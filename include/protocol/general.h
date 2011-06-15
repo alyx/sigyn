@@ -3,6 +3,8 @@
  * Released under the BSD license.
  */
 
+#pragma once
+
 #include "sigyn.h"
 
 static void nick(char *newnick)

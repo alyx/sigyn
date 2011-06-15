@@ -3,6 +3,8 @@
  * Released under the BSD license.
  */
 
+#pragma once
+
 /* config.h - Sigyn temp. configuration file
  * Fill in the values here to configure sigyn
  * NOTE: This will eventually be replaced with

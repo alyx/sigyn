@@ -3,6 +3,8 @@
  * Released under the BSD license.
  */
 
+#pragma once
+
 #include <stdio.h>
 #include <stdarg.h>
 #include "config.h"

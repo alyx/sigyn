@@ -1,3 +1,10 @@
+/* Sigyn - A reasonably sane IRC bot.
+ * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
+ * Released under the BSD license.
+ */
+
+#pragma once
+
 typedef struct irc_channel_t irc_channel_t;
 typedef struct irc_user_t irc_user_t;
 
