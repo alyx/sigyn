@@ -23,13 +23,20 @@ struct me {
         struct addrinfo hints {
             int ai_family = AF_UNSPEC;
             int ai_socktype = SOCK_STREAM;
-        }
+        };
         struct addrinfo *res;
-    }
+    };
+    struct stats {
+        struct time {
+            const time_t uptime = time(NULL);
+        };
+        int inB = 0;
+        int outB = 0;
+    };
 } me;
 
 int raw(char *line, ...) {
-    char sendbuf[510];
+    char *sendbuf[510];
     va_list args;
     
     va_start(args, line);
@@ -39,7 +46,10 @@ int raw(char *line, ...) {
     strlcpy(sendbuf, "\r\n");
 
     int sent = send(socket, sendbuf, strlen(sendbuf), 0);
-    char logout = snprintf("<< %s", sendbuf);
+    me.stats.outB += sent;
+    char *logout = snprintf("<< %s", sendbuf);
     log(LOG_RAW, logout);
     return sent;
 }
+
+void parse(char *text);
