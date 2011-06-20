@@ -21,7 +21,9 @@ enum log_levels {
     LOG_GENERAL
 }
 
-void log(int level, char *message, ...)
+FILE *logfile = fopen(LOGFILE, "a");
+
+void logger(int level, char *message, ...)
 {
     if (level >= LOG_LEVEL)
     {
