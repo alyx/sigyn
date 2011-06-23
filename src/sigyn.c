@@ -20,8 +20,10 @@ int main(int argc, char *argv[])
     initialise_sigyn(SIGYN_NICK, SIGYN_NICK, SIGYN_REALNAME, UPLINK_SERVER, UPLINK_PORT);
     irc_connect(me.uplink.hostname, me.uplink.port);
 
-    user(me.client.nick, hostname, me.uplink.server, me.client.gecos);
-    nick(me.nick);
+    if(UPLINK_PASS)
+        irc_pass(UPLINK_PASS);
+    irc_user(me.client.nick, hostname, me.uplink.server, me.client.gecos);
+    irc_nick(me.nick);
     
     char *text = mowgli_alloc(513);
     irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));

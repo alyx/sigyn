@@ -44,6 +44,7 @@ struct irc_event_t
 int raw(char *line, ...);
 static void irc_nick(char *nick);
 static void irc_user(char *user, char *host, char *server, char *gecos);
+static void irc_pass(char *password);
 static void irc_quit(char *message);
 static void irc_pong(char *message);
 static void irc_privmsg(char *target, char *message);

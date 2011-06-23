@@ -16,5 +16,6 @@
 
 #define UPLINK_SERVER "irc.thinstack.net" // Server address we should connect to.
 #define UPLINK_PORT 6667 // Port we should connect to.
+//#define UPLINK_PASS "moocow" // Password for the IRC connection. Uncomment this is you need it.
 
 #define LOGFILE "sigyn.log" // File Sigyn should log to. Undef this if you do not want a log file.

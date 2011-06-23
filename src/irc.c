@@ -30,6 +30,11 @@ static void irc_user(char *user, char *host, char *server, char *real)
     raw("USER %s %s %s :%s", user, host, server, real);
 }
 
+static void irc_pass(char *password)
+{
+    raw("PASS %s", password);
+}
+
 static void irc_quit(char *message)
 {
     raw("QUIT :%s", message);
