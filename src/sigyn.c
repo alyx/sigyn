@@ -4,49 +4,31 @@
  */
 
 #include "sigyn.h"
-#include "config.h"
 #include "protocol/general.h"
+
+void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int port)
+{
+    me.client.nick = nick;
+    me.client.user = ident;
+    me.client.gecos = gecos;
+    me.uplink.port = port;
+    me.uplink.hostname = uplink;
+}
 
 int main(int argc, char *argv[])
 {
-    switch( getaddrinfo( UPLINK_SERVER, UPLINK_PORT, &hints, &res) )
-    switch( getaddrinfo( me.uplink.hostname, me.uplink.port, &me.uplink.hints, &me.uplink.res) )
-    {
-        case EAI_AGAIN:
-            log(LOG_WARNING, "getaddrinfo error: The name server returned a temporary failure indication. Try again later.");
-            exit(0);
-        case EAI_FAIL:
-            log(LOG_WARNING, "getaddrinfo error: The name server returned a permanent failure indication.");
-            exit(0);
-        case EAI_MEMORY:
-            log(LOG_WARNING, "getaddrinfo error: Out of memory.");
-            exit(0);
-        case EAI_SYSTEM:
-            log(LOG_WARNING, "getaddrinfo error: System returned error: %i", errno);
-            exit(0);
-    }
-    log(LOG_STATUS, "Attempting to connect to %s:%d.", me.uplink.hostname, me.uplink.port);
-    me.uplink.sock = socket(me.uplink.res.ai_family, me.uplink.res.ai_socktype, me.uplink.res.ai_protocol);
-    if( connect(me.uplink.sock, me.uplink.res.ai_addr, me.uplink.res.ai_addrlen) != -1)
-    {
-        log(LOG_STATUS, "Connection to %s:%d successful.", me.uplink.hostname, me.uplink.port);
-    }
-    else
-    {
-        log(LOG_STATUS, "Connection to %s:%d failed: %i", me.uplink.hostname, me.uplink.port, errno);
-        exit(0);
-    }
-    char *hostname[1024];
-    hostname[1023] = "\0";
-    gethostname(hostname, 1023);
-    user(me.nick, hostname, me.uplink.server, SIGYN_REALNAME);
+    initialise_sigyn(SIGYN_NICK, SIGYN_NICK, SIGYN_REALNAME, UPLINK_SERVER, UPLINK_PORT);
+    irc_connect(me.uplink.hostname, me.uplink.port);
+
+    user(me.client.nick, hostname, me.uplink.server, me.client.gecos);
     nick(me.nick);
     
     char *text = mowgli_alloc(513);
+    irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
     while (1)
     {
-         recv_data(text);
-         parse(text);
+        fread(text, 1, 512, sock);
+        event = parse(text);
     }
     
     return 0;
