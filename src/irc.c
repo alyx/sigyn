@@ -20,37 +20,37 @@ int raw(char *line, ...) {
     return sent;
 }
 
-static void irc_nick(char *newnick)
+void irc_nick(char *newnick)
 {
     raw("NICK %s", newnick);
 }
 
-static void irc_user(char *user, char *host, char *server, char *real)
+void irc_user(char *user, char *host, char *server, char *real)
 {
     raw("USER %s %s %s :%s", user, host, server, real);
 }
 
-static void irc_pass(char *password)
+void irc_pass(char *password)
 {
     raw("PASS %s", password);
 }
 
-static void irc_quit(char *message)
+void irc_quit(char *message)
 {
     raw("QUIT :%s", message);
 }
 
-static void irc_pong(char *message)
+void irc_pong(char *message)
 {
     raw("PONG :%s", message);
 }
 
-static void irc_privmsg(char *target, char *message)
+void irc_privmsg(char *target, char *message)
 {
     raw("PRIVMSG %s :%s", target, message);
 }
 
-static void irc_notice(char *target, char *message)
+void irc_notice(char *target, char *message)
 {
     raw("NOTICE %s: %s", target, message);
 }
