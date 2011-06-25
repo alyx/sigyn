@@ -32,3 +32,4 @@ struct me {
 } me;
 
 void parse(char *text);
+void uplink_connect(char *uplink, int *port);
