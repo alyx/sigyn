@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
 
     if(UPLINK_PASS)
         irc_pass(UPLINK_PASS);
-    irc_user(me.client.nick, hostname, me.uplink.server, me.client.gecos);
     irc_nick(me.nick);
+    irc_user(me.client.nick, hostname, me.uplink.server, me.client.gecos);
     
     char *text = mowgli_alloc(513);
     irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
