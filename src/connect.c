@@ -5,7 +5,7 @@
 
 #include "sigyn.h"
 
-void irc_connect(char *uplink, int *port)
+void uplink_connect(char *uplink, int *port)
 {
     struct addrinfo hints {
         int ai_family = AF_UNSPEC;
