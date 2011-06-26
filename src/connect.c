@@ -41,5 +41,8 @@ void uplink_connect(char *uplink, int *port)
         logger(LOG_STATUS, "Connection to %s:%d failed: %i", uplink, port, errno);
         exit(0);
     }
+    if(UPLINK_PASS)
+        irc_pass(UPLINK_PASS);
+    irc_nick(me.nick);
+    irc_user(me.client.nick, hostname, me.uplink.server, me.client.gecos);
 }    
-irc_user(me.nick, hostname, me.uplink.server, me.gecos);
