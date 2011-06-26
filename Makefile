@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS=-c -Wall -Werror -Iinclude --std=c99
+CFLAGS=-c -Wall -Werror -Iinclude -std=c99
 LDFLAGS=
 SOURCES=src/parser.c tests/parse.c tests/log.c tests/test.c
 #SOURCES=tests/log.c
