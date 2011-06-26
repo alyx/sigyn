@@ -8,28 +8,31 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
-#include <mowgli.h>
+#include <libmowgli/mowgli.h>
 #include "logger.h"
 #include "irc.h"
 #include "config.h"
 
 struct me {
     irc_user_t *client;
-    char *channels[];
+    char **channels;
     struct uplink {
         int sock;
         int port;
         char *hostname;
-    };
+    } uplink;
     struct stats {
-        struct time {
-            const time_t uptime = time(NULL);
-        };
-        int inB = 0;
-        int outB = 0;
-    };
+        time_t start;
+        int inB;
+        int outB;
+    } stats;
 } me;
 
-void parse(char *text);
+//me.stats.start = time(NULL);
+//me.stats.inB = 0;
+//me.stats.outB = 0;
+
+irc_event_t *parse(char *text);
 void uplink_connect(char *uplink, int *port);

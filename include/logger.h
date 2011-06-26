@@ -8,10 +8,12 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "config.h"
+#include <string.h>
+#include <stdlib.h>
 
 /*
  * define various log levels;
- * this is only for making calls to log() look prettier.
+ * this is only for making calls to logger() look prettier.
  */
 enum log_levels {
     LOG_RAW,
@@ -19,20 +21,26 @@ enum log_levels {
     LOG_WARNING,
     LOG_STATUS,
     LOG_GENERAL
-}
+};
 
-FILE *logfile = fopen(LOGFILE, "a");
+FILE *logfile;
 
 void logger(int level, char *message, ...)
 {
+    if ((logfile = fopen(LOGFILE, "a")) == NULL)
+    {
+        fprintf(stderr, "Cannot open logfile\n");
+        exit(1);
+    }
     if (level >= LOG_LEVEL)
     {
         char logline[1024];
         va_list args;
         va_start(args, message);
-        vsnprinft(logline, 1024, message, args);
+        vsnprintf(logline, 1024, message, args);
         va_end(args);
-        strlcpy(logline, "\n");
+        /*strlcpy(logline, "\n");*/
+        strncat(logline, "\n", 1);
         fprintf(logfile, logline);
     }
 }

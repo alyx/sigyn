@@ -5,10 +5,10 @@
 
 #pragma once
 
-typedef struct irc_channel_t irc_channel_t;
-typedef struct irc_user_t irc_user_t;
+//typedef struct irc_channel_t irc_channel_t;
+//typedef struct irc_user_t irc_user_t;
 
-struct irc_channel_t {
+typedef struct {
     char *name;
     char *topic;
     size_t nusers;
@@ -20,9 +20,9 @@ struct irc_channel_t {
         size_t nparam;
         char **users;
     } *modes;
-};
+} irc_channel_t;
 
-struct irc_user_t
+typedef struct
 {
     char *nick;
     char *user;
@@ -31,15 +31,15 @@ struct irc_user_t
 
     size_t nchans;
     char **chans;
-};
+} irc_user_t;
 
-struct irc_event_t
+typedef struct
 {
     irc_user_t *origin;
     char *command;
     char *target;
     char *message;
-};
+} irc_event_t;
 
 int raw(char *line, ...);
 void irc_pass(char *password);
