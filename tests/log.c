@@ -1,5 +1,5 @@
-#import "logger.h"
-#import "test.h"
+#include "logger.h"
+#include "test.h"
 
 void test_logger(void)
 {

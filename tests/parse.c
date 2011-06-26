@@ -1,10 +1,10 @@
-#import "irc.h"
-#import <stddef.h>
-#import <stdio.h>
-#import <sys/types.h>
-#import <libmowgli/mowgli.h>
-#import "parser.h"
-#import "test.h"
+#include "irc.h"
+#include <stddef.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <libmowgli/mowgli.h>
+#include "parser.h"
+#include "test.h"
 
 void test_parse(void)
 {

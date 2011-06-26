@@ -1,4 +1,4 @@
-#import "test.h"
+#include "test.h"
 
 int main(void)
 {

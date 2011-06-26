@@ -1,4 +1,4 @@
-#import "sigyn.h"
+#include "sigyn.h"
 
 int main(void)
 {
