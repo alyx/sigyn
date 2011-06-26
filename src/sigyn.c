@@ -4,10 +4,12 @@
  */
 
 #include "sigyn.h"
-#include "protocol/general.h"
 
 void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int port)
 {
+    me.stats.time = time(NULL);
+    me.stats.inB = 0;
+    me.stats.outB = 0;
     me.client.nick = nick;
     me.client.user = ident;
     me.client.gecos = gecos;
