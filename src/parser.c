@@ -4,34 +4,58 @@
  */
 
 #include "sigyn.h"
+#include <libmowgli/mowgli.h>
+
+irc_user_t *parse_user(char *hostmask)
+{
+    /*irc_user_t *user = mowgli_alloc(sizeof(irc_user_t));*/
+    irc_user_t *user = malloc(sizeof(irc_user_t));
+    char *ptr;
+
+    if((ptr = strchr(hostmask, '!')) != NULL)
+    {
+        *ptr = '\0';
+        user->nick = hostmask;
+        hostmask = ++ptr;
+    }
+    if ((ptr = strchr(hostmask, '@')) != NULL)
+    {
+        *ptr = '\0';
+        user->user = hostmask;
+        hostmask = ++ptr;
+    }
+
+    user->host = hostmask;
+
+    return user;
+}
 
 irc_event_t *parse(char *text)
 {
-    irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
-    char *ptr = text;
+    /*irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));*/
+    irc_event_t *event = malloc(sizeof(irc_event_t));
     char *user = NULL, *ptr, *cmd, *data = NULL;
 
     if (text != NULL)
     {
         if (*text == '\n')
-            return;
+            return NULL;
         if (*text == '\0')
-            return;
+            return NULL;
 
-        char *logmsg = snprintf(">> %s", text);
-        logger(LOG_RAW, logmsg);
+        logger(LOG_RAW, ">> %s", text);
 
-            if (line[0] == ':') {
+            if (text[0] == ':') {
                 user = &text[1];
                 ptr = strchr(user, ' ');
-                if (p == NULL)
-                    return -1;
+                if (ptr == NULL)
+                    return NULL;
                 *ptr++ = '\0';
                 cmd = ptr;
                 if ((ptr = strchr(user, ' ')))
                     *ptr = '\0';
             } else
-                cmd = line;
+                cmd = text;
             ptr = strchr(cmd, ' ');
             if (ptr) {
                 *ptr++ = '\0';
@@ -45,36 +69,15 @@ irc_event_t *parse(char *text)
                 irc_user_t *origin = parse_user(user);
 
                 /* If the origin is a server */
-                if (!origin.nick)
-                    origin.nick = origin.host;
+                if (!origin->nick)
+                    origin->nick = origin->host;
 
-                event.origin = origin;
+                event->origin = origin;
             }
 
-            event.command = cmd;
-
+            event->command = cmd;
+            return event;
     }
+    return NULL;
 }
 
-irc_user_t *parse_user(char *hostmask)
-{
-    irc_user_t *user = mowgli_alloc(sizeof(irc_user_t));
-    char *ptr;
-
-    if((ptr = strchr(hostmask, '!')) != NULL)
-    {
-        *ptr = '\0';
-        user.nick = hostmask;
-        hostmask = ++ptr;
-    }
-    if ((ptr = strchr(hostmask, '@')) != NULL)
-    {
-        *ptr = '\0';
-        user.user = hostmask;
-        hostmask = ++ptr;
-    }
-
-    user.host = host;
-
-    return user;
-}
