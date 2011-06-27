@@ -12,7 +12,8 @@ void uplink_connect(char *uplink, int *port)
         int ai_socktype = SOCK_STREAM;
     };
     struct addrinfo *res;
-    char *hostname = mowgli_alloc(256);
+    /*char *hostname = mowgli_alloc(256);*/
+    char *hostname = malloc(256);
     gethostname(hostname, 255);
 
     switch( getaddrinfo( uplink, port, &hints, &res) )

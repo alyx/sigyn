@@ -22,8 +22,10 @@ int main(int argc, char *argv[])
     initialise_sigyn(SIGYN_NICK, SIGYN_NICK, SIGYN_REALNAME, UPLINK_SERVER, UPLINK_PORT);
     uplink_connect(me.uplink.hostname, me.uplink.port);
     
-    char *text = mowgli_alloc(513);
-    irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
+    /*char *text = mowgli_alloc(513);*/
+    /*irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));*/
+    char *text = malloc(513);
+    irc_event_t *event = malloc(sizeof(irc_event_t));
     while (1)
     {
         fread(text, 1, 512, sock);

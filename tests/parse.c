@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <libmowgli/mowgli.h>
+/*#include <libmowgli/mowgli.h>*/
 #include "parser.h"
 #include "test.h"
 

@@ -10,7 +10,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-#include <libmowgli/mowgli.h>
+//#include <libmowgli/mowgli.h>
 #include "logger.h"
 #include "irc.h"
 #include "config.h"
