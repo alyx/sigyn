@@ -2,8 +2,9 @@
  * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
  * Released under the BSD license.
  */
-
-#pragma once
+#ifndef __SIGYN_H
+#define __SIGYN_H
+//#pragma once
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -36,3 +37,4 @@ struct me {
 
 irc_event_t *parse(char *text);
 void uplink_connect(char *uplink, int *port);
+#endif

@@ -2,9 +2,8 @@
  * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
  * Released under the BSD license.
  */
-
-#pragma once
-
+#ifndef __SIGYN_CONFIG_H
+#define __SIGYN_CONFIG_H
 /* config.h - Sigyn temp. configuration file
  * Fill in the values here to configure sigyn
  * NOTE: This will eventually be replaced with
@@ -22,3 +21,5 @@
 const char *LOGFILE = "sigyn.log";
 #define LOG_LEVEL 0
 #define BUFSIZE 1024 // You probably won't need to touch this.
+
+#endif
