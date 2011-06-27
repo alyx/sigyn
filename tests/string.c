@@ -4,7 +4,8 @@
 int main(void)
 {
     char moo[1024];
-    strlcat(moo, "moo\n", 5);
+    strlcpy(moo, "moo\n", sizeof(moo));
+    strlcat(moo, "fish\n", sizeof(moo));
     printf("%s", moo);
     return 0;
 
