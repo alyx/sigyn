@@ -4,7 +4,7 @@
  */
 
 #include "sigyn.h"
-#include <libmowgli/mowgli.h>
+/*#include <libmowgli/mowgli.h>*/
 
 irc_user_t *parse_user(char *hostmask)
 {
