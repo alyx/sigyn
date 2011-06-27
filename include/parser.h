@@ -8,6 +8,6 @@
 
 #include "irc.h"
 
-irc_user_t *parse_user(char *hostmask);
-irc_event_t *parse(char *text);
+extern irc_user_t *parse_user(char *hostmask);
+extern irc_event_t *parse(char *text);
 #endif
