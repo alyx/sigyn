@@ -3,6 +3,8 @@
  * Released under the BSD license.
  */
 
+#include "atheme_string.h"
+
 int raw(char *line, ...) {
     char *sendbuf[510];
     va_list args;
