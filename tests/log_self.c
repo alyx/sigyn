@@ -8,3 +8,4 @@ int main(void)
     logger(LOG_GENERAL, "Example GENERAL here");
     return 0;
 }
+

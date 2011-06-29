@@ -1,4 +1,6 @@
-CC=clang
+ifndef CC
+	CC=clang
+endif
 CFLAGS=-c -Wall -Werror -Iinclude -std=c99 -ggdb
 LDFLAGS=
 #SOURCES=src/logger.c src/parser.c tests/parse.c tests/log.c tests/test.c
