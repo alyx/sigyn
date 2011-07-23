@@ -1,0 +1,31 @@
+SUBDIRS="include src"
+MODULES="core compiler"
+PROJECT_NAME="sigyn"
+
+defaults()
+{
+    MK_PREFIX=/opt/sigyn
+}
+
+option()
+{
+    mk_option \
+        OPTION="buffer" \
+        VAR="BUFSIZE" \
+        PARAM="bufsize" \
+        DEFAULT=1024 \
+        HELP="Incomming string buffer size"
+}
+
+configure()
+{
+    mk_msg "compile prefix: $MK_PREFIX"
+    mk_msg "buffer size: $BUFSIZE"
+
+    mk_export BUFSIZE
+}
+
+make()
+{
+
+}
