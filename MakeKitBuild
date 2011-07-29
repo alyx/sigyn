@@ -1,4 +1,4 @@
-SUBDIRS="include src"
+#SUBDIRS="include src"
 MODULES="core compiler"
 PROJECT_NAME="sigyn"
 
@@ -19,13 +19,23 @@ option()
 
 configure()
 {
+    mk_config_header "include/sysinfo.h"
+
+    #mk_check_headers stdio.h stdlib.h string.h moocows.h
+    mk_check_libraries mowgli
+
     mk_msg "compile prefix: $MK_PREFIX"
     mk_msg "buffer size: $BUFSIZE"
 
     mk_export BUFSIZE
+    mk_define BUFSIZE $BUFSIZE
 }
 
 make()
 {
-
+    mk_program \
+        PROGRAM=sigyn \
+        SOURCES="src/*.c" \
+        INCLUDEDIRS="include" \
+        LIBDEPS="mowgli"
 }
