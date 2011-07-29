@@ -2,7 +2,7 @@
 
 void logger_init(const char *filename)
 {
-    if ((logfile = fopen(filename, "a")) == NULL)
+    if ((stderr = fopen(filename, "a")) == NULL)
     {
         fprintf(stderr, "Cannot open logfile\n");
         exit(1);
@@ -39,6 +39,6 @@ void logger(unsigned int level, char *format, ...)
     time(&t);
     tm = *localtime(&t);
     strftime(datetime, sizeof(datetime) - 1, "[%d/%m/%Y %H:%M:%S]", &tm);
-    fprintf(logfile, "%s %s\n", datetime, buf);
-    fflush(logfile);
+    fprintf(stderr, "%s %s\n", datetime, buf);
+    fflush(stderr);
 }
