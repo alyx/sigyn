@@ -46,4 +46,4 @@ void uplink_connect(char *uplink, int *port)
         irc_pass(UPLINK_PASS);
     irc_nick(me.nick);
     irc_user(me.client.nick, hostname, me.uplink.server, me.client.gecos);
-}    
+}
