@@ -7,9 +7,6 @@
 
 #include <sys/types.h>
 
-//typedef struct irc_channel_t irc_channel_t;
-//typedef struct irc_user_t irc_user_t;
-
 typedef struct {
     char *name;
     char *topic;

@@ -5,13 +5,40 @@
 
 #include "sigyn.h"
 
+#ifdef _WIN32
+    WSADATA wsaData;
+#endif
+
 void uplink_connect(char *uplink, int *port)
 {
-    struct addrinfo hints {
-        int ai_family = AF_UNSPEC;
-        int ai_socktype = SOCK_STREAM;
-    };
-    struct addrinfo *res;
+    struct addrinfo *res, hints;
+    hints = { 0 };
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+#ifdef _WIN32
+    int wsres;
+    wsres = WSAStartup(MAKEWORD(2,2), &wsaData);
+    switch(wsres)
+    {
+        case 0:
+            logger(LOG_DEBUG, "Successfully started Winsock.");
+        case WSASYSNOTREADY:
+            logger(LOG_WARNING, "Cannot start winsock: Underlying network is not ready for communication.");
+            exit(0);
+        case WSAVERNOTSUPPORTED:
+            /* Note: This should never happen. */
+            logger(LOG_WARNING, "Cannot start winsock: This version of winsock is not supported by this winsock implementation.");
+            exit(0);
+        case WSAEPROCLIM:
+            logger(LOG_WARNING, "Cannot start winsock: Winsock task limit reached.")
+            exit(0);
+        default:
+            logger(LOG_WARNING, "Cannot start winsock: Unknown errno %d", wsres);
+            exit(0);
+    }
+
+#else
     /*char *hostname = mowgli_alloc(256);*/
     char *hostname = malloc(256);
     gethostname(hostname, 255);
@@ -42,6 +69,7 @@ void uplink_connect(char *uplink, int *port)
         logger(LOG_STATUS, "Connection to %s:%d failed: %i", uplink, port, errno);
         exit(0);
     }
+#endif
     if(UPLINK_PASS)
         irc_pass(UPLINK_PASS);
     irc_nick(me.nick);

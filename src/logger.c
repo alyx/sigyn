@@ -1,8 +1,14 @@
 #include "logger.h"
 
+FILE *logfile;
+
+#ifndef _WIN32
+logfile = stderr;
+#endif
+
 void logger_init(const char *filename)
 {
-    if ((stderr = fopen(filename, "a")) == NULL)
+    if ((logfile = fopen(filename, "a")) == NULL)
     {
         fprintf(stderr, "Cannot open logfile\n");
         exit(1);
@@ -36,9 +42,14 @@ void logger(unsigned int level, char *format, ...)
     vsnprintf(buf, BUFSIZE, format, args);
     va_end(args);
 
+    if (logfile == NULL)
+    {
+        logger_init("sigyn.log");
+    }
+
     time(&t);
     tm = *localtime(&t);
     strftime(datetime, sizeof(datetime) - 1, "[%d/%m/%Y %H:%M:%S]", &tm);
-    fprintf(stderr, "%s %s\n", datetime, buf);
-    fflush(stderr);
+    fprintf(logfile, "%s %s\n", datetime, buf);
+    fflush(logfile);
 }

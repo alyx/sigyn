@@ -14,7 +14,6 @@
 
 #ifdef _WIN32
 #   include <winsock2.h>
-#   include <w2tcpip.h>
 #else
 #   include <sys/socket.h>
 #   include <netinet/in.h>
