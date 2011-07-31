@@ -15,13 +15,13 @@ irc_user_t *parse_user(char *hostmask)
 
     if((ptr = strchr(hostmask, '!')) != NULL)
     {
-        *ptr = '\0';
+        ptr = '\0';
         user->nick = hostmask;
         hostmask = ++ptr;
     }
     if ((ptr = strchr(hostmask, '@')) != NULL)
     {
-        *ptr = '\0';
+        ptr = '\0';
         user->user = hostmask;
         hostmask = ++ptr;
     }
@@ -51,19 +51,20 @@ irc_event_t *parse(char *text)
                 ptr = strchr(user, ' ');
                 if (ptr == NULL)
                     return NULL;
-                //*ptr++ = '\0';
-                ptr++;
                 ptr = '\0';
-                cmd = ptr;
+                //*ptr++ = '\0';
+                //ptr++;
+                //ptr = '\0';
+                cmd = ++ptr;
                 if ((ptr = strchr(user, ' ')))
-                    ptr++;
+                    //ptr++;
                     ptr ='\0';
             } else
                 cmd = text;
             ptr = strchr(cmd, ' ');
             if (ptr) {
-                ptr++;
                 ptr = '\0';
+                //ptr = '\0';
                 data = ptr;
                 if (*data == ':')
                     data++;
