@@ -2,9 +2,9 @@
 
 FILE *logfile;
 
-#ifndef _WIN32
-logfile = stderr;
-#endif
+/*#ifndef _WIN32*/
+/*logfile = fopen(stderr, "a");*/
+/*#endif*/
 
 void logger_init(const char *filename)
 {
