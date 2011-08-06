@@ -1,10 +1,13 @@
+/* Sigyn - A reasonably sane IRC bot.
+ * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
+ * Released under the BSD license.
+ *
+ * Abstract: This module implements a method of logging to a file
+ */
+
 #include "logger.h"
 
 FILE *logfile;
-
-/*#ifndef _WIN32*/
-/*logfile = fopen(stderr, "a");*/
-/*#endif*/
 
 void logger_init(const char *filename)
 {
@@ -13,6 +16,12 @@ void logger_init(const char *filename)
         fprintf(stderr, "Cannot open logfile\n");
         exit(1);
     }
+}
+
+void logger_deinit(void)
+{
+    if (logfile != NULL):
+        fclose(logfile);
 }
 
 void logger(unsigned int level, char *format, ...)
