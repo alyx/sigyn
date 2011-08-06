@@ -12,26 +12,20 @@
 #include <time.h>
 #include <unistd.h>
 
-#ifdef _WIN32
-#   include <winsock2.h>
-#else
-#   include <sys/socket.h>
-#   include <netinet/in.h>
-#   include <netdb.h>
-#endif
-
-
 #include <libmowgli/mowgli.h>
 #include "logger.h"
 #include "irc.h"
 #include "config.h"
 
-
 struct me {
     irc_user_t *client;
     char **channels;
     struct uplink {
+#ifdef _WIN32
+        SOCKET sock;
+#else
         int sock;
+#endif
         int port;
         char *hostname;
     } uplink;
@@ -42,6 +36,8 @@ struct me {
     } stats;
 } me;
 
-irc_event_t *parse(char *text);
-void uplink_connect(char *uplink, int *port);
+extern irc_event_t *parse(char *text);
+extern void uplink_connect(char *uplink, int *port);
+extern char *sigyn_hostname(void);
+extern void sigyn_fatal(void);
 #endif
