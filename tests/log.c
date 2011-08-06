@@ -1,9 +1,10 @@
-/*#include "test.h"*/
+#include "test.h"
 #include "logger.h"
 
-void test_logger(void)
+int test_logger(char *logstring)
 {
     logger_init(LOGFILE);
-    logger(LOG_RAW, "Example RAW here");
-    logger(LOG_GENERAL, "Example GENERAL here");
+    logger(LOG_GENERAL, logstring);
+    logger_deinit;
+    return 1;
 }
