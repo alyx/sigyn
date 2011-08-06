@@ -28,7 +28,7 @@ enum log_levels {
 FILE *logfile;
 
 extern void logger_init(const char *filename);
-//static void va_logger(unsigned int level, const char *format, va_list args);
+extern void logger_deinit(void);
 extern void logger(unsigned int level, char *format, ...);
 
 #endif
