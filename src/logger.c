@@ -20,7 +20,7 @@ void logger_init(const char *filename)
 
 void logger_deinit(void)
 {
-    if (logfile != NULL):
+    if (logfile != NULL)
         fclose(logfile);
 }
 
@@ -29,6 +29,9 @@ void logger(unsigned int level, char *format, ...)
     char buf[BUFSIZE], datetime[64];
     time_t t;
     struct tm tm;
+
+    if (level < LOG_LEVEL)
+        return;
 
     va_list args;
     va_start(args, format);

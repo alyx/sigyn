@@ -5,6 +5,6 @@ int test_logger(char *logstring)
 {
     logger_init(LOGFILE);
     logger(LOG_GENERAL, logstring);
-    logger_deinit;
+    logger_deinit();
     return 1;
 }

@@ -3,7 +3,8 @@
 
 int test_hostname(void)
 {
-    char *host = sigyn_hostname();
+    char host[256];
+    sigyn_hostname(host);
     if (host = NULL):
         return 0;
     return 1;

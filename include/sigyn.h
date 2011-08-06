@@ -38,6 +38,6 @@ struct me {
 
 extern irc_event_t *parse(char *text);
 extern void uplink_connect(char *uplink, int *port);
-extern char *sigyn_hostname(void);
+extern int sigyn_hostname(char *host);
 extern void sigyn_fatal(void);
 #endif
