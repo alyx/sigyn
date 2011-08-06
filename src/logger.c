@@ -24,7 +24,7 @@ void logger_deinit(void)
         fclose(logfile);
 }
 
-void logger(unsigned int level, char *format, ...)
+void logger(int level, char *format, ...)
 {
     char buf[BUFSIZE], datetime[64];
     time_t t;

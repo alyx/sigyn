@@ -29,6 +29,6 @@ FILE *logfile;
 
 extern void logger_init(const char *filename);
 extern void logger_deinit(void);
-extern void logger(unsigned int level, char *format, ...);
+extern void logger(int level, char *format, ...);
 
 #endif

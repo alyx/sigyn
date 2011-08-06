@@ -19,9 +19,9 @@ int sigyn_hostname(char *host)
     int res;
 #ifdef _WIN32
     WSADATA wsaData;
-    int wsres WSAStartup(MAKEWORD(2, 2), &wsaData);
-
-
+    int wsres = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (wsres != 0)
+        return -1;
 #endif
     res = gethostname(host, (sizeof(host) -1));
 #ifdef _WIN32
