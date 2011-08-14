@@ -3,10 +3,15 @@
  * Released under the BSD license.
  */
 
+#include <stdarg.h>
+#include <stdio.h>
+
 #include "atheme_string.h"
+#include "logger.h"
+#include "me.h"
 
 int raw(char *line, ...) {
-    char *sendbuf[510];
+    char sendbuf[510];
     va_list args;
 
     va_start(args, line);
@@ -75,7 +80,7 @@ void irc_oper(char *user, char *password)
      * Parameters: <user> <password>
      * Example: OPER foo bar
      */
-    raw("OPER %s %s", user password);
+    raw("OPER %s %s", user, password);
 }
 
 void irc_quit(char *message)
@@ -230,9 +235,9 @@ void irc_connect(char *target, int port, char *remote)
      * Parameters: <target server> [<port> [<remote server>]]
      * Example: CONNECT tolsun.oulu.fi
      */
-    if (remote != NULL && port != NULL)
+    if (remote != NULL && port != 0)
         raw("CONNECT %s %d %s", target, port, remote);
-    else if (remote != NULL && port == NULL)
+    else if (remote != NULL && port == 0)
         raw("CONNECT %s %s", target, remote);
     else
         raw("CONNECT %s", target);

@@ -14,9 +14,10 @@
 
 void uplink_connect(char *uplink, int *port)
 {
-    char *hostname = sigyn_hostname();
+    char hostname[256];
+    sigyn_hostname(hostname, 255);
     struct addrinfo *res, hints;
-    hints = { 0 };
+//    hints = { 0; };
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
@@ -28,49 +29,49 @@ void uplink_connect(char *uplink, int *port)
         case 0:
             logger(LOG_STATUS, "Successfully started Winsock.");
         case WSASYSNOTREADY:
-            fatal("Cannot start winsock: Underlying network is not ready for communication.");
+            sigyn_fatal("Cannot start winsock: Underlying network is not ready for communication.");
         case WSAVERNOTSUPPORTED:
             /* Note: This should never happen. */
-            fatal("Cannot start winsock: This version of winsock is not supported by this winsock implementation.");
+            sigyn_fatal("Cannot start winsock: This version of winsock is not supported by this winsock implementation.");
         case WSAEPROCLIM:
-            fatal("Cannot start winsock: Winsock task limit reached.")
+            sigyn_fatal("Cannot start winsock: Winsock task limit reached.")
         default:
-            fatal("Cannot start winsock: Unknown errno %d", wsres);
+            sigyn_fatal("Cannot start winsock: Unknown errno %d", wsres);
     }
 #endif
 
     int result;
-    result = getaddrinfo( uplink, port, &hints, &res);
+    result = getaddrinfo( uplink, (char*)port, &hints, &res);
     switch(result)
     {
         case 0:
             logger(LOG_STATUS, "Hostname resolution successful");
         case EAI_AGAIN:
-            fatal("Cannot resolve hostname: The name server returned a temporary failure indication. Try again later.");
+            sigyn_fatal("Cannot resolve hostname: The name server returned a temporary failure indication. Try again later.");
         case EAI_FAIL:
-            fatal("Cannot resolve hostname: The name server returned a permanent failure indication.");
+            sigyn_fatal("Cannot resolve hostname: The name server returned a permanent failure indication.");
         case EAI_MEMORY:
-            fatal("Cannot resolve hostname: Out of memory.");
+            sigyn_fatal("Cannot resolve hostname: Out of memory.");
         case EAI_SYSTEM:
-            fatal("Cannot resolve hostname: System returned error: %i", ERRNO);
+            sigyn_fatal("Cannot resolve hostname: System returned error: %i", ERRNO);
         default:
-            char tmp[40+sizeof(result)];
-            fatal("Cannot resolve hostname: Unknown error %d", result);
+            sigyn_fatal("Cannot resolve hostname: Unknown error %d", result);
     }
 
     logger(LOG_STATUS, "Attempting to connect to %s:%d", uplink, port);
     me.uplink.sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
-    if( connect(me.uplink.sock, res.ai_addr, res.ai_addrlen) != -1)
+    if( connect(me.uplink.sock, res->ai_addr, res->ai_addrlen) != -1)
         logger(LOG_STATUS, "Connection to %s:%d successful", uplink, port);
     else
     {
         logger(LOG_STATUS, "Connection to %s:%d failed: %i", uplink, port, ERRNO);
-        fatal("Connection failed");
+        sigyn_fatal("Connection failed");
     }
 
-    if(UPLINK_PASS)
+#ifdef UPLINK_PASS
         irc_pass(UPLINK_PASS);
-    irc_nick(me.nick);
-    irc_user(me.client.nick, hostname, me.uplink.server, me.client.gecos);
+#endif
+    irc_nick(me.client->nick);
+    irc_user(me.client->nick, hostname, me.uplink.hostname, me.client->gecos);
 }

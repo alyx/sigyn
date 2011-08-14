@@ -13,31 +13,14 @@
 #include <unistd.h>
 
 #include <libmowgli/mowgli.h>
+#include "me.h"
+#include "platform.h"
 #include "logger.h"
 #include "irc.h"
 #include "config.h"
 
-struct me {
-    irc_user_t *client;
-    char **channels;
-    struct uplink {
-#ifdef _WIN32
-        SOCKET sock;
-#else
-        int sock;
-#endif
-        int port;
-        char *hostname;
-    } uplink;
-    struct stats {
-        const time_t start;
-        int inB;
-        int outB;
-    } stats;
-} me;
-
 extern irc_event_t *parse(char *text);
 extern void uplink_connect(char *uplink, int *port);
 extern int sigyn_hostname(char *host, int len);
-extern void sigyn_fatal(void);
+extern void sigyn_fatal(char *format, ...);
 #endif
