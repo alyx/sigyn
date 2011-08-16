@@ -6,6 +6,8 @@
 #ifndef __SIGYN_ME_H
 #define __SIGYN_ME_H
 
+#include <time.h>
+
 #include "irc.h"
 
 struct me {
@@ -13,6 +15,7 @@ struct me {
     char **channels;
     struct uplink {
 #ifdef _WIN32
+        bool winsock;
         SOCKET sock;
 #else
         int sock;
@@ -21,7 +24,7 @@ struct me {
         char *hostname;
     } uplink;
     struct stats {
-        const time_t start;
+        time_t start;
         int inB;
         int outB;
     } stats;
