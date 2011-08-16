@@ -8,11 +8,10 @@
 #include "sigyn.h"
 
 #ifdef _WIN32
-    static const int wsres;
     WSADATA wsaData;
 #endif
 
-void uplink_connect(char *uplink, int *port)
+void uplink_connect(char *uplink, int port)
 {
     char hostname[256];
     sigyn_hostname(hostname, 255);
@@ -23,11 +22,12 @@ void uplink_connect(char *uplink, int *port)
     hints.ai_protocol = IPPROTO_TCP;
 
 #ifdef _WIN32
-    wsres = WSAStartup(MAKEWORD(2,2), &wsaData);
+    int wsres = WSAStartup(MAKEWORD(2,2), &wsaData);
     switch(wsres)
     {
         case 0:
             logger(LOG_STATUS, "Successfully started Winsock.");
+            me.uplink.winsock = true;
         case WSASYSNOTREADY:
             sigyn_fatal("Cannot start winsock: Underlying network is not ready for communication.");
         case WSAVERNOTSUPPORTED:
