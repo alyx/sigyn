@@ -18,12 +18,11 @@ int raw(char *line, ...) {
     vsnprintf(sendbuf, 509, line, args);
     va_end(args);
 
-    strlcpy(sendbuf, "\r\n");
+    strlcpy(sendbuf, "\r\n", 2);
 
-    int sent = send(socket, sendbuf, strlen(sendbuf), 0);
+    int sent = send(me.uplink.sock, sendbuf, strlen(sendbuf), 0);
     me.stats.outB += sent;
-    char *logout = snprintf("<< %s", sendbuf);
-    log(LOG_RAW, logout);
+    logger(LOG_RAW, "<< %s", sendbuf);
     return sent;
 }
 
