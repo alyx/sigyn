@@ -24,6 +24,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "config.h"
+
 #ifndef HAVE_STRLCAT
 /* These functions are taken from Linux. */
 size_t strlcat(char *dest, const char *src, size_t count)

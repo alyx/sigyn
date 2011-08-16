@@ -19,7 +19,7 @@ option()
 
 configure()
 {
-    mk_config_header "include/sysinfo.h"
+    mk_config_header "include/config.h"
 
     #mk_check_headers stdio.h stdlib.h string.h moocows.h
     mk_check_libraries mowgli

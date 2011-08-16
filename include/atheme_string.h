@@ -10,6 +10,7 @@
 #define __CLAROSTRING
 
 #include <sys/types.h>
+#include "config.h"
 
 #ifndef HAVE_STRLCAT
     size_t strlcat(char *dest, const char *src, size_t count);

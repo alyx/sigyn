@@ -8,11 +8,12 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include "config.h"
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
 
+#include "sigyn_config.h"
+#include "config.h"
 /*
  * define various log levels;
  * this is only for making calls to logger() look prettier.
@@ -22,7 +23,8 @@ enum log_levels {
     LOG_DEBUG,
     LOG_WARNING,
     LOG_STATUS,
-    LOG_GENERAL
+    LOG_GENERAL,
+    LOG_FATAL
 };
 
 FILE *logfile;
