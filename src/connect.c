@@ -13,7 +13,6 @@
 #   include <ws2tcpip.h>
 #endif
 
-
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
@@ -35,6 +34,19 @@
     WSADATA wsaData;
 #endif
 
+/*
+ * Routine Description: 
+ * This routine connect to the IRC server and initialises the IRC registration phase.
+ *
+ * Arguments:
+ *     uplink - A string containing the hostname of the server to connect to.
+ *     port   - The port to connect to, this defaults to 6667.
+ *
+ *  Return value:
+ *      None.
+ *
+ */
+
 void uplink_connect(char *uplink, int port)
 {
     char hostname[256];
@@ -47,6 +59,9 @@ void uplink_connect(char *uplink, int port)
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
+
+    if (port == 0)
+        port = 6667;
 
 #ifdef _WIN32
     int wsres = WSAStartup(MAKEWORD(2,2), &wsaData);
