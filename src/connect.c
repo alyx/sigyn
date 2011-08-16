@@ -6,6 +6,30 @@
  */
 
 #include "sigyn.h"
+#include "platform.h"
+
+#ifdef _WIN32
+#   include <winsock2.h>
+#   include <ws2tcpip.h>
+#endif
+
+
+#include <string.h>
+#include <stdio.h>
+#include <errno.h>
+
+#ifndef _WIN32
+#   include <sys/types.h>
+#   include <sys/socket.h>
+#   include <netdb.h>
+#   include <arpa/inet.h>
+#   include <unistd.h>
+#   define close_portable close
+#else
+#   define snprintf sprintf_s
+#   define close_portable closesocket
+#endif
+
 
 #ifdef _WIN32
     WSADATA wsaData;
@@ -15,8 +39,11 @@ void uplink_connect(char *uplink, int port)
 {
     char hostname[256];
     sigyn_hostname(hostname, 255);
-    struct addrinfo *res, hints;
-//    hints = { 0; };
+    struct addrinfo *res = NULL,
+                    *ptr = NULL,
+                    hints;
+    
+    memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
@@ -41,25 +68,13 @@ void uplink_connect(char *uplink, int port)
 #endif
 
     int result;
-    result = getaddrinfo( uplink, (char*)port, &hints, &res);
-    switch(result)
-    {
-        case 0:
-            logger(LOG_STATUS, "Hostname resolution successful");
-        case EAI_AGAIN:
-            sigyn_fatal("Cannot resolve hostname: The name server returned a temporary failure indication. Try again later.");
-        case EAI_FAIL:
-            sigyn_fatal("Cannot resolve hostname: The name server returned a permanent failure indication.");
-        case EAI_MEMORY:
-            sigyn_fatal("Cannot resolve hostname: Out of memory.");
-        case EAI_SYSTEM:
-            sigyn_fatal("Cannot resolve hostname: System returned error: %i", ERRNO);
-        default:
-            sigyn_fatal("Cannot resolve hostname: Unknown error %d", result);
-    }
+    result = getaddrinfo(uplink, (char*)port, &hints, &res);
+    if (result != 0)
+        sigyn_fatal("Cannot resolve hostname (%s): %s", uplink, gai_strerror(result));
 
     logger(LOG_STATUS, "Attempting to connect to %s:%d", uplink, port);
-    me.uplink.sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    ptr = res;
+    me.uplink.sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 
     if( connect(me.uplink.sock, res->ai_addr, res->ai_addrlen) != -1)
         logger(LOG_STATUS, "Connection to %s:%d successful", uplink, port);
@@ -68,6 +83,8 @@ void uplink_connect(char *uplink, int port)
         logger(LOG_STATUS, "Connection to %s:%d failed: %i", uplink, port, ERRNO);
         sigyn_fatal("Connection failed");
     }
+
+    freeaddrinfo(res);
 
 #ifdef UPLINK_PASS
         irc_pass(UPLINK_PASS);
