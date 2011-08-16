@@ -321,11 +321,11 @@ void irc_whowas(char *nickname, int count, char *server)
      * Parameters: <nickname> [<count> [<server>]]
      * WHOWAS Trillian 1 *.edu
      */
-    if (count != NULL && server != NULL)
+    if (count != 0 && server != NULL)
         raw("WHOWAS %s %d %s", nickname, count, server);
-    else if (count != NULL && server == NULL)
+    else if (count != 0 && server == NULL)
         raw("WHOWAS %s %d", nickname, count);
-    else if (count == NULL && server != NULL)
+    else if (count == 0 && server != NULL)
         raw("WHOWAS %s %s", nickname, server);
     else
         raw("WHOWAS %s", nickname);
