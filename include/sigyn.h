@@ -21,6 +21,10 @@
 #include "sigyn_config.h"
 
 extern irc_event_t *parse(char *text);
-extern void uplink_connect(char *uplink, int port);
+extern void sigyn_fatal(char *format, ...);
+extern int StartWSA(void);
 extern int sigyn_hostname(char *host, int len);
+extern void uplink_connect(char *uplink, int port);
+extern void uplink_disconnect(void);
+
 #endif

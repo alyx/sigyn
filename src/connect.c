@@ -36,6 +36,67 @@
 
 /*
  * Routine Description:
+ * This routine provides a simple function for initialising Winsock.
+ *
+ * Arguments:
+ *     None
+ *
+ * Return value:
+ *     wsres - 0 for "Everything worked", otherwise whatever value is returned by WSAStartup().
+ */
+
+int StartWSA(void)
+{
+#ifdef _WIN32
+    if(me.uplink.winsock == true)
+        return 0;
+    int wsres = WSAStartup(MAKEWORD(2,2), &wsaData);
+    switch(wsres)
+    {
+        case 0:
+            logger(LOG_STATUS, "Successfully started Winsock.");
+            me.uplink.winsock = true;
+        case WSASYSNOTREADY:
+            sigyn_fatal("Cannot start winsock: Underlying network is not ready for communication.");
+        case WSAVERNOTSUPPORTED:
+            /* Note: This should never happen. */
+            sigyn_fatal("Cannot start winsock: This version of winsock is not supported by this winsock implementation.");
+        case WSAEPROCLIM:
+            sigyn_fatal("Cannot start winsock: Winsock task limit reached.")
+        default:
+            sigyn_fatal("Cannot start winsock: Unknown errno %d", wsres);
+    }
+    return wsres;
+#else
+    return 0;
+#endif
+}
+
+/*
+ * Routine Description:
+ * This routine provides an operating-system agnostic method of discovering
+ * the hostname of the system.
+ *
+ * Arguments:
+ *     host - A pointer to a string filled with the hostname by gethostname().
+ *     len  - The maximum length we allow the hostname to be.
+ *
+ * Return value:
+ *     res - sigyn_hostname() forwards the return value of gethostname().
+ *           This is 0 for success, and -1 for failure.
+ *
+ */
+
+int sigyn_hostname(char *host, int len)
+{
+    int res;
+    StartWSA();
+    res = gethostname(host, len);
+    return res;
+}
+
+/*
+ * Routine Description:
  * This routine connect to the IRC server and initialises the IRC registration phase.
  *
  * Arguments:
@@ -63,24 +124,7 @@ void uplink_connect(char *uplink, int port)
     if (port == 0)
         port = 6667;
 
-#ifdef _WIN32
-    int wsres = WSAStartup(MAKEWORD(2,2), &wsaData);
-    switch(wsres)
-    {
-        case 0:
-            logger(LOG_STATUS, "Successfully started Winsock.");
-            me.uplink.winsock = true;
-        case WSASYSNOTREADY:
-            sigyn_fatal("Cannot start winsock: Underlying network is not ready for communication.");
-        case WSAVERNOTSUPPORTED:
-            /* Note: This should never happen. */
-            sigyn_fatal("Cannot start winsock: This version of winsock is not supported by this winsock implementation.");
-        case WSAEPROCLIM:
-            sigyn_fatal("Cannot start winsock: Winsock task limit reached.")
-        default:
-            sigyn_fatal("Cannot start winsock: Unknown errno %d", wsres);
-    }
-#endif
+    StartWSA();
 
     int result;
     result = getaddrinfo(uplink, (char*)port, &hints, &res);

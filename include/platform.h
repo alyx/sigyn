@@ -14,6 +14,5 @@
 #   define ERRNO errno
 #endif
 
-extern void sigyn_fatal(char *format, ...);
 
 #endif // __SIGYN_PLATFORM_H
