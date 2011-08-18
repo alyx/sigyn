@@ -15,6 +15,21 @@
     extern int gethostname (char *__name, size_t __len) __THROW __nonnull ((1));
 #endif
 
+/*
+ * Routine Description:
+ * This routine provides an operating-system agnostic method of discovering
+ * the hostname of the system.
+ *
+ * Arguments:
+ *     host - A pointer to a string filled with the hostname by gethostname().
+ *     len  - The maximum length we allow the hostname to be.
+ *
+ * Return value:
+ *     res - sigyn_hostname() forwards the return value of gethostname().
+ *           This is 0 for success, and -1 for failure.
+ *
+ */
+
 int sigyn_hostname(char *host, int len)
 {
     int res;

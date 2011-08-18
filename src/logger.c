@@ -7,7 +7,17 @@
 
 #include "logger.h"
 
-FILE *logfile;
+/*
+ * Routine Description:
+ * This routine initialises the logger by opening the specified file
+ * and setting it as Sigyn's logfile.
+ *
+ * Arguments:
+ *     filename - A string containing the path of the log file.
+ *
+ * Return value:
+ *     None
+ */
 
 void logger_init(const char *filename)
 {
@@ -18,11 +28,37 @@ void logger_init(const char *filename)
     }
 }
 
+/*
+ * Routine Description:
+ * This routine deinitialises the logger by closing the log file.
+ *
+ * Arguments:
+ *     None
+ *
+ * Return value:
+ *     None
+ */
+
 void logger_deinit(void)
 {
     if (logfile != NULL)
         fclose(logfile);
 }
+
+/*
+ * Routine Description:
+ * This routine provides a method for logging various details to a file.
+ *
+ * Arguments:
+ *     level  - An integer specifying the level to log the message to (See
+ *              the log_levels enum in logger.h for the log levels).
+ *     format - A string containing the format for the log message.
+ *     ...    - An undefined amount of other arguments to be inserted
+ *              into the format string.
+ *
+ * Return value:
+ *     None
+ */
 
 void logger(int level, char *format, ...)
 {

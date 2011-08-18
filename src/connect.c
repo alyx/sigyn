@@ -35,15 +35,15 @@
 #endif
 
 /*
- * Routine Description: 
+ * Routine Description:
  * This routine connect to the IRC server and initialises the IRC registration phase.
  *
  * Arguments:
  *     uplink - A string containing the hostname of the server to connect to.
  *     port   - The port to connect to, this defaults to 6667.
  *
- *  Return value:
- *      None.
+ * Return value:
+ *     None.
  *
  */
 
@@ -54,7 +54,7 @@ void uplink_connect(char *uplink, int port)
     struct addrinfo *res = NULL,
                     *ptr = NULL,
                     hints;
-    
+
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
@@ -106,4 +106,20 @@ void uplink_connect(char *uplink, int port)
 #endif
     irc_nick(me.client->nick);
     irc_user(me.client->nick, hostname, me.uplink.hostname, me.client->gecos);
+}
+
+/*
+ * Routine Description:
+ * This routine disconnects from the IRC server.
+ *
+ * Arguments:
+ *     None.
+ *
+ * Return value:
+ *     None.
+ */
+void uplink_disconnect(void)
+{
+    if(me.uplink.connected == true)
+        close_portable(me.uplink.sock);
 }

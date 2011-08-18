@@ -5,6 +5,25 @@
 
 #include "sigyn.h"
 
+/*
+ * Routine Description:
+ * This routine sets up the data inside the me struct, used continuously
+ * throughout Sigyn's runtime.
+ *
+ * Arguments:
+ *     nick   - A string containing the nickname Sigyn should use
+ *              to connect with (Sent in the first NICK command).
+ *     ident  - A string containing the username Sigyn should use
+ *              (Sent in USER).
+ *     gecos  - A string containing the "real name" Sigyn should use
+ *              (Sent in USER).
+ *     uplink - A string containing the hostname Sigyn should connect to.
+ *     port   - An integer specifying the port number of the IRC server.
+ *
+ * Return value:
+ *    None.
+ */
+
 void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int port)
 {
     me.stats.start = time(NULL);
@@ -15,9 +34,62 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int po
     me.client->gecos = gecos;
     me.uplink.port = port;
     me.uplink.hostname = uplink;
+    me.uplink.connected = false;
 #ifdef _WIN32
     me.uplink.winsock = false;
 #endif
+}
+
+/*
+ * Routine Description:
+ * This routine provides a method for shutdown-time cleaning of opened files,
+ * sockets, et cetera.
+ *
+ * Arguments:
+ *     None
+ *
+ * Return value:
+ *     None
+ */
+
+void sigyn_cleanup(void)
+{
+    logger(LOG_STATUS, "Running cleanup.");
+    uplink_disconnect();
+#ifdef _WIN32
+    if(me.uplink.winsock == true)
+    {
+        WSACleanup();
+        logger(LOG_STATUS, "Shut down winsock.");
+    }
+#endif
+    logger_deinit();
+}
+
+/*
+ * Routine Description:
+ * This routine provides a method for handling fatal errors
+ * caused by other routines.
+ *
+ * Arguments:
+ *     format - A string containing the format for the log message.
+ *     ...    - An undefined amount of other arguments to be inserted
+ *              into the format string.
+ *
+ * Return value:
+ *     None
+ */
+
+void sigyn_fatal(char *format, ...)
+{
+    char buf[BUFSIZE];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(buf, BUFSIZE, format, args);
+    va_end(args);
+    logger(LOG_FATAL, buf);
+    sigyn_cleanup();
+    exit(1);
 }
 
 int main(int argc, char *argv[])
