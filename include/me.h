@@ -7,6 +7,7 @@
 #define __SIGYN_ME_H
 
 #include <time.h>
+#include <stdbool.h>
 
 #include "irc.h"
 
@@ -14,6 +15,7 @@ struct me {
     irc_user_t *client;
     char **channels;
     struct uplink {
+        bool connected;
 #ifdef _WIN32
         bool winsock;
         SOCKET sock;
