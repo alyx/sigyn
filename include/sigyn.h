@@ -26,11 +26,12 @@
 #   include <arpa/inet.h>
 //#   include <unistd.h>
 #   define close_portable close
-#   define ERRNO WSAGetLastError()
+#   define ERRNO errno
 #else
 #   define snprintf sprintf_s
 #   define close_portable closesocket
-#   define ERRNO errno
+#   define ERRNO WSAGetLastError()
+#   define errno GetLastError()
 #endif
 
 #include <libmowgli/mowgli.h>
