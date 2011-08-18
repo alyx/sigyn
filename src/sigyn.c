@@ -104,10 +104,8 @@ int main(int argc, char *argv[])
     {
         /*fread(text, 1, 512, me.uplink.sock);*/
         //XXX: Redo how we get the contents, probably do some shiny select() wrapper.
-        printf("YAY IT DOESN'T CRASH!\n");
-        abort();
-        event = parse(text);
+        //event = parse(text);
     }
-    close_socket(me.uplink.sock);
+    uplink_disconnect();
     return 0;
 }

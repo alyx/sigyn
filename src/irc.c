@@ -3,12 +3,7 @@
  * Released under the BSD license.
  */
 
-#include <stdarg.h>
-#include <stdio.h>
-
-#include "atheme_string.h"
-#include "logger.h"
-#include "me.h"
+#include <sigyn.h>
 
 int raw(char *line, ...) {
     char sendbuf[510];
@@ -18,10 +13,11 @@ int raw(char *line, ...) {
     vsnprintf(sendbuf, 509, line, args);
     va_end(args);
 
-    strlcpy(sendbuf, "\r\n", 2);
+    strlcat(sendbuf, "\r\n", 2);
 
     int sent = send(me.uplink.sock, sendbuf, strlen(sendbuf), 0);
     me.stats.outB += sent;
+    strip(sendbuf);
     logger(LOG_RAW, "<< %s", sendbuf);
     return sent;
 }

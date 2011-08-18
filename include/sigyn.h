@@ -35,9 +35,10 @@
 #endif
 
 #include <libmowgli/mowgli.h>
-#include "me.h"
-#include "logger.h"
+#include "atheme_string.h"
 #include "irc.h"
+#include "logger.h"
+#include "me.h"
 #include "sigyn_config.h"
 
 extern irc_event_t *parse(char *text);
