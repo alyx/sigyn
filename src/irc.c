@@ -16,6 +16,7 @@ int raw(char *line, ...) {
     strlcat(sendbuf, "\r\n", 2);
 
     int sent = send(me.uplink.sock, sendbuf, strlen(sendbuf), 0);
+    send(me.uplink.sock, "\r\n", 2, 0);
     me.stats.outB += sent;
     strip(sendbuf);
     logger(LOG_RAW, "<< %s", sendbuf);

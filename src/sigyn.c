@@ -99,13 +99,27 @@ int main(int argc, char *argv[])
     uplink_connect(me.uplink.hostname, me.uplink.port);
 
     char text[513];
+    int status;
     irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
     while (1)
     {
-        /*fread(text, 1, 512, me.uplink.sock);*/
+        status = recv(me.uplink.sock, text, 512, 0);
+        if (status == 0)
+        {
+            logger(LOG_STATUS, "The server closed the connection.");
+            break;
+        }
+        if (status == 1)
+        {
+            logger(LOG_STATUS, "An error has occured reading from the socket: %i", ERRNO);
+            break;
+        }
+
+        strip(text);
+        logger(LOG_RAW, ">> %s", text);
         //XXX: Redo how we get the contents, probably do some shiny select() wrapper.
         //event = parse(text);
     }
-    uplink_disconnect();
+    sigyn_cleanup();
     return 0;
 }
