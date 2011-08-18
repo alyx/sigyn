@@ -6,29 +6,6 @@
  */
 
 #include "sigyn.h"
-#include "platform.h"
-
-#ifdef _WIN32
-#   include <winsock2.h>
-#   include <ws2tcpip.h>
-#endif
-
-#include <string.h>
-#include <stdio.h>
-#include <errno.h>
-
-#ifndef _WIN32
-#   include <sys/types.h>
-#   include <sys/socket.h>
-#   include <netdb.h>
-#   include <arpa/inet.h>
-#   include <unistd.h>
-#   define close_portable close
-#else
-#   define snprintf sprintf_s
-#   define close_portable closesocket
-#endif
-
 
 #ifdef _WIN32
     WSADATA wsaData;
@@ -123,11 +100,13 @@ void uplink_connect(char *uplink, int port)
 
     if (port == 0)
         port = 6667;
+    char portStr[sizeof(port) + 1];
+    sprintf(portStr, "%d", port);
 
     StartWSA();
 
     int result;
-    result = getaddrinfo(uplink, (char*)port, &hints, &res);
+    result = getaddrinfo(uplink, portStr, &hints, &res);
     if (result != 0)
         sigyn_fatal("Cannot resolve hostname (%s): %s", uplink, gai_strerror(result));
 

@@ -26,6 +26,7 @@
 
 void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int port)
 {
+    me.client = mowgli_alloc(sizeof(irc_user_t));
     me.stats.start = time(NULL);
     me.stats.inB = 0;
     me.stats.outB = 0;
@@ -103,6 +104,8 @@ int main(int argc, char *argv[])
     {
         /*fread(text, 1, 512, me.uplink.sock);*/
         //XXX: Redo how we get the contents, probably do some shiny select() wrapper.
+        printf("YAY IT DOESN'T CRASH!\n");
+        abort();
         event = parse(text);
     }
     close_socket(me.uplink.sock);

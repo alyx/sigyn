@@ -5,6 +5,12 @@
 #ifndef __SIGYN_H
 #define __SIGYN_H
 
+#ifdef _WIN32
+#   include <winsock2.h>
+#   include <ws2tcpip.h>
+#endif
+
+#include <errno.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -13,9 +19,22 @@
 #include <time.h>
 #include <unistd.h>
 
+#ifndef _WIN32
+//#   include <sys/types.h>
+#   include <sys/socket.h>
+#   include <netdb.h>
+#   include <arpa/inet.h>
+//#   include <unistd.h>
+#   define close_portable close
+#   define ERRNO WSAGetLastError()
+#else
+#   define snprintf sprintf_s
+#   define close_portable closesocket
+#   define ERRNO errno
+#endif
+
 #include <libmowgli/mowgli.h>
 #include "me.h"
-#include "platform.h"
 #include "logger.h"
 #include "irc.h"
 #include "sigyn_config.h"
