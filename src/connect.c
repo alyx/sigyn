@@ -19,7 +19,8 @@
  *     None
  *
  * Return value:
- *     wsres - 0 for "Everything worked", otherwise whatever value is returned by WSAStartup().
+ *     wsres - 0 for "Everything worked", otherwise whatever value is
+ *     returned by WSAStartup().
  */
 
 int StartWSA(void)
