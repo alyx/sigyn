@@ -4,13 +4,10 @@
  */
 
 #include "sigyn.h"
-#include "logger.h"
-/*#include <libmowgli/mowgli.h>*/
 
 irc_user_t *parse_user(char *hostmask)
 {
-    /*irc_user_t *user = mowgli_alloc(sizeof(irc_user_t));*/
-    irc_user_t *user = malloc(sizeof(irc_user_t));
+    irc_user_t *user = mowgli_alloc(sizeof(irc_user_t));
     char *ptr;
 
     if((ptr = strchr(hostmask, '!')) != NULL)
@@ -30,6 +27,17 @@ irc_user_t *parse_user(char *hostmask)
 
     return user;
 }
+
+#if 0 //Until this code actually works.
+irc_user_t *parse_user(char *hostmask)
+{
+    irc_user_t *user = mowgli_alloc(sizeof(irc_user_t));
+    char *user, *ptr, *cmd, *data = NULL;
+    if((text == '\n') || (text == '\r') || (text == '\0'))
+        return;
+    strip(hostmask);
+}
+#endif
 
 irc_event_t *parse(char *text)
 {
