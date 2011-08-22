@@ -28,17 +28,51 @@ irc_user_t *parse_user(char *hostmask)
     return user;
 }
 
-#if 0 //Until this code actually works.
-irc_user_t *parse_user(char *hostmask)
+irc_event_t *parse(char line[])
 {
-    irc_user_t *user = mowgli_alloc(sizeof(irc_user_t));
-    char *user, *ptr, *cmd, *data = NULL;
-    if((text == '\n') || (text == '\r') || (text == '\0'))
-        return;
-    strip(hostmask);
-}
-#endif
+    char *token;
+    irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
 
+    strip(line);
+
+    token = strtok(line, " ");
+    if((strncmp(token, ":", 1)) == 0)
+    {
+       event->origin = token + 1;
+    }
+    else
+    {
+        event->command = token;
+    }
+    
+    if(token != NULL)
+    {
+        if(event->command != NULL)
+        {
+            token = strtok(NULL, "\0");
+            event->data = token;
+        }
+        else
+        {
+            token = strtok(NULL, " ");
+            event->command = token;
+        }
+    }
+    
+    if(token != NULL)
+    {
+        if (event->data != NULL)
+            return event;
+
+        token = strtok(NULL, "\0");
+        event->data = token;
+    }
+
+    return event;
+}
+
+
+#if 0
 irc_event_t *parse(char *text)
 {
     /*irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));*/
@@ -94,4 +128,4 @@ irc_event_t *parse(char *text)
     }
     return NULL;
 }
-
+#endif

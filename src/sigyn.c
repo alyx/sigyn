@@ -118,7 +118,10 @@ int main(int argc, char *argv[])
         strip(text);
         logger(LOG_RAW, ">> %s", text);
         //XXX: Redo how we get the contents, probably do some shiny select() wrapper.
-        //event = parse(text);
+        fprintf(stderr, "Raw: %s\n", text);
+        event = parse(text);
+        fprintf(stderr, "Origin: %s\nCmd: %s\nData: %s\n", event->origin, event->command, event->data);
+        fprintf(stderr, "\n\n");
     }
     sigyn_cleanup();
     return 0;

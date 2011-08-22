@@ -34,10 +34,11 @@ typedef struct
 
 typedef struct
 {
-    irc_user_t *origin;
+    //irc_user_t *origin;
+    char *origin;
     char *command;
     char *target;
-    char *message;
+    char *data;
 } irc_event_t;
 
 extern int raw(char *line, ...);
