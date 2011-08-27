@@ -115,11 +115,11 @@ void uplink_connect(char *uplink, int port)
     ptr = res;
     me.uplink.sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 
-#ifdef _WIN32
+/*#ifdef _WIN32
     ioctlsocket(me.uplink.sock, FIONBIO, 1);
 #else
     fcntl(me.uplink.sock, F_SETFL, O_NONBLOCK);
-#endif
+#endif*/
 
     connect(me.uplink.sock, res->ai_addr, res->ai_addrlen);
 
