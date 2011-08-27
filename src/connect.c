@@ -115,21 +115,16 @@ void uplink_connect(char *uplink, int port)
     ptr = res;
     me.uplink.sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 
-    if( connect(me.uplink.sock, res->ai_addr, res->ai_addrlen) != -1)
-        logger(LOG_STATUS, "Connection to %s:%d successful", uplink, port);
-    else
-    {
-        logger(LOG_STATUS, "Connection to %s:%d failed: %i", uplink, port, ERRNO);
-        sigyn_fatal("Connection failed");
-    }
+#ifdef _WIN32
+    ioctlsocket(me.uplink.sock, FIONBIO, 1);
+#else
+    fcntl(me.uplink.sock, F_SETFL, O_NONBLOCK);
+#endif
+
+    connect(me.uplink.sock, res->ai_addr, res->ai_addrlen);
 
     freeaddrinfo(res);
 
-#ifdef UPLINK_PASS
-        irc_pass(UPLINK_PASS);
-#endif
-    irc_nick(me.client->nick);
-    irc_user(me.client->nick, hostname, me.uplink.hostname, me.client->gecos);
 }
 
 /*

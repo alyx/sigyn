@@ -95,8 +95,14 @@ void sigyn_fatal(char *format, ...)
 
 int main(int argc, char *argv[])
 {
+    char hostname[256];
+    sigyn_hostname(hostname, 255);
+
     initialise_sigyn(SIGYN_NICK, SIGYN_NICK, SIGYN_REALNAME, UPLINK_SERVER, UPLINK_PORT);
     uplink_connect(me.uplink.hostname, me.uplink.port);
+
+    irc_nick(me.client->nick);
+    irc_user(me.client->nick, hostname, me.uplink.hostname, me.client->gecos);
 
     char text[513];
     int status;

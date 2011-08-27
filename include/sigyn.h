@@ -20,11 +20,10 @@
 #include <unistd.h>
 
 #ifndef _WIN32
-//#   include <sys/types.h>
 #   include <sys/socket.h>
 #   include <netdb.h>
 #   include <arpa/inet.h>
-//#   include <unistd.h>
+#   include <fcntl.h>
 #   define close_portable close
 #   define ERRNO errno
 #else
