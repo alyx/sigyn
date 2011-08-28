@@ -20,4 +20,6 @@
 #define LOGFILE "sigyn.log" // File Sigyn should log to. Undef this if you do not want a log file.
 #define LOG_LEVEL 0
 
+#define CHANNEL "#dev"
+
 #endif

@@ -124,10 +124,16 @@ int main(int argc, char *argv[])
         strip(text);
         logger(LOG_RAW, ">> %s", text);
         //XXX: Redo how we get the contents, probably do some shiny select() wrapper.
-        fprintf(stderr, "Raw: %s\n", text);
         event = parse(text);
-        fprintf(stderr, "Origin: %s\nCmd: %s\nData: %s\n", event->origin, event->command, event->data);
-        fprintf(stderr, "\n\n");
+
+        if (event->command != NULL)
+            fprintf(stderr, "Got %s\n", event->command);
+
+        if (strcmp(event->command, "PRIVMSG") == 0)
+            irc_privmsg(CHANNEL, "Hello world!");
+        if (strcmp(event->command, "001") == 0)
+            irc_join(CHANNEL, NULL);
+
     }
     sigyn_cleanup();
     return 0;
