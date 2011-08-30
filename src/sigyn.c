@@ -39,6 +39,7 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int po
 #ifdef _WIN32
     me.uplink.winsock = false;
 #endif
+    mowgli_hook_init();
 }
 
 /*
@@ -128,6 +129,8 @@ int main(int argc, char *argv[])
 
         if (event->command != NULL)
             fprintf(stderr, "Got %s\n", event->command);
+
+        mowgli_hook_call(event->command, event);
 
         if (strcmp(event->command, "PRIVMSG") == 0)
             irc_privmsg(CHANNEL, "Hello world!");
