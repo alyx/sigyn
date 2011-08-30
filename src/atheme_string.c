@@ -70,8 +70,6 @@ void strip(char *line)
                         *c = '\0';
                 if ((c = strchr(line, '\r')))
                         *c = '\0';
-                if ((c = strchr(line, '\1')))
-                        *c = '\0';
         }
 }
 
