@@ -44,7 +44,7 @@ irc_event_t *parse(char line[])
     {
         event->command = token;
     }
-    
+
     if(token != NULL)
     {
         if(event->command != NULL)
@@ -58,7 +58,7 @@ irc_event_t *parse(char line[])
             event->command = token;
         }
     }
-    
+
     if(token != NULL)
     {
         if (event->data != NULL)
@@ -70,62 +70,3 @@ irc_event_t *parse(char line[])
 
     return event;
 }
-
-
-#if 0
-irc_event_t *parse(char *text)
-{
-    /*irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));*/
-    irc_event_t *event = malloc(sizeof(irc_event_t));
-    char *user = NULL, *ptr, *cmd, *data = NULL;
-
-    if (text != NULL)
-    {
-        if (*text == '\n')
-            return NULL;
-        if (*text == '\0')
-            return NULL;
-
-        logger(LOG_RAW, ">> %s", text);
-
-            if (text[0] == ':') {
-                user = &text[1];
-                ptr = strchr(user, ' ');
-                if (ptr == NULL)
-                    return NULL;
-                ptr = '\0';
-                //*ptr++ = '\0';
-                //ptr++;
-                //ptr = '\0';
-                cmd = ++ptr;
-                if ((ptr = strchr(user, ' ')))
-                    //ptr++;
-                    ptr ='\0';
-            } else
-                cmd = text;
-            ptr = strchr(cmd, ' ');
-            if (ptr) {
-                ptr = '\0';
-                //ptr = '\0';
-                data = ptr;
-                if (*data == ':')
-                    data++;
-            }
-
-            if (user != NULL)
-            {
-                irc_user_t *origin = parse_user(user);
-
-                /* If the origin is a server */
-                if (!origin->nick)
-                    origin->nick = origin->host;
-
-                event->origin = origin;
-            }
-
-            event->command = cmd;
-            return event;
-    }
-    return NULL;
-}
-#endif
