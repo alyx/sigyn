@@ -132,11 +132,6 @@ int main(int argc, char *argv[])
 
         mowgli_hook_call(event->command, event);
 
-        if (strcmp(event->command, "PRIVMSG") == 0)
-            irc_privmsg(CHANNEL, "Hello world!");
-        if (strcmp(event->command, "001") == 0)
-            irc_join(CHANNEL, NULL);
-
     }
     sigyn_cleanup();
     return 0;
