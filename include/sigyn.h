@@ -38,6 +38,7 @@
 #include "irc.h"
 #include "logger.h"
 #include "me.h"
+#include "module.h"
 #include "sigyn_config.h"
 
 extern irc_event_t *parse(char *text);
