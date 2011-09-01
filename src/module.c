@@ -44,7 +44,7 @@ static module_t *module_load_internal(const char *pathname, char *errbuf, int er
 
 static mowgli_module_t *linker_open_ext(const char *path, char *errbuf, int errlen)
 {
-	char *buf = smalloc(strlen(path) + 20);
+	char *buf = mowgli_alloc(strlen(path) + 20);
 	void *ret;
 
 	strlcpy(buf, path, strlen(path) + 20);
@@ -77,7 +77,7 @@ void modules_init(void)
 
 	if (!module_heap)
 	{
-		sigyn_fata("modules_init(): block allocator failed.");
+		sigyn_fatal("modules_init(): block allocator failed.");
 	}
 }
 
@@ -105,7 +105,7 @@ module_t *module_load(const char *filespec)
 		pathname = filespec;
 	else
 	{
-		snprintf(pathbuf, BUFSIZE, "%s/%s", MODDIR "/modules", filespec);
+		snprintf(pathbuf, BUFSIZE, "%s/modules/%s", SIGYN_ROOT, filespec);
 		pathname = pathbuf;
 	}
 
@@ -123,7 +123,7 @@ module_t *module_load(const char *filespec)
 		hdata.path = pathname;
 		hdata.module = NULL;
 		hdata.handled = 0;
-		hook_call_module_load(&hdata);
+		/*hook_call_module_load(&hdata);*/
 
 		if (! hdata.module)
 		{
@@ -182,7 +182,7 @@ static module_t *module_load_internal(const char *pathname, char *errbuf, int er
 
 	if (h->abi_ver != SIGYN_MAPI_VER)
 	{
-		snprintf(errbuf, errlen, "module_load(): \2%s\2: MAPI version mismatch (%u != %u), please recompile.", pathname, h->abi_ver, SIGYN_MAPI_VERAPI_VER);
+		snprintf(errbuf, errlen, "module_load(): \2%s\2: MAPI version mismatch (%u != %u), please recompile.", pathname, h->abi_ver, SIGYN_MAPI_VER);
 
 		mowgli_module_close(handle);
 		return NULL;
@@ -303,6 +303,7 @@ void module_load_dir(const char *dirspec)
  * side effects:
  *       qualifying modules are passed to module_load().
  */
+#if 0
 void module_load_dir_match(const char *dirspec, const char *pattern)
 {
 	DIR *module_dir = NULL;
@@ -328,7 +329,7 @@ void module_load_dir_match(const char *dirspec, const char *pattern)
 
 	closedir(module_dir);
 }
-
+#endif
 /*
  * module_unload()
  *

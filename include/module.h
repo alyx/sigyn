@@ -66,7 +66,7 @@ struct module_ {
 #define MAX_CMD_PARC		20
 
 struct module_header_t {
-	unsigned int atheme_mod;
+	unsigned int sigyn_mod;
 	unsigned int abi_ver;
 	unsigned int abi_rev;
 	const char *serial;
@@ -91,23 +91,23 @@ typedef struct {
 
 #define DECLARE_MODULE(name, norestart, modinit, deinit, ver, ven) \
 	module_header_t _header = { \
-		MAPI_ATHEME_MAGIC, MAPI_ATHEME_V4, \
-		CURRENT_ABI_REVISION, "unknown", \
+		SIGYN_MAPI, SIGYN_MAPI_VER, \
+		SIGYN_ABIREV, "unknown", \
 		name, norestart, modinit, deinit, ven, ver \
 	}
 
-E void _modinit(module_t *m);
-E void _moddeinit(module_unload_intent_t intent);
+extern void _modinit(module_t *m);
+extern void _moddeinit(module_unload_intent_t intent);
 
-E void modules_init(void);
-E module_t *module_load(const char *filespec);
-E void module_load_dir(const char *dirspec);
-E void module_load_dir_match(const char *dirspec, const char *pattern);
-E void *module_locate_symbol(const char *modname, const char *sym);
-E void module_unload(module_t *m, module_unload_intent_t intent);
-E module_t *module_find(const char *name);
-E module_t *module_find_published(const char *name);
-E bool module_request(const char *name);
+extern void modules_init(void);
+extern module_t *module_load(const char *filespec);
+extern void module_load_dir(const char *dirspec);
+extern void module_load_dir_match(const char *dirspec, const char *pattern);
+extern void *module_locate_symbol(const char *modname, const char *sym);
+extern void module_unload(module_t *m, module_unload_intent_t intent);
+extern module_t *module_find(const char *name);
+extern module_t *module_find_published(const char *name);
+extern bool module_request(const char *name);
 
 #define MODULE_TRY_REQUEST_DEPENDENCY(self, modname) \
 	if (module_request(modname) == false)				\

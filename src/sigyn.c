@@ -98,6 +98,7 @@ int main(int argc, char *argv[])
 {
     char hostname[256];
     sigyn_hostname(hostname, 255);
+    module_t *m;
 
     initialise_sigyn(SIGYN_NICK, SIGYN_NICK, SIGYN_REALNAME, UPLINK_SERVER, UPLINK_PORT);
     uplink_connect(me.uplink.hostname, me.uplink.port);
@@ -108,6 +109,9 @@ int main(int argc, char *argv[])
     char text[513];
     int status;
     irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
+    m = module_load("/home/alyx/projects/sigyn/build/moo");
+    if (m == NULL)
+        fprintf(stderr, "moo what?\n");
     while (1)
     {
         status = recv(me.uplink.sock, text, 512, 0);
