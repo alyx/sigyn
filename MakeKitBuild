@@ -23,6 +23,7 @@ configure()
 
     #mk_check_headers stdio.h stdlib.h string.h moocows.h
     mk_check_libraries mowgli
+    mk_check_libraries dl
     mk_check_functions \
         HEADERDEPS="string.h" \
         strlcat strlcpy
@@ -41,5 +42,5 @@ make()
         PROGRAM=sigyn \
         SOURCES="src/*.c" \
         INCLUDEDIRS="include" \
-        LIBDEPS="mowgli"
+        LIBDEPS="mowgli dl"
 }
