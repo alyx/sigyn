@@ -42,5 +42,6 @@ make()
         PROGRAM=sigyn \
         SOURCES="src/*.c" \
         INCLUDEDIRS="include" \
-        LIBDEPS="mowgli dl"
+        LIBDEPS="mowgli dl" \
+        LDFLAGS="-export-dynamic"
 }
