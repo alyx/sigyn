@@ -1,5 +1,5 @@
 #CFLAGS=-c -Wall -Wextra -Werror -Iinclude -std=c99 -ggdb3
-CFLAGS=-c -Wall -ggdb3 -Iinclude -Ibuild/object/include -D_MK_HOST
+CFLAGS=-c -Wall -g -Iinclude -Ibuild/object/include -D_MK_HOST
 LDFLAGS=-lmowgli -ldl
 #SOURCES=src/logger.c src/parser.c src/hostname.c tests/parse.c tests/log.c tests/hostname.c tests/test.c
 #SOURCES=src/logger.c src/parser.c tests/parse_self.c
@@ -16,5 +16,7 @@ $(EXE): $(OBJECTS)
 
 .c.o:
 	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) -S $< -o $@.s
+
 clean:
 	rm $(OBJECTS) $(EXE)

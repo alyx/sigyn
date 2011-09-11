@@ -24,7 +24,7 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "config.h"
+#include "sigyn.h"
 
 #ifndef HAVE_STRLCAT
 /* These functions are taken from Linux. */

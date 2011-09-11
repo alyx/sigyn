@@ -24,7 +24,7 @@
  *    None.
  */
 
-void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int port)
+static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int port)
 {
     me.client = mowgli_alloc(sizeof(irc_user_t));
     me.stats.start = time(NULL);
@@ -39,6 +39,8 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int po
 #ifdef _WIN32
     me.uplink.winsock = false;
 #endif
+    mowgli_init();
+
     mowgli_hook_init();
     modules_init();
 }
@@ -110,7 +112,7 @@ int main(int argc, char *argv[])
     char text[513];
     int status;
     irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
-    m = module_load("/home/alyx/projects/sigyn/build/moo");
+    m = module_load("/home/alyx/Projects/sigyn/build/moo");
     if (m == NULL)
         fprintf(stderr, "moo what?\n");
     while (1)

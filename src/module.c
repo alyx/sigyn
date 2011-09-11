@@ -182,7 +182,7 @@ static module_t *module_load_internal(const char *pathname, char *errbuf, int er
 
 	if (h->abi_ver != SIGYN_MAPI_VER)
 	{
-		snprintf(errbuf, errlen, "module_load(): \2%s\2: MAPI version mismatch (%u != %u), please recompile.", pathname, h->abi_ver, SIGYN_MAPI_VER);
+		snprintf(errbuf, errlen, "module_load(): \2%s\2: MAPI version mismatch (%u != %i), please recompile.", pathname, h->abi_ver, SIGYN_MAPI_VER);
 
 		mowgli_module_close(handle);
 		return NULL;
@@ -190,7 +190,7 @@ static module_t *module_load_internal(const char *pathname, char *errbuf, int er
 
 	if (h->abi_rev != SIGYN_ABIREV)
 	{
-		snprintf(errbuf, errlen, "module_load(): \2%s\2: ABI revision mismatch (%u != %u), please recompile.", pathname, h->abi_rev, SIGYN_ABIREV);
+		snprintf(errbuf, errlen, "module_load(): \2%s\2: ABI revision mismatch (%u != %i), please recompile.", pathname, h->abi_rev, SIGYN_ABIREV);
 
 		mowgli_module_close(handle);
 		return NULL;

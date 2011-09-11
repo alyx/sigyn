@@ -5,7 +5,8 @@
 
 #include "sigyn.h"
 
-irc_user_t *parse_user(char *hostmask)
+#if 0
+static irc_user_t *parse_user(char *hostmask)
 {
     irc_user_t *user = mowgli_alloc(sizeof(irc_user_t));
     char *ptr;
@@ -27,6 +28,7 @@ irc_user_t *parse_user(char *hostmask)
 
     return user;
 }
+#endif
 
 irc_event_t *parse(char line[])
 {

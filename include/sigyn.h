@@ -43,6 +43,7 @@
 
 extern irc_event_t *parse(char *text);
 extern void sigyn_fatal(char *format, ...);
+extern void sigyn_cleanup(void);
 extern int StartWSA(void);
 extern int sigyn_hostname(char *host, int len);
 extern void uplink_connect(char *uplink, int port);

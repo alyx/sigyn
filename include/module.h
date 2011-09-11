@@ -9,6 +9,7 @@
 #ifndef SIGYN_MODULE_H
 #define SIGYN_MODULE_H
 
+#include "config.h"
 #include "abirev.h"
 
 typedef enum {
