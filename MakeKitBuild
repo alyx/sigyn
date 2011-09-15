@@ -21,13 +21,12 @@ configure()
 {
     mk_config_header "include/config.h"
 
-    #mk_check_headers stdio.h stdlib.h string.h moocows.h
     mk_check_libraries mowgli
     mk_check_libraries dl
     mk_check_functions \
-        HEADERDEPS="string.h" \
-        strlcat strlcpy
-
+       HEADERDEPS="string.h" \
+       strlcat strlcpy
+       
     mk_msg "compile prefix: $MK_PREFIX"
     mk_msg "buffer size: $BUFSIZE"
 
@@ -43,5 +42,5 @@ make()
         SOURCES="src/*.c" \
         INCLUDEDIRS="include" \
         LIBDEPS="mowgli dl" \
-        LDFLAGS="-export-dynamic"
+        LDFLAGS="-Wl,-export-dynamic"
 }
