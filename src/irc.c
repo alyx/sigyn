@@ -7,6 +7,7 @@
 
 int raw(char *line, ...) {
     char sendbuf[510];
+    int length;
     va_list args;
 
     va_start(args, line);
@@ -14,13 +15,12 @@ int raw(char *line, ...) {
     va_end(args);
 
     strlcat(sendbuf, "\r\n", 2);
+    length = strlen(sendbuf);
 
-    int sent = send(me.uplink.sock, sendbuf, strlen(sendbuf), 0);
-    send(me.uplink.sock, "\r\n", 2, 0);
-    me.stats.outB += sent;
-    strip(sendbuf);
+    sendq_add(me.uplink.sock, sendbuf, length); 
+    strip(sendbuf, "\r\n");
     logger(LOG_RAW, "<< %s", sendbuf);
-    return sent;
+    return length;
 }
 
 static void serv_optional(char *server, char *command)
