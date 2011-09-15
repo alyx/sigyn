@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 #include "irc.h"
+#include "platform.h"
 
 struct me {
     irc_user_t *client;
@@ -17,10 +18,8 @@ struct me {
         bool connected;
 #ifdef _WIN32
         bool winsock;
-        SOCKET sock;
-#else
-        int sock;
 #endif
+		socket_t sock;
         int port;
         char *hostname;
     } uplink;
@@ -29,6 +28,7 @@ struct me {
         int inB;
         int outB;
     } stats;
+    int maxfd;
 } me;
 
 #endif
