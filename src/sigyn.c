@@ -5,6 +5,8 @@
 
 #include "sigyn.h"
 
+fd_set readfds, writefds, nullfds;
+
 /*
  * Routine Description:
  * This routine sets up the data inside the me struct, used continuously
@@ -36,13 +38,15 @@ static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     me.uplink.port = port;
     me.uplink.hostname = uplink;
     me.uplink.connected = false;
+    me.maxfd = 3;
 #ifdef _WIN32
     me.uplink.winsock = false;
 #endif
-    mowgli_init();
 
+    mowgli_init();
     mowgli_hook_init();
     modules_init();
+    queue_init();
 }
 
 /*
@@ -97,49 +101,79 @@ void sigyn_fatal(char *format, ...)
     exit(1);
 }
 
+void io_loop(void)
+{
+    int sr;
+    struct timeval to;
+    static char buffer[BUFSIZE + 1];
+    while (1)
+    {
+        to.tv_usec = 0;
+        to.tv_sec  = 1;
+
+        memset(buffer, '\0', BUFSIZE + 1);
+        FD_ZERO(&readfds);
+        FD_ZERO(&writefds);
+
+        if (((!me.uplink.connected) && (me.uplink.sock != -1)) || (sendq.count != 0))
+        {
+            FD_SET(me.uplink.sock, &writefds);
+            printf("Set socket %d as writable.\n", me.uplink.sock);
+        }
+        else if (me.uplink.sock != -1)
+        {
+            FD_SET(me.uplink.sock, &readfds);
+            printf("No writing needed. Setting %d as readable.\n", me.uplink.sock);
+        }
+
+        if (me.uplink.sock == -1)
+            sigyn_fatal("Socked dead. Dying.");
+
+        if ((sr = select(me.maxfd + 1, &readfds, &writefds, &nullfds, &to)) > 0)
+        {
+            if (FD_ISSET(me.uplink.sock, &writefds))
+            {
+                if (!me.uplink.connected)
+                {
+                    sigyn_introduce_client(me.client->nick);
+                    sendq_dump(me.uplink.sock);
+                    me.uplink.connected = true;
+                }
+                else
+                {
+                    sendq_dump(me.uplink.sock);
+                }
+            }
+
+            if(!(irc_read(me.uplink.sock, buffer)))
+                sigyn_fatal("Lost connection to uplink.");
+
+            preparse(buffer);
+            recvq_dump(me.uplink.sock);
+        }
+        else
+        {
+            if ((sr == -1) && errno != EINTR)
+                sigyn_fatal("Lost connection to server: %s", strerror(errno));
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
-    char hostname[256];
-    sigyn_hostname(hostname, 255);
     module_t *m;
 
     initialise_sigyn(SIGYN_NICK, SIGYN_NICK, SIGYN_REALNAME, UPLINK_SERVER, UPLINK_PORT);
-    uplink_connect(me.uplink.hostname, me.uplink.port);
+    me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, NULL);
+    printf("%d\n", me.uplink.sock);
 
-    irc_nick(me.client->nick);
-    irc_user(me.client->nick, hostname, me.uplink.hostname, me.client->gecos);
-
-    char text[513];
-    int status;
-    irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
     m = module_load("/home/alyx/Projects/sigyn/build/moo");
     if (m == NULL)
         fprintf(stderr, "moo what?\n");
-    while (1)
-    {
-        status = recv(me.uplink.sock, text, 512, 0);
-        if (status == 0)
-        {
-            logger(LOG_STATUS, "The server closed the connection.");
-            break;
-        }
-        if (status == 1)
-        {
-            logger(LOG_STATUS, "An error has occured reading from the socket: %i", ERRNO);
-            break;
-        }
 
-        strip(text);
-        logger(LOG_RAW, ">> %s", text);
-        //XXX: Redo how we get the contents, probably do some shiny select() wrapper.
-        event = parse(text);
+    io_loop();
 
-        if (event->command != NULL)
-            fprintf(stderr, "Got %s\n", event->command);
-
-        mowgli_hook_call(event->command, event);
-
-    }
     sigyn_cleanup();
     return 0;
 }
+
