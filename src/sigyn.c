@@ -101,7 +101,7 @@ void sigyn_fatal(char *format, ...)
     exit(1);
 }
 
-void io_loop(void)
+static void io_loop(void)
 {
     int sr;
     struct timeval to;
