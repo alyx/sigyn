@@ -23,18 +23,6 @@
 
 #include <dlfcn.h>
 
-#if defined(__APPLE__)
-#   define PLATFORM_SUFFIX ".dylib"
-#elif defined(__FreeBSD__) || defined(__unix__) || defined(sun)
-#   define PLATFORM_SUFFIX ".so"
-#elif defined(__hpux)
-#   define PLATFORM_SUFFIX ".sl"
-#elif defined(_MSC_VER)
-#   define PLATFORM_SUFFIX ".dll"
-#else
-#   error Unknown platform - Dynamic library suffix unknown.
-#endif
-
 mowgli_heap_t *module_heap;
 mowgli_list_t modules, modules_inprogress;
 
