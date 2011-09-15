@@ -40,23 +40,27 @@ void preparse(char line[])
         return;
 
     save = strdup(line);
-    
-    if (strchr(save, '\n') == NULL)
-        goto partial;
 
-    while ((token = strtok_r(NULL, "\n", &save)) && (token != NULL))
+    if (strchr(save, '\n') == NULL)
     {
-        recvq_add(me.uplink.sock, token, true);
-        
-        if (strchr(save, '\n') == NULL)
-            break;
-    }
-    
-    partial:
         token = save;
+        strip(token, "\r");
         recvq_add(me.uplink.sock, token, false);
+    }
+    else
+    {
+        while ((token = strtok_r(NULL, "\n", &save)) && (token != NULL))
+        {
+            strip(token, "\r");
+            recvq_add(me.uplink.sock, token, true);
+
+            if (strchr(save, '\n') == NULL)
+                break;
+        }
+    }
+
 }
-    
+
 
 irc_event_t *parse(char line[])
 {
@@ -72,7 +76,7 @@ irc_event_t *parse(char line[])
     token = strtok(string, " ");
     if((strncmp(token, ":", 1)) == 0)
     {
-       event->origin = token + 1;
+        event->origin = token + 1;
     }
     else
     {
