@@ -30,14 +30,46 @@ static irc_user_t *parse_user(char *hostmask)
 }
 #endif
 
+void preparse(char line[])
+{
+    char *token, *save;
+
+    me.stats.inB += strlen(line);
+
+    if ((*line == '\n') || (*line == '\000'))
+        return;
+
+    save = strdup(line);
+    
+    if (strchr(save, '\n') == NULL)
+        goto partial;
+
+    while ((token = strtok_r(NULL, "\n", &save)) && (token != NULL))
+    {
+        recvq_add(me.uplink.sock, token, true);
+        
+        if (strchr(save, '\n') == NULL)
+            break;
+    }
+    
+    partial:
+        token = save;
+        recvq_add(me.uplink.sock, token, false);
+}
+    
+
 irc_event_t *parse(char line[])
 {
+    char *string = strdup(line);
     char *token;
     irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
+    if (string == NULL)
+        return NULL;
 
-    strip(line);
+    strip(string, "\r\n");
+    logger(LOG_RAW, ">> %s", string);
 
-    token = strtok(line, " ");
+    token = strtok(string, " ");
     if((strncmp(token, ":", 1)) == 0)
     {
        event->origin = token + 1;
@@ -70,5 +102,10 @@ irc_event_t *parse(char line[])
         event->data = token;
     }
 
+    if (event != NULL)
+    {
+        printf("\tGot %s\n", event->command);
+        mowgli_hook_call(event->command, event);
+    }
     return event;
 }
