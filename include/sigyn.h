@@ -5,11 +5,6 @@
 #ifndef __SIGYN_H
 #define __SIGYN_H
 
-#ifdef _WIN32
-#   include <winsock2.h>
-#   include <ws2tcpip.h>
-#endif
-
 #include <errno.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -18,35 +13,35 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-
-#ifndef _WIN32
-#   include <sys/socket.h>
-#   include <netdb.h>
-#   include <arpa/inet.h>
-#   include <fcntl.h>
-#   define close_portable close
-#   define ERRNO errno
-#else
-#   define snprintf sprintf_s
-#   define close_portable closesocket
-#   define ERRNO WSAGetLastError()
-#   define errno GetLastError()
-#endif
-
 #include <libmowgli/mowgli.h>
-#include "atheme_string.h"
+
+#define HOSTLEN 64
+#include "platform.h"
 #include "irc.h"
+#include "ircstream.h"
 #include "logger.h"
 #include "me.h"
 #include "module.h"
+#include "queue.h"
 #include "sigyn_config.h"
 
-extern irc_event_t *parse(char *text);
+/* Define functions from string.c */
+
+extern void strip(char *line, char *strippers); 
+#ifndef HAVE_STRLCAT
+extern size_t strlcat(char *dest, const char *src, size_t count);
+#endif
+#ifndef HAVE_STRLCPY
+extern size_t strlcpy(char *dest, const char *src, size_t count);
+#endif
+
+extern irc_event_t *parse(char line[]);
+extern void preparse(char line[]);
 extern void sigyn_fatal(char *format, ...);
-extern void sigyn_cleanup(void);
+void sigyn_cleanup(void);
 extern int StartWSA(void);
 extern int sigyn_hostname(char *host, int len);
-extern void uplink_connect(char *uplink, int port);
+extern socket_t uplink_connect(char *uplink, int port, char *vhost);
 extern void uplink_disconnect(void);
 
 #endif
