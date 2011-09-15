@@ -86,45 +86,104 @@ int sigyn_hostname(char *host, int len)
  *
  */
 
-void uplink_connect(char *uplink, int port)
+socket_t uplink_connect(char *uplink, int port, char *vhost)
 {
-    char hostname[256];
-    sigyn_hostname(hostname, 255);
+	socket_t sock;
+	int error, flags;
+    unsigned int optval;
     struct addrinfo *res = NULL,
-                    *ptr = NULL,
                     hints;
 
     memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
-    if (port == 0)
-        port = 6667;
-    char portStr[sizeof(port) + 1];
-    sprintf(portStr, "%d", port);
-
     StartWSA();
 
-    int result;
-    result = getaddrinfo(uplink, portStr, &hints, &res);
-    if (result != 0)
-        sigyn_fatal("Cannot resolve hostname (%s): %s", uplink, gai_strerror(result));
+    if ((error = getaddrinfo(uplink, NULL, &hints, &res)))
+        sigyn_fatal("Cannot resolve hostname(%s): %s", uplink, gai_strerror(error));
+    if (res->ai_addr == NULL)
+    {
+        freeaddrinfo(res);
+        sigyn_fatal("Cannot resolve hostname (%s).");
+    }
 
     logger(LOG_STATUS, "Attempting to connect to %s:%d", uplink, port);
-    ptr = res;
-    me.uplink.sock = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+    if (!(sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol)))
+    {
+        freeaddrinfo(res);
+        sigyn_fatal("Unable to create socket.");
+    }
 
-/*#ifdef _WIN32
-    ioctlsocket(me.uplink.sock, FIONBIO, 1);
+    if (sock > me.maxfd)
+        me.maxfd = sock;
+
+    if (vhost != NULL)
+    {
+        struct addrinfo *bindres = NULL;
+        
+        if ((error = getaddrinfo(vhost, NULL, &hints, &bindres)))
+        {
+            freeaddrinfo(res);
+            close_portable(sock);
+            sigyn_fatal("Cannot resolve vhost (%s): %s", vhost, gai_strerror(error));
+        }
+        if (bindres->ai_addr == NULL)
+        {
+            freeaddrinfo(res);
+            freeaddrinfo(bindres);
+            sigyn_fatal("Cannot resolve vhost (%s).");
+        }
+
+        optval = 1;
+        setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *)&optval, sizeof(optval));
+
+        if (bind(sock, bindres->ai_addr, bindres->ai_addrlen) < 0)
+        {
+            freeaddrinfo(res);
+            freeaddrinfo(bindres);
+            close_portable(sock);
+            sigyn_fatal("Unable to bind to vhost (%s): %s", vhost, strerror(errno));
+        }
+
+        freeaddrinfo(bindres);
+    }
+
+    logger(LOG_DEBUG, "Setting file descriptor %d as non-blocking.", sock);
+
+#ifdef _WIN32
+    ioctlsocket(sock, FIONBIO, 1);
 #else
-    fcntl(me.uplink.sock, F_SETFL, O_NONBLOCK);
-#endif*/
+    flags = fcntl(sock, F_GETFL, 0);
+    flags |= O_NONBLOCK;
+    fcntl(sock, F_SETFL, flags);
+#endif
 
-    connect(me.uplink.sock, res->ai_addr, res->ai_addrlen);
+    switch(res->ai_family)
+    {
+        case AF_INET:
+            ((struct sockaddr_in *) res->ai_addr)->sin_port = htons(port);
+            break;
+        case AF_INET6:
+            ((struct sockaddr_in6 *) res->ai_addr)->sin6_port = htons(port);
+            break;
+    }
+
+    if ((connect(sock, res->ai_addr, res->ai_addrlen) == -1)
+            && errno != EINPROGRESS && errno != EINTR)
+    {
+        close_portable(sock);
+        freeaddrinfo(res);
+        if (vhost)
+            sigyn_fatal("Failed to connect to %s (Using vhost %s): %s",
+                    uplink, vhost, strerror(errno));
+        else
+            sigyn_fatal("Failed to connect to %s: %s", uplink, strerror(errno));
+    }
 
     freeaddrinfo(res);
 
+    return sock;
 }
 
 /*
