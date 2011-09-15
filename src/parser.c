@@ -52,13 +52,13 @@ void preparse(char line[])
         while ((token = strtok_r(NULL, "\n", &save)) && (token != NULL))
         {
             strip(token, "\r");
+            printf("Token: %s\n", token);
             recvq_add(me.uplink.sock, token, true);
 
             if (strchr(save, '\n') == NULL)
                 break;
         }
     }
-
 }
 
 
@@ -74,6 +74,9 @@ irc_event_t *parse(char line[])
     logger(LOG_RAW, ">> %s", string);
 
     token = strtok(string, " ");
+    if (token == NULL)
+        return NULL;
+
     if((strncmp(token, ":", 1)) == 0)
     {
         event->origin = token + 1;
@@ -99,16 +102,34 @@ irc_event_t *parse(char line[])
 
     if(token != NULL)
     {
-        if (event->data != NULL)
-            return event;
+        token = strtok(NULL, " ");
 
+        if (token != NULL)
+        {
+
+            if ((strncmp(token, ":", 1)) == 0)
+                event->target = token + 1;
+            else
+                event->target = token;
+        }
+    }
+
+    if ((token != NULL) && (!event->data))
+    {
         token = strtok(NULL, "\0");
-        event->data = token;
+        if (token != NULL)
+        {
+            if ((strncmp(token, ":", 1)) == 0)
+                event->data = token + 1;
+            else
+                event->data = token;
+        }
     }
 
     if (event != NULL)
     {
-        printf("\tGot %s\n", event->command);
+        printf("Origin: %s\nCommand: %s\nTarget: %s\nData: %s\n\n", event->origin,
+                event->command, event->target, event->data);
         mowgli_hook_call(event->command, event);
     }
     return event;
