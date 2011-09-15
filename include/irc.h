@@ -34,7 +34,7 @@ typedef struct
 
 typedef struct
 {
-    //irc_user_t *origin;
+    /*irc_user_t *origin;*/
     char *origin;
     char *command;
     char *target;
