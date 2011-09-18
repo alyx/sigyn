@@ -4,16 +4,9 @@
  */
 #ifndef __SIGYN_LOG_H
 #define __SIGYN_LOG_H
-//#pragma once
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
+#include "sigyn.h"
 
-#include "sigyn_config.h"
-#include "config.h"
 /*
  * define various log levels;
  * this is only for making calls to logger() look prettier.
