@@ -28,14 +28,15 @@ typedef struct
     char *host;
     char *gecos;
 
+    bool server;
+
     size_t nchans;
     char **chans;
 } irc_user_t;
 
 typedef struct
 {
-    /*irc_user_t *origin;*/
-    char *origin;
+    irc_user_t *origin;
     char *command;
     char *target;
     char *data;
@@ -63,8 +64,8 @@ extern void irc_connect(char *target, int port, char *remote);
 extern void irc_trace(char *server);
 extern void irc_admin(char *server);
 extern void irc_info(char *server);
-extern void irc_privmsg(char *receiver, char *text);
-extern void irc_notice(char *nickname, char *text);
+extern void irc_privmsg(char *receiver, char *format, ...);
+extern void irc_notice(char *nickname, char *format, ...);
 extern void irc_who(char *name, char *o);
 extern void irc_whois(char *server, char *nickmask);
 extern void irc_whowas(char *nickname, int count, char *server);
