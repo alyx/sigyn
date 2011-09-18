@@ -4,17 +4,7 @@ PROJECT_NAME="sigyn"
 
 defaults()
 {
-    MK_PREFIX=/opt/sigyn
-}
-
-option()
-{
-    mk_option \
-        OPTION="buffer" \
-        VAR="BUFSIZE" \
-        PARAM="bufsize" \
-        DEFAULT=1024 \
-        HELP="Incomming string buffer size"
+    MK_PREFIX="/opt/sigyn"
 }
 
 configure()
@@ -28,19 +18,52 @@ configure()
        strlcat strlcpy
        
     mk_msg "compile prefix: $MK_PREFIX"
-    mk_msg "buffer size: $BUFSIZE"
 
-    mk_export BUFSIZE
-    mk_define BUFSIZE $BUFSIZE
     mk_define SIGYN_ROOT \"$MK_PREFIX\"
 }
 
 make()
 {
+
+    mk_stage \
+        SOURCE="dist/config.example" \
+        DEST="$MK_PREFIX/etc/sigyn.ini"
+
     mk_program \
         PROGRAM=sigyn \
         SOURCES="src/*.c" \
         INCLUDEDIRS="include" \
-        LIBDEPS="mowgli dl" \
+        LIBDEPS="mowgli" \
         LDFLAGS="-Wl,-export-dynamic"
+
+    mk_dlo \
+        DLO="core/ping" \
+        SOURCES="modules/core/ping.c" \
+        INCLUDEDIRS="include" \
+        INSTALLDIR="$MK_PREFIX/modules"
+
+    mk_dlo \
+    DLO="example/dns" \
+    SOURCES="modules/example/dns.c" \
+    INCLUDEDIRS="include" \
+    INSTALLDIR="$MK_PREFIX/modules"
+
+    mk_dlo \
+    DLO="example/hello" \
+    SOURCES="modules/example/hello.c" \
+    INCLUDEDIRS="include" \
+    INSTALLDIR="$MK_PREFIX/modules"
+
+    mk_dlo \
+    DLO="admin/modload" \
+    SOURCES="modules/admin/modload.c" \
+    INCLUDEDIRS="include" \
+    INSTALLDIR="$MK_PREFIX/modules"
+
+    mk_dlo \
+    DLO="admin/raw" \
+    SOURCES="modules/admin/raw.c" \
+    INCLUDEDIRS="include" \
+    INSTALLDIR="$MK_PREFIX/modules"
+
 }
