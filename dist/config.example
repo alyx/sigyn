@@ -1,0 +1,15 @@
+[sigyn]
+nick = sigyn
+realname = Sigyn IRC Bot
+
+[uplink]
+server = irc.thinstack.net
+port = 6667
+
+[logging]
+file = sigyn.log
+level = 0
+
+[channels]
+channel = "#dev"
+

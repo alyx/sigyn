@@ -14,6 +14,7 @@
 
 struct me {
     irc_user_t *client;
+    char *config;
     struct uplink {
         bool connected;
 #ifdef _WIN32
