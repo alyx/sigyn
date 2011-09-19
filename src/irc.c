@@ -268,22 +268,36 @@ void irc_info(char *server)
 
 /* 4.4: Sending messages */
 
-void irc_privmsg(char *receiver, char *text)
+void irc_privmsg(char *receiver, char *format, ...)
 {
     /* 4.4.1: PRIVMSG
      * Parameters: <receiver>{,<receiver>} <text to be sent>
      * Example: PRIVMSG Angel :yes I'm receiving it!
      */
-    raw("PRIVMSG %s :%s", receiver, text);
+
+    char buf[BUFSIZE];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(buf, BUFSIZE, format, args);
+    va_end(args);
+
+    raw("PRIVMSG %s :%s", receiver, buf);
 }
 
-void irc_notice(char *nickname, char *text)
+void irc_notice(char *nickname, char *format, ...)
 {
     /* 4.4.2: NOTICE
      * Parameters: <nickname> <text>
      * Example: NOTICE Angel :Foobar
      */
-    raw("NOTICE %s :%s", nickname, text);
+
+    char buf[BUFSIZE];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(buf, BUFSIZE, format, args);
+    va_end(args);
+
+    raw("NOTICE %s :%s", nickname, buf);
 }
 
 /* 4.5: User based queries */
