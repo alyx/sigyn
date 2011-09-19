@@ -18,4 +18,5 @@ autoload = core/ping
 # Available modules:
 #   - core/ping
 #   - example/dns
+#   - example/hello
 #   - admin/raw

@@ -55,12 +55,6 @@ make()
     INSTALLDIR="$MK_PREFIX/modules"
 
     mk_dlo \
-    DLO="admin/modload" \
-    SOURCES="modules/admin/modload.c" \
-    INCLUDEDIRS="include" \
-    INSTALLDIR="$MK_PREFIX/modules"
-
-    mk_dlo \
     DLO="admin/raw" \
     SOURCES="modules/admin/raw.c" \
     INCLUDEDIRS="include" \
