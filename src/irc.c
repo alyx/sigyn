@@ -47,7 +47,7 @@ int raw(char *line, ...) {
  *     buffer - A chunk of allocated memory stating where to insert the string
  *              read from the socket.
  *
- * Return:
+ * Return value:
  *     n - An integer stating the amount of data read from the socket.
  *
  */
@@ -71,7 +71,7 @@ int read_irc(socket_t sock, char *buffer)
  * Arguments:
  *     nick - A string containing the nickname to use.
  *
- * Return:
+ * Return value:
  *     None
  *
  */

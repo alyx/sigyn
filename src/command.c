@@ -5,6 +5,18 @@ mowgli_list_t commands;
 
 static void handle_privmsg(void *data, void *unused);
 
+/*
+ * Routine Description:
+ * This routine initialises the command memory heap.
+ *
+ * Arguments:
+ *     None
+ *
+ * Return value:
+ *      None
+ *
+ */
+
 void command_init(void)
 {
     command_heap = mowgli_heap_create(sizeof(command_t), 1024, BH_NOW);
@@ -14,6 +26,20 @@ void command_init(void)
 
     mowgli_hook_associate("PRIVMSG", handle_privmsg, NULL);
 }
+
+/*
+ * Routine Description:
+ * This routine searches through the command list to locate
+ * the specified command.
+ *
+ * Arguments:
+ *     name - A string containing the name of the command to seach for.
+ *
+ * Return value:
+ *     c - Returns a command_t object if the command is located,
+ *         and returns NULL if it is not.
+ *
+ */
 
 command_t *command_find(const char *name)
 {
@@ -30,6 +56,21 @@ command_t *command_find(const char *name)
     
     return NULL;
 }
+
+/*
+ * Routine Description:
+ * This routine provides a function to create a command and append it to
+ * the command list.
+ *
+ * Arguments:
+ *     name     - A string containing the name of the command.
+ *     function - A pointer to the function to be called when
+ *                the command is used.
+ * 
+ * Return value:
+ *     None
+ *
+ */
 
 void command_add(const char *name, void *function)
 {
@@ -49,6 +90,19 @@ void command_add(const char *name, void *function)
     mowgli_node_add(c, mowgli_node_create(), &commands);
 }
 
+/*
+ * Routine Description:
+ * This routine provides a function to remove a command from the command list.
+ *
+ * Arguments:
+ *     name     - A string containing the name of the command.
+ *     function - A pointer to the function the command pointed to.
+ *
+ * Return value:
+ *     None
+ *
+ */
+
 void command_del(const char *name, void *function)
 {
     command_t *c;
@@ -64,7 +118,6 @@ void command_del(const char *name, void *function)
         }
     }
 }
-
 
 static void handle_privmsg(void *data, void *unused)
 {
@@ -85,4 +138,3 @@ static void handle_privmsg(void *data, void *unused)
     }
     free(tmp);
 }
-

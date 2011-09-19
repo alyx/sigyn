@@ -5,6 +5,20 @@
 
 #include "sigyn.h"
 
+/*
+ * Routine Description:
+ * This function parses a given hostmask and returns an irc_user_t object
+ * containing the results.
+ *
+ * Arguments:
+ *     hostmask - A string containing the IRC hostmask.
+ *
+ * Return value:
+ *     user - An irc_user_t object containing the data from 
+ *            the parsed hostmask.
+ *            
+ */
+
 irc_user_t *parse_user(char hostmask[])
 {
     char *save, *token, *tmp;
@@ -39,6 +53,18 @@ irc_user_t *parse_user(char hostmask[])
     return user;
 }
 
+/*
+ * Routine Description:
+ * This routine converts a raw string from the server into a format suitable for placing into the recieve queue.
+ *
+ * Arguments:
+ *     line - A string containing the raw IRC line.
+ *
+ * Return value:
+ *     None
+ *
+ */
+
 void preparse(char line[])
 {
     char *token, *save;
@@ -72,6 +98,17 @@ void preparse(char line[])
     }
 }
 
+/*
+ * Routine Description:
+ * This routine parses a raw IRC line into an irc_event_t object.
+ *
+ * Arguments:
+ *     line - A string containing the raw IRC line.
+ *
+ * Return value:
+ *     event - An irc_event_t object containing the parsed string data.
+ *
+ */
 
 irc_event_t *parse(char line[])
 {

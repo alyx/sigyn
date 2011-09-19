@@ -21,6 +21,7 @@
  * Return value:
  *     wsres - 0 for "Everything worked", otherwise whatever value is
  *     returned by WSAStartup().
+ *
  */
 
 int StartWSA(void)
@@ -79,10 +80,11 @@ int sigyn_hostname(char *host, int len)
  *
  * Arguments:
  *     uplink - A string containing the hostname of the server to connect to.
- *     port   - The port to connect to, this defaults to 6667.
+ *     port   - An integer stating the port to connect to.
+ *     vhost  - A string containing the hostname for Sigyn to bind to (Optional).
  *
  * Return value:
- *     None.
+ *     sock - Returns the socket_t object (a SOCKET on Windows, a file descriptor (int) everywhere else).
  *
  */
 
@@ -196,6 +198,7 @@ socket_t uplink_connect(char *uplink, int port, char *vhost)
  * Return value:
  *     None.
  */
+
 void uplink_disconnect(void)
 {
     if(me.uplink.connected == true)
