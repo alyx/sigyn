@@ -53,10 +53,6 @@ configure()
 
 make()
 {
-    mk_stage \
-        SOURCE="libmowgli.pc" \
-        DEST="$MK_PREFIX/pkgconfig/libmowgli.pc"
-
     mk_library \
         LIB=mowgli \
         SOURCES="src/libmowgli/*.c" \

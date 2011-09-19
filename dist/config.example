@@ -1,6 +1,8 @@
 [sigyn]
 nick = sigyn
 realname = Sigyn IRC Bot
+# Fantasy defines the command prefix (!command)
+fantasy = "!" 
 
 [uplink]
 server = irc.thinstack.net

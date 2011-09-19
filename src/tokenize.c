@@ -27,7 +27,6 @@ int tokenize(char *message, char **parv)
 
     if (parv[i] == NULL)
         i--;
-    i--;
 
     return i;
 }

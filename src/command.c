@@ -58,7 +58,7 @@ command_t *command_find(const char *name)
         if (!strcasecmp(c->name, name))
             return c;
     }
-    
+
     return NULL;
 }
 
@@ -86,7 +86,7 @@ void command_add(const char *name, void *function)
         logger(LOG_DEBUG, "Command %s already exists. Aborting command_add().", name);
         return;
     }
-    
+
     c = mowgli_heap_alloc(command_heap);
 
     c->name = strdup(name);
@@ -126,20 +126,31 @@ void command_del(const char *name, void *function)
 
 static void handle_privmsg(void *data, void *unused)
 {
+    int i, len;
     irc_event_t *event;
     command_t *cmd;
     int parc;
-    char *parv[MAXPARC + 1], *tmp;
-    
+    char *parv[MAXPARC + 1], *tmp, *prefix;
+
     event = (irc_event_t *)data;
     tmp = strdup(event->data);
-    if (*tmp == '!')
-    {
-        parc = tokenize(tmp, parv);
+    prefix = config_get_string("sigyn", "fantasy");
+    if (prefix == NULL)
+        return;
 
-        cmd = command_find(parv[0] + 1);
-        if (cmd != NULL)
-            cmd->function(event, parc, parv);
+    len = (strlen(prefix) - 1);
+
+    for (i = 0; i <= len; i++)
+    {
+        if (*tmp == prefix[i])
+        {
+            parc = tokenize(tmp, parv);
+
+            cmd = command_find(parv[0] + 1);
+            if (cmd != NULL)
+                cmd->function(event, parc, parv);
+            break;
+        }
     }
     free(tmp);
 }
