@@ -14,7 +14,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-#include <libmowgli/mowgli.h>
+#include "mowgli.h"
 
 /* Define some limits. */
 #define BUFSIZE 1024

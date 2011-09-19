@@ -6,7 +6,7 @@
 #ifndef __SIGYN_COMMAND_H
 #define __SIGYN_COMMAND_H
 
-#include <libmowgli/mowgli.h>
+#include "mowgli.h"
 
 typedef struct command_ command_t;
 typedef void (*command_function_t)(void *event, int user_argstack_size, char **user_arguments);

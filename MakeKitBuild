@@ -32,32 +32,32 @@ make()
     mk_program \
         PROGRAM=sigyn \
         SOURCES="src/*.c" \
-        INCLUDEDIRS="include" \
+        INCLUDEDIRS="include libmowgli/src/libmowgli" \
         LIBDEPS="mowgli" \
         LDFLAGS="-Wl,-export-dynamic"
 
     mk_dlo \
         DLO="core/ping" \
         SOURCES="modules/core/ping.c" \
-        INCLUDEDIRS="include" \
+        INCLUDEDIRS="include libmowgli/src/libmowgli" \
         INSTALLDIR="$MK_PREFIX/modules"
 
     mk_dlo \
     DLO="example/dns" \
     SOURCES="modules/example/dns.c" \
-    INCLUDEDIRS="include" \
+    INCLUDEDIRS="include libmowgli/src/libmowgli" \
     INSTALLDIR="$MK_PREFIX/modules"
 
     mk_dlo \
     DLO="example/hello" \
     SOURCES="modules/example/hello.c" \
-    INCLUDEDIRS="include" \
+    INCLUDEDIRS="include libmowgli/src/libmowgli" \
     INSTALLDIR="$MK_PREFIX/modules"
 
     mk_dlo \
     DLO="admin/raw" \
     SOURCES="modules/admin/raw.c" \
-    INCLUDEDIRS="include" \
+    INCLUDEDIRS="include libmowgli/src/libmowgli" \
     INSTALLDIR="$MK_PREFIX/modules"
 
 }
