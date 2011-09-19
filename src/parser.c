@@ -5,30 +5,39 @@
 
 #include "sigyn.h"
 
-#if 0
-static irc_user_t *parse_user(char *hostmask)
+irc_user_t *parse_user(char hostmask[])
 {
-    irc_user_t *user = mowgli_alloc(sizeof(irc_user_t));
-    char *ptr;
+    char *save, *token, *tmp;
+    irc_user_t *user;
+    
+    user = mowgli_alloc(sizeof(irc_user_t));
 
-    if((ptr = strchr(hostmask, '!')) != NULL)
+    if (hostmask == NULL)
+        return NULL;
+
+    tmp = strdup(hostmask);
+
+    if (strchr(tmp, '!') != NULL)
     {
-        ptr = '\0';
-        user->nick = hostmask;
-        hostmask = ++ptr;
+        /* Origin is a user. */
+        user->server = false;
+
+        token = strtok_r(tmp, "!", &save);
+        if (token != NULL)
+            user->nick = token;
+        token = strtok_r(NULL, "@", &save);
+        if (token != NULL)
+            user->user = token;
+        user->host = save;
     }
-    if ((ptr = strchr(hostmask, '@')) != NULL)
+    else
     {
-        ptr = '\0';
-        user->user = hostmask;
-        hostmask = ++ptr;
+        /* Origin is a server. */
+        user->nick = tmp;
+        user->server = true;
     }
-
-    user->host = hostmask;
-
     return user;
 }
-#endif
 
 void preparse(char line[])
 {
@@ -43,20 +52,22 @@ void preparse(char line[])
 
     if (strchr(save, '\n') == NULL)
     {
-        token = save;
-        strip(token, "\r");
-        recvq_add(me.uplink.sock, token, false);
+        strip(save, "\r");
+        recvq_add(me.uplink.sock, save, false);
     }
     else
     {
         while ((token = strtok_r(NULL, "\n", &save)) && (token != NULL))
         {
             strip(token, "\r");
-            printf("Token: %s\n", token);
             recvq_add(me.uplink.sock, token, true);
 
             if (strchr(save, '\n') == NULL)
+            {
+                strip(save, "\r");
+                recvq_add(me.uplink.sock, save, false);
                 break;
+            }
         }
     }
 }
@@ -79,7 +90,8 @@ irc_event_t *parse(char line[])
 
     if((strncmp(token, ":", 1)) == 0)
     {
-        event->origin = token + 1;
+        event->origin = mowgli_alloc(sizeof(irc_user_t));
+        event->origin = parse_user(token + 1);
     }
     else
     {
@@ -111,6 +123,9 @@ irc_event_t *parse(char line[])
                 event->target = token + 1;
             else
                 event->target = token;
+
+            if ((strcmp(event->target, me.client->nick)) == 0)
+                event->target = event->origin->nick;
         }
     }
 
@@ -128,8 +143,6 @@ irc_event_t *parse(char line[])
 
     if (event != NULL)
     {
-        printf("Origin: %s\nCommand: %s\nTarget: %s\nData: %s\n\n", event->origin,
-                event->command, event->target, event->data);
         mowgli_hook_call(event->command, event);
     }
     return event;
