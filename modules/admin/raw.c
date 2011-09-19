@@ -20,6 +20,9 @@ static void cmd_raw(irc_event_t *event, int parc, char **parv)
     int i;
     char *buffer;
 
+    if ((strcmp(config_get_string("admin", "nick"), event->origin->nick)) != 0)
+        return;
+
     buffer = mowgli_alloc(BUFSIZE);
 
     for (i = 1; i <= parc; i++)

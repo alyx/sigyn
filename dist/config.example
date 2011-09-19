@@ -22,3 +22,6 @@ autoload = core/ping
 #   - example/dns
 #   - example/hello
 #   - admin/raw
+
+[admin]
+nick = adminuser
