@@ -5,6 +5,21 @@
 
 #include <sigyn.h>
 
+/*
+ * Routine Description:
+ * This routine sends a raw line of IRC data to the socket specified in me.uplink.sock.
+ *
+ * Arguments:
+ *     line - A string containing the (printf-formatted) string to send
+ *            to the IRCd.
+ *     ...  - An undefined amount of additional arguments inserted into 
+ *            the formatted string (line).
+ *
+ * Return value:
+ *     length - An integer stating the length of the send string.
+ *
+ */
+
 int raw(char *line, ...) {
     char sendbuf[510];
     int length;
@@ -21,6 +36,55 @@ int raw(char *line, ...) {
     strip(sendbuf, "\r\n");
     logger(LOG_RAW, "<< %s", sendbuf);
     return length;
+}
+
+/*
+ * Routine Description:
+ * This routine reads from the specified socket into a buffer.
+ *
+ * Arguments:
+ *     sock   - A socket_t object stating the socket to read from.
+ *     buffer - A chunk of allocated memory stating where to insert the string
+ *              read from the socket.
+ *
+ * Return:
+ *     n - An integer stating the amount of data read from the socket.
+ *
+ */
+
+int read_irc(socket_t sock, char *buffer)
+{
+    int n;
+
+    n = read(sock, buffer, BUFSIZE);
+    buffer[n] = '\0';
+
+    me.stats.inB += n;
+    
+    return n;
+}
+
+/*
+ * Routine Description:
+ * This routine introduces the IRC client to the server.
+ *
+ * Arguments:
+ *     nick - A string containing the nickname to use.
+ *
+ * Return:
+ *     None
+ *
+ */
+
+void sigyn_introduce_client(char *nick)
+{
+	/* Generate the system hostname; RFC1459 wants us to send this. */
+	char hostname[256];
+    sigyn_hostname(hostname, 255);
+    
+    /* Introduce ourselves to the server. */
+    irc_nick(nick);
+    irc_user(nick, hostname, me.uplink.hostname, me.client->gecos);
 }
 
 static void serv_optional(char *server, char *command)
