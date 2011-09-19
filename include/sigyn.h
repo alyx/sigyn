@@ -23,7 +23,6 @@
 #include "platform.h"
 #include "command.h"
 #include "irc.h"
-#include "ircstream.h"
 #include "logger.h"
 #include "me.h"
 #include "module.h"

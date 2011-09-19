@@ -43,6 +43,9 @@ typedef struct
 } irc_event_t;
 
 extern int raw(char *line, ...);
+extern int read_irc(socket_t sock, char *buffer);
+extern void sigyn_introduce_client(char *nick);
+
 extern void irc_pass(char *password);
 extern void irc_nick(char *nick);
 extern void irc_user(char *user, char *host, char *server, char *real);

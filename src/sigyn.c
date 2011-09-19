@@ -144,7 +144,7 @@ static void io_loop(void)
                 }
             }
 
-            if(!(irc_read(me.uplink.sock, buffer)))
+            if(!(read_irc(me.uplink.sock, buffer)))
                 sigyn_fatal("Lost connection to uplink.");
 
             preparse(buffer);
