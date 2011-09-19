@@ -1,4 +1,4 @@
-#SUBDIRS="include src"
+SUBDIRS="libmowgli"
 MODULES="core compiler"
 PROJECT_NAME="sigyn"
 
