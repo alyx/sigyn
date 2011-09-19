@@ -1,3 +1,8 @@
+/* Sigyn - A reasonably sane IRC bot.
+ * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
+ * Released under the BSD license.
+ */
+
 #include "sigyn.h"
 
 mowgli_heap_t *recvq_heap;
