@@ -47,6 +47,7 @@ static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     mowgli_hook_init();
     modules_init();
     queue_init();
+    command_init();
 }
 
 /*
@@ -118,12 +119,10 @@ static void io_loop(void)
         if (((!me.uplink.connected) && (me.uplink.sock != -1)) || (sendq.count != 0))
         {
             FD_SET(me.uplink.sock, &writefds);
-            printf("Set socket %d as writable.\n", me.uplink.sock);
         }
         else if (me.uplink.sock != -1)
         {
             FD_SET(me.uplink.sock, &readfds);
-            printf("No writing needed. Setting %d as readable.\n", me.uplink.sock);
         }
 
         if (me.uplink.sock == -1)
@@ -159,18 +158,38 @@ static void io_loop(void)
     }
 }
 
-int main(int argc, char *argv[])
+static void loadmodules(void)
 {
+    char *token, *save;
     module_t *m;
 
-    initialise_sigyn(SIGYN_NICK, SIGYN_NICK, SIGYN_REALNAME, UPLINK_SERVER, UPLINK_PORT);
+    save = config_get_string("modules", "autoload");
+    if (save == NULL)
+        return;
+
+    while ((token = strtok_r(NULL, " ", &save)) && (token != NULL))
+    {
+        m = module_load(token);
+        if (m != NULL)
+            printf("[Modules] Loaded module %s\n", m->name);
+        else
+            printf("[Modules] Failed to load module %s\n", token);
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    char config[BUFSIZE];
+
+    snprintf(config, BUFSIZE, "%s/%s", SIGYN_ROOT, "etc/sigyn.ini");
+
+    me.config = config;
+
+    initialise_sigyn(config_get_string("sigyn", "nick"), config_get_string("sigyn", "nick"), config_get_string("sigyn", "realname"), config_get_string("uplink", "server"),
+            config_get_int("uplink", "port"));
     me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, NULL);
-    printf("%d\n", me.uplink.sock);
 
-    m = module_load("/home/alyx/Projects/sigyn/build/moo");
-    if (m == NULL)
-        fprintf(stderr, "moo what?\n");
-
+    loadmodules();
     io_loop();
 
     sigyn_cleanup();

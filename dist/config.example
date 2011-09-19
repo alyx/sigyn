@@ -13,3 +13,9 @@ level = 0
 [channels]
 channel = "#dev"
 
+[modules]
+autoload = core/ping
+# Available modules:
+#   - core/ping
+#   - example/dns
+#   - admin/raw
