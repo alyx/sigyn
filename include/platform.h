@@ -1,9 +1,6 @@
 /* Sigyn - A reasonably sane IRC bot.
  * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
  * Released under the BSD license.
- * 
- * Abstract: This header defines various platform-specific functions, 
- * 			 variables, et cetera.
  */
 
 #ifndef __SIGYN_PLATFORM_H

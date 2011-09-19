@@ -2,6 +2,7 @@
  * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
  * Released under the BSD license.
  */
+
 #ifndef __SIGYN_IRC_H
 #define __SIGYN_IRC_H
 
@@ -78,4 +79,5 @@ extern void irc_pong(char *daemon);
 extern void irc_away(char *message);
 extern void irc_users(char *server);
 extern void irc_userhost(char *nickname);
-#endif
+
+#endif /* __SIGYN_IRC_H */

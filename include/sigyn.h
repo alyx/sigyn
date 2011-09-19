@@ -2,6 +2,7 @@
  * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
  * Released under the BSD license.
  */
+
 #ifndef __SIGYN_H
 #define __SIGYN_H
 
@@ -30,4 +31,4 @@
 #include "tools.h"
 #include "version.h"
 
-#endif
+#endif /* __SIGYN_H */

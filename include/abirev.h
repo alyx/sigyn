@@ -1,5 +1,10 @@
-#ifndef SIGYN_ABIREV_H
-#define SIGYN_ABIREV_H
+/* Sigyn - A reasonably sane IRC bot.
+ * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
+ * Released under the BSD license.
+ */
+
+#ifndef __SIGYN_ABIREV_H
+#define __SIGYN_ABIREV_H
 
 /*
  * Increment this in case of changes to the module ABI (i.e. changes
@@ -11,4 +16,4 @@
  */
 #define SIGYN_ABIREV 100000
 
-#endif // SIGYN_ABIREV_H
+#endif /* __SIGYN_ABIREV_H */
