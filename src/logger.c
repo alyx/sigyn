@@ -62,11 +62,14 @@ void logger_deinit(void)
 
 void logger(int level, char *format, ...)
 {
+    int i;
     char buf[BUFSIZE], datetime[64];
     time_t t;
     struct tm tm;
 
-    if (level < LOG_LEVEL)
+    i = config_get_int("logging", "level");
+
+    if (level < i)
         return;
 
     va_list args;
