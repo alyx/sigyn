@@ -37,7 +37,6 @@ queue_t *recvq_add(socket_t sock, char *string, bool complete)
             snprintf(tmp, BUFSIZE, "%s%s", tail->string, string);
             tail->string = strdup(tmp);
             tail->completed = complete;
-            printf("Node %d completed (%d): string is %s\n", recvq.count, complete, tail->string);
             return tail;
         }
     }
@@ -53,7 +52,6 @@ queue_t *recvq_add(socket_t sock, char *string, bool complete)
     else
         q->completed = false;
     mowgli_node_add(q, mowgli_node_create(), &recvq);
-    printf("Node %d added (%d): string is %s\n", recvq.count, complete, q->string);
     return q;
 }
 
@@ -68,6 +66,7 @@ void recvq_dump(socket_t sock)
 
         if ((q->sock == sock) && (q->completed == true))
         {
+            printf(">> %s\n", q->string);
             parse(q->string);
             mowgli_node_delete(n, &recvq);
         }
@@ -95,7 +94,7 @@ void sendq_dump(socket_t sock)
         q = (queue_t *)n->data;
         if (q->sock == sock)
         {
-            write(q->sock, q->string, q->len);
+            me.stats.outB += write(q->sock, q->string, q->len);
             mowgli_node_delete(n, &sendq);
         }
     }
