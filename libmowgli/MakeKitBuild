@@ -1,0 +1,68 @@
+MODULES="core compiler"
+PROJECT_NAME="libmowgli"
+
+configure()
+{
+    mk_config_header "src/libmowgli/mowgli_config.h"
+
+    mk_check_headers dirent.h errno.h inttypes.h limits.h locale.h memory.h ndir.h stdio.h stdarg.h stdint.h stdlib.h string.h strings.h sys/dir.h sys/mman.h sys/ndir.h sys/stat.h sys/types.h unistd.h    
+
+    mk_check_functions \
+        HEADERDEPS="sys/time.h" \
+        gettimeofday
+
+    mk_check_functions \
+        HEADERDEPS="string.h" \
+        memset strchr strdup strerror strlcat strlcpy strndup 
+
+    mk_check_functions \
+        HEADERDEPS="sys/mman.h" \
+        mmap
+
+    mk_check_functions \
+        HEADERDEPS="stdio.h" \
+        printf snprintf sprintf
+
+    mk_check_functions \
+        HEADERDEPS="locale.h" \
+        setlocale
+
+    mk_check_functions \
+        HEADERDEPS="port.h" \
+        port_create
+
+    mk_check_functions \
+        HEADERDEPS="strings.h" \
+        strcasecmp 
+
+    mk_check_functions \
+        HEADERDEPS="stdlib.h" \
+        strtod strtol
+
+    mk_check_functions \
+        HEADERDEPS="stdio.h stdarg.h" \
+        vsnprintf
+
+    mk_define PACKAGE_BUGREPORT "bugs+libmowgli@atheme.org"
+    mk_define PACKAGE_NAME "libmowgli"
+    mk_define PACKAGE_STRING "libmowgli 0.9.90"
+    mk_define PACKAGE_TARNAME "libmowgli"
+    mk_define PACKAGE_URL ""
+    mk_define PACKAGE_VERSION "0.9.90" 
+}
+
+make()
+{
+    mk_stage \
+        SOURCE="libmowgli.pc" \
+        DEST="$MK_PREFIX/pkgconfig/libmowgli.pc"
+
+    mk_library \
+        LIB=mowgli \
+        SOURCES="src/libmowgli/*.c" \
+        INCLUDEDIRS="src/libmowgli" \
+        LIBDEPS="dl" \
+        LDFLAGS = "-shared -fPIC -Wl,-soname=libmowgli.so.2" \
+        CPPFLAGS = "-DPIC" \
+        CFLAGS = "-fPIC"
+}
