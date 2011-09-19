@@ -28,7 +28,6 @@
 #include "me.h"
 #include "module.h"
 #include "queue.h"
-#include "sigyn_config.h"
 #include "tools.h"
 #include "version.h"
 
