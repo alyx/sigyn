@@ -92,7 +92,7 @@ void command_add(const char *name, void *function, const char *help, const char 
     c = mowgli_heap_alloc(command_heap);
 
     c->name = strdup(name);
-    c->function = function;
+    c->function = (command_function_t)function;
     c->help = strdup(help);
     c->syntax = strdup(syntax);
 
