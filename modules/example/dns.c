@@ -7,7 +7,7 @@ static void cmd_dns(irc_event_t *event, int parc, char **parv);
 
 void _modinit(module_t *m)
 {
-    command_add("dns", cmd_dns);
+    command_add("dns", cmd_dns, "Resolves the IP address of a domain.", "<domain name>");
 }
 
 void _moddeinit(module_unload_intent_t intent)
@@ -23,7 +23,7 @@ static void cmd_dns(irc_event_t *event, int parc, char **parv)
 
     if (parc < 1)
     {
-        irc_privmsg(event->origin->nick, "Incorrect usage. Try 'dns <hostname to resolve>'.");
+        command_fail(CMD_NEEDSPARAM, event->origin, "dns");
         return;
     }
 

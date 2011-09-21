@@ -7,7 +7,7 @@ static void cmd_raw(irc_event_t *event, int parc, char **parv);
 
 void _modinit(module_t *m)
 {
-    command_add("raw", cmd_raw);
+    command_add("raw", cmd_raw, "sends a raw command to the IRC server.", "<command>");
 }
 
 void _moddeinit(module_unload_intent_t intent)

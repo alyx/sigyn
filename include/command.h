@@ -15,11 +15,13 @@ struct command_
 {
     char *name;
     command_function_t function;
+    char *help;
+    char *syntax;
 };
 
-void command_init(void);
-command_t *command_find(const char *name);
-void command_add(const char *name, void *function);
-void command_del(const char *name, void *function);
+extern void command_init(void);
+extern command_t *command_find(const char *name);
+extern void command_add(const char *name, void *function, const char *help, const char *syntax);
+extern void command_del(const char *name, void *function);
 
 #endif /* __SIGYN_COMMAND_H */

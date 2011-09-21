@@ -9,7 +9,7 @@ static void cmd_hello(irc_event_t *event, int parc, char **parv);
 void _modinit(module_t *m)
 {
     mowgli_hook_associate("PRIVMSG", handle_privmsg, NULL);
-    command_add("hello", cmd_hello);
+    command_add("hello", cmd_hello, "says hello to you!", "<user>");
 }
 
 void _moddeinit(module_unload_intent_t intent)

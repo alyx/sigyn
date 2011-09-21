@@ -60,4 +60,10 @@ make()
     INCLUDEDIRS="include libmowgli/src/libmowgli" \
     INSTALLDIR="$MK_PREFIX/modules"
 
+    mk_dlo \
+    DLO="core/help" \
+    SOURCES="modules/core/help.c" \
+    INCLUDEDIRS="include libmowgli/src/libmowgli" \
+    INSTALLDIR="$MK_PREFIX/modules"
+
 }

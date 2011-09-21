@@ -71,13 +71,15 @@ command_t *command_find(const char *name)
  *     name     - A string containing the name of the command.
  *     function - A pointer to the function to be called when
  *                the command is used.
+ *     help     - A string containing information about the command.
+ *     syntax   - A string containing the command syntax.
  * 
  * Return value:
  *     None
  *
  */
 
-void command_add(const char *name, void *function)
+void command_add(const char *name, void *function, const char *help, const char *syntax)
 {
     command_t *c;
 
@@ -91,6 +93,8 @@ void command_add(const char *name, void *function)
 
     c->name = strdup(name);
     c->function = function;
+    c->help = strdup(help);
+    c->syntax = strdup(syntax);
 
     mowgli_node_add(c, mowgli_node_create(), &commands);
 }
@@ -118,6 +122,10 @@ void command_del(const char *name, void *function)
         c = (command_t *)n->data;
         if ((c->function == function) && ((strcmp(c->name, name)) == 0))
         {
+            mowgli_free(c->name);
+            mowgli_free(c->help);
+            mowgli_free(c->syntax);
+
             mowgli_node_delete(n, &commands);
             mowgli_heap_free(command_heap, c);
         }
