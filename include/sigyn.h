@@ -23,6 +23,7 @@
 #include "minini/minini.h"
 #include "platform.h"
 #include "command.h"
+#include "interface.h"
 #include "irc.h"
 #include "logger.h"
 #include "me.h"
