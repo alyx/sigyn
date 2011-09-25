@@ -24,17 +24,27 @@ configure()
 
 make()
 {
+    UNAME=`uname -o`
 
     mk_stage \
         SOURCE="dist/config.example" \
         DEST="$MK_PREFIX/etc/sigyn.ini.example"
 
-    mk_program \
-        PROGRAM=sigyn \
-        SOURCES="src/*.c" \
-        INCLUDEDIRS="include libmowgli/src/libmowgli" \
-        LIBDEPS="mowgli" \
-        LDFLAGS="-Wl,-export-dynamic"
+    if [ "$UNAME" == "Solaris" ]; then
+        mk_program \
+            PROGRAM=sigyn \
+            SOURCES="src/*.c" \
+            INCLUDEDIRS="include libmowgli/src/libmowgli" \
+            LIBDEPS="mowgli socket" \
+            LDFLAGS="-Wl,-export-dynamic"
+    else
+        mk_program \
+            PROGRAM=sigyn \
+            SOURCES="src/*.c" \
+            INCLUDEDIRS="include libmowgli/src/libmowgli" \
+            LIBDEPS="mowgli" \
+            LDFLAGS="-Wl,-export-dynamic"
+    fi
 
     mk_dlo \
         DLO="core/ping" \
