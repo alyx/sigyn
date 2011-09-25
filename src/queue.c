@@ -13,21 +13,21 @@ mowgli_list_t sendq;
 
 void queue_init(void)
 {
-    recvq_heap = mowgli_heap_create(sizeof(queue_t), 1024, BH_NOW);
+    recvq_heap = mowgli_heap_create(sizeof(io_queue_t), 1024, BH_NOW);
 
     if (!recvq_heap)
         sigyn_fatal("queue_init(): block allocator failed.");
 
-    sendq_heap = mowgli_heap_create(sizeof(queue_t), 256, BH_NOW);
+    sendq_heap = mowgli_heap_create(sizeof(io_queue_t), 256, BH_NOW);
 
     if (!sendq_heap)
         sigyn_fatal("queue_init(): block allocator failed.");
 }
 
-queue_t *recvq_add(socket_t sock, char *string, bool complete)
+io_queue_t *recvq_add(socket_t sock, char *string, bool complete)
 {
     mowgli_node_t *n;
-    queue_t *q, *tail;
+    io_queue_t *q, *tail;
     char tmp[1024];
 
     if (strlen(string) == 0)
@@ -36,7 +36,7 @@ queue_t *recvq_add(socket_t sock, char *string, bool complete)
     n = recvq.tail;
     if (n != NULL)
     {
-        tail = (queue_t *)n->data;
+        tail = (io_queue_t *)n->data;
         if (tail->completed == false)
         {
             snprintf(tmp, BUFSIZE, "%s%s", tail->string, string);
@@ -63,11 +63,11 @@ queue_t *recvq_add(socket_t sock, char *string, bool complete)
 void recvq_dump(socket_t sock)
 {
     mowgli_node_t *n, *tn;
-    queue_t *q;
+    io_queue_t *q;
 
     MOWGLI_LIST_FOREACH_SAFE(n, tn, recvq.head)
     {
-        q = (queue_t *)n->data;
+        q = (io_queue_t *)n->data;
 
         if ((q->sock == sock) && (q->completed == true))
         {
@@ -80,7 +80,7 @@ void recvq_dump(socket_t sock)
 
 void sendq_add(socket_t sock, char *string, size_t len)
 {
-    queue_t *q;
+    io_queue_t *q;
     q = mowgli_heap_alloc(sendq_heap);
     q->len = len;
     q->sock = sock;
@@ -92,11 +92,11 @@ void sendq_add(socket_t sock, char *string, size_t len)
 void sendq_dump(socket_t sock)
 {
     mowgli_node_t *n, *tn;
-    queue_t *q;
+    io_queue_t *q;
 
     MOWGLI_LIST_FOREACH_SAFE(n, tn, sendq.head)
     {
-        q = (queue_t *)n->data;
+        q = (io_queue_t *)n->data;
         if (q->sock == sock)
         {
             me.stats.outB += write(q->sock, q->string, q->len);
@@ -108,11 +108,11 @@ void sendq_dump(socket_t sock)
 void sendq_flush(socket_t sock)
 {
     mowgli_node_t *n, *tn;
-    queue_t *q;
+    io_queue_t *q;
 
     MOWGLI_LIST_FOREACH_SAFE(n, tn, sendq.head)
     {
-        q = (queue_t *)n->data;
+        q = (io_queue_t *)n->data;
         if (q->sock == sock)
             mowgli_node_delete(n, &sendq);
     }

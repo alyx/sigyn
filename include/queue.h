@@ -9,9 +9,9 @@
 #include "config.h"
 #include "platform.h"
 
-typedef struct queue_ queue_t;
+typedef struct io_queue_ io_queue_t;
 
-struct queue_ {
+struct io_queue_ {
     char *string;
     socket_t sock;
     size_t len;
@@ -21,7 +21,7 @@ struct queue_ {
 extern mowgli_list_t sendq;
 
 extern void queue_init(void);
-extern queue_t *recvq_add(socket_t sock, char *string, bool complete);
+extern io_queue_t *recvq_add(socket_t sock, char *string, bool complete);
 extern void recvq_dump(socket_t sock);
 extern void sendq_add(socket_t sock, char *string, size_t len);
 extern void sendq_dump(socket_t sock);
