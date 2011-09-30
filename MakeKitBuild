@@ -24,27 +24,26 @@ configure()
 
 make()
 {
-    UNAME=`uname -o`
+    UNAME=`uname -s`
+
+    if [ "$UNAME" == "SunOS" ]; then
+        LIBS="mowgli socket"
+    elif [ "$UNAME" == "MINGW_NT*" ]; then
+        LIBS="mowgli wsock32"
+    else
+        LIBS="mowgli"
+    fi
 
     mk_stage \
         SOURCE="dist/config.example" \
         DEST="$MK_PREFIX/etc/sigyn.ini.example"
 
-    if [ "$UNAME" == "Solaris" ]; then
         mk_program \
             PROGRAM=sigyn \
             SOURCES="src/*.c" \
             INCLUDEDIRS="include libmowgli/src/libmowgli" \
-            LIBDEPS="mowgli socket" \
+            LIBDEPS="$LIBS" \
             LDFLAGS="-Wl,-export-dynamic"
-    else
-        mk_program \
-            PROGRAM=sigyn \
-            SOURCES="src/*.c" \
-            INCLUDEDIRS="include libmowgli/src/libmowgli" \
-            LIBDEPS="mowgli" \
-            LDFLAGS="-Wl,-export-dynamic"
-    fi
 
     mk_dlo \
         DLO="core/ping" \

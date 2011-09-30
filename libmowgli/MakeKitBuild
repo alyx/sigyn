@@ -53,11 +53,19 @@ configure()
 
 make()
 {
+    UNAME=`uname -s`
+
+    if [ "$UNAME" == "MINGW_NT*" ]; then
+        LIBS="user32"
+    else
+        LIBS="dl"
+    fi
+
     mk_library \
         LIB=mowgli \
         SOURCES="src/libmowgli/*.c" \
         INCLUDEDIRS="src/libmowgli" \
-        LIBDEPS="dl" \
+        LIBDEPS="$LIBS" \
         LDFLAGS = "-shared -fPIC -Wl,-soname=libmowgli.so.2" \
         CPPFLAGS = "-DPIC" \
         CFLAGS = "-fPIC"
