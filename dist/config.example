@@ -16,12 +16,12 @@ level = 0
 channel = "#dev"
 
 [modules]
-autoload = core/ping
-# Available modules:
-#   - core/ping
-#   - example/dns
-#   - example/hello
-#   - admin/raw
+# Modules are loaded when their value is set to true.
+core/ping = true
+core/help = true
+admin/raw = false
+example/dns = false
+example/hello = false
 
 [admin]
 nick = adminuser

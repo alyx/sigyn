@@ -160,20 +160,23 @@ static void io_loop(void)
 
 static void loadmodules(void)
 {
-    char *token, *save;
+    int i;
+    bool autoload;
     module_t *m;
+    char buf[BUFSIZE];
 
-    save = config_get_string("modules", "autoload");
-    if (save == NULL)
-        return;
-
-    while ((token = strtok_r(NULL, " ", &save)) && (token != NULL))
+    for (i = 0; ini_getkey("modules", i, buf, BUFSIZE, me.config) > 0; i++)
     {
-        m = module_load(token);
-        if (m != NULL)
-            printf("[Modules] Loaded module %s\n", m->name);
-        else
-            printf("[Modules] Failed to load module %s\n", token);
+        autoload = config_get_bool("modules", buf);
+
+        if (autoload == true)
+        {
+            m = module_load(buf);
+            if (m != NULL)
+                printf("[Modules] Loaded module %s\n", m->name);
+            else
+                printf("[Modules] Failed to load module %s\n", buf);
+        }
     }
 }
 
