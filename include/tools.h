@@ -32,6 +32,7 @@ extern void sigyn_cleanup(void);
 /* connect.c functions */
 extern int StartWSA(void);
 extern int sigyn_hostname(char *host, int len);
+extern socket_t uplink_connect(char *uplink, int port, char *vhost);
 extern void uplink_disconnect(void);
 
 /* tokenize.c functions */
