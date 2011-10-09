@@ -90,7 +90,7 @@
 enum quote_option {
   QUOTE_NONE,
   QUOTE_ENQUOTE,
-  QUOTE_DEQUOTE,
+  QUOTE_DEQUOTE
 };
 
 static TCHAR *skipleading(const TCHAR *str)
@@ -340,7 +340,7 @@ int ini_getbool(const TCHAR *Section, const TCHAR *Key, int DefValue, const TCHA
   int ret;
 
   ini_gets(Section, Key, __T(""), LocalBuffer, sizearray(LocalBuffer), Filename);
-  LocalBuffer[0] = toupper(LocalBuffer[0]);
+  LocalBuffer[0] = (TCHAR)toupper(LocalBuffer[0]);
   if (LocalBuffer[0] == 'Y' || LocalBuffer[0] == '1' || LocalBuffer[0] == 'T')
     ret = 1;
   else if (LocalBuffer[0] == 'N' || LocalBuffer[0] == '0' || LocalBuffer[0] == 'F')
