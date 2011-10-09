@@ -1,6 +1,6 @@
 #include "sigyn.h"
 
-DECLARE_MODULE("examples/hello", 0, _modinit, _moddeinit,
+DECLARE_MODULE("examples/hello", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
         "1.0", "Alyx <alyx@malkier.net>");
 
 static void handle_privmsg(void *data, void *unused);

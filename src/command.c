@@ -120,7 +120,7 @@ void command_del(const char *name, void *function)
     MOWGLI_LIST_FOREACH_SAFE(n, tn, commands.head)
     {
         c = (command_t *)n->data;
-        if ((c->function == function) && ((strcmp(c->name, name)) == 0))
+        if ((c->function == (command_function_t)function) && ((strcmp(c->name, name)) == 0))
         {
             mowgli_free(c->name);
             mowgli_free(c->help);
