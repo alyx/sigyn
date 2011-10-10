@@ -6,6 +6,13 @@
 #ifndef __SIGYN_PLATFORM_H
 #define __SIGYN_PLATFORM_H
 
+/* Create some magic for hiding warnings about unused variables. */
+#if defined(GCC) || defined(__clang__) || defined(__ICC)
+#   define UNUSED __attribute__((unused))
+#else
+#   define UNUSED
+#endif
+
 
 /* Handle networking headers. Windows wants Winsock, everyone else uses
  * BSD-style sockets.
