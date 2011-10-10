@@ -1,24 +1,24 @@
 #include "sigyn.h"
 
-DECLARE_MODULE("core/ping", 0, _modinit, _moddeinit,
+DECLARE_MODULE("core/ping", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
         "1.0", "Alyx <alyx@malkier.net>");
 
-static void handle_ping(void *data, void *unused);
+static void handle_ping(void *data, UNUSED void *udata);
 
-void _modinit(module_t *m)
+void _modinit(UNUSED module_t *m)
 {
     mowgli_hook_associate("PING", handle_ping, NULL);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+void _moddeinit(UNUSED module_unload_intent_t intent)
 {
     mowgli_hook_dissociate("PING", handle_ping);
 }
 
-static void handle_ping(void *data, void *unused)
+static void handle_ping(void *data, UNUSED void *udata)
 {
     irc_event_t *event;
     event = (irc_event_t *)data;
 
-   irc_pong(event->data + 1);
+    irc_pong(event->data + 1);
 }
