@@ -88,7 +88,7 @@ int sigyn_hostname(char *host, int len)
  *
  */
 
-socket_t uplink_connect(char *uplink, int port, char *vhost)
+socket_t uplink_connect(char *uplink, uint16_t port, char *vhost)
 {
 	socket_t sock;
 	int error, flags;
