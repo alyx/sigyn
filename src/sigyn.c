@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
     me.config = config;
 
     initialise_sigyn(config_get_string("sigyn", "nick"), config_get_string("sigyn", "nick"), config_get_string("sigyn", "realname"), config_get_string("uplink", "server"),
-            (uint16_t *)config_get_int("uplink", "port"));
+            (uint16_t)config_get_int("uplink", "port"));
     me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, NULL);
 
     loadmodules();
