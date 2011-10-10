@@ -21,7 +21,7 @@ struct me {
         bool winsock;
 #endif
 		socket_t sock;
-        int port;
+        uint16_t port;
         char *hostname;
     } uplink;
     struct stats {
