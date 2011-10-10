@@ -26,7 +26,7 @@ fd_set readfds, writefds, nullfds;
  *    None.
  */
 
-static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, int port)
+static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, uint16_t port)
 {
     me.client = mowgli_alloc(sizeof(irc_user_t));
     me.stats.start = time(NULL);
@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
     me.config = config;
 
     initialise_sigyn(config_get_string("sigyn", "nick"), config_get_string("sigyn", "nick"), config_get_string("sigyn", "realname"), config_get_string("uplink", "server"),
-            config_get_int("uplink", "port"));
+            (uint16_t *)config_get_int("uplink", "port"));
     me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, NULL);
 
     loadmodules();
