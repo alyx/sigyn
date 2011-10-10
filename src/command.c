@@ -8,7 +8,7 @@
 mowgli_heap_t *command_heap;
 mowgli_list_t commands;
 
-static void handle_privmsg(void *data, void *unused);
+static void handle_privmsg(void *data, UNUSED void *udata);
 
 /*
  * Routine Description:
@@ -132,7 +132,7 @@ void command_del(const char *name, void *function)
     }
 }
 
-static void handle_privmsg(void *data, void *unused)
+static void handle_privmsg(void *data, UNUSED void *udata)
 {
     int i, len;
     irc_event_t *event;
