@@ -40,6 +40,7 @@ io_queue_t *recvq_add(socket_t sock, char *string, bool complete)
         if (tail->completed == false)
         {
             snprintf(tmp, BUFSIZE, "%s%s", tail->string, string);
+            free(tail->string);
             tail->string = strdup(tmp);
             tail->completed = complete;
             return tail;
@@ -73,6 +74,7 @@ void recvq_dump(socket_t sock)
         {
             printf(">> %s\n", q->string);
             parse(q->string);
+            free(q->string);
             mowgli_node_delete(n, &recvq);
         }
     }

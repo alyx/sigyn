@@ -23,7 +23,7 @@ int tokenize(char *message, char **parv)
             break;
     }
     if ((i > MAXPARC) && (save != NULL))
-        parv[i] = save;
+        parv[i] = strdup(save);
 
     if (parv[i] == NULL)
         i--;

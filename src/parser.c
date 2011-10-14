@@ -47,9 +47,12 @@ irc_user_t *parse_user(char hostmask[])
     else
     {
         /* Origin is a server. */
-        user->nick = tmp;
+        user->nick = strdup(tmp);
         user->server = true;
     }
+
+    free(tmp);
+
     return user;
 }
 
@@ -96,6 +99,8 @@ void preparse(char line[])
             }
         }
     }
+
+    free(save);
 }
 
 /*
@@ -182,5 +187,8 @@ irc_event_t *parse(char line[])
     {
         mowgli_hook_call(event->command, event);
     }
+
+    free(string);
+
     return event;
 }
