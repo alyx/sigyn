@@ -48,6 +48,7 @@ static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     modules_init();
     queue_init();
     command_init();
+    timer_init();
 }
 
 /*
@@ -106,11 +107,25 @@ static void io_loop(void)
 {
     int sr;
     struct timeval to;
+    time_t currtime, next_event;
     static char buffer[BUFSIZE + 1];
+    
+    to.tv_usec = 0;
+    
     while (1)
     {
-        to.tv_usec = 0;
-        to.tv_sec  = 1;
+        currtime = time(NULL);
+        next_event = get_next_timer();
+
+        if (next_event <= currtime)
+        {
+            run_timers(currtime);
+        }
+        
+        if (next_event > currtime)
+            to.tv_sec = (next_event - currtime);
+        else
+            to.tv_sec  = 1;
 
         memset(buffer, '\0', BUFSIZE + 1);
         FD_ZERO(&readfds);
