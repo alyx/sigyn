@@ -100,7 +100,6 @@ void preparse(char line[])
         }
     }
 
-    free(save);
 }
 
 /*
