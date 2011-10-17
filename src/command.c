@@ -162,7 +162,5 @@ static void handle_privmsg(void *data, UNUSED void *udata)
     }
 
     free(tmp);
-    if (parv[MAXPARC] != NULL)
-        free(parv[MAXPARC]);
 
 }
