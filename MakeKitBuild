@@ -16,6 +16,9 @@ configure()
     mk_check_functions \
        HEADERDEPS="string.h" \
        strlcat strlcpy
+    mk_check_functions \
+       HEADERDEPS="unistd.h" \
+       fork getpid
        
     mk_msg "compile prefix: $MK_PREFIX"
 
