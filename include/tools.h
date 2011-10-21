@@ -35,6 +35,9 @@ extern int sigyn_hostname(char *host, int len);
 extern socket_t uplink_connect(char *uplink, uint16_t port, char *vhost);
 extern void uplink_disconnect(void);
 
+/* signal.c functions */
+void signals_init(void);
+
 /* tokenize.c functions */
 extern int tokenize(char *message, char **parv);
 
