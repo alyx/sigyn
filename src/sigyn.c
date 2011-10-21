@@ -45,6 +45,7 @@ static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
 
     mowgli_init();
     mowgli_hook_init();
+    signals_init();
     modules_init();
     queue_init();
     command_init();
@@ -99,6 +100,7 @@ void sigyn_fatal(char *format, ...)
     vsnprintf(buf, BUFSIZE, format, args);
     va_end(args);
     logger(LOG_FATAL, buf);
+    irc_quit(buf);
     sigyn_cleanup();
     exit(1);
 }
