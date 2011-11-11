@@ -1,3 +1,6 @@
 [submodule "makekit"]
 	path = makekit
 	url = git://mkbuild.git.sourceforge.net/gitroot/mkbuild/makekit
+[submodule "libmowgli-2"]
+	path = libmowgli-2
+	url = git://git.atheme.org/libmowgli-2.git
