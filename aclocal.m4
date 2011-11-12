@@ -11,4 +11,6 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+m4_include([m4/atheme-c.m4])
 m4_include([m4/buildsys.m4])
+m4_include([m4/pkg.m4])
