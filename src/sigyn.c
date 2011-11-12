@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
 {
     char config[BUFSIZE];
 
-    snprintf(config, BUFSIZE, "%s/%s", SIGYN_ROOT, "etc/sigyn.ini");
+    snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.ini");
 
     me.config = config;
 

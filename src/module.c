@@ -93,7 +93,7 @@ module_t *module_load(const char *filespec)
 		pathname = filespec;
 	else
 	{
-		snprintf(pathbuf, BUFSIZE, "%s/modules/%s", SIGYN_ROOT, filespec);
+		snprintf(pathbuf, BUFSIZE, "%s/%s", MODDIR "/modules", filespec);
 		pathname = pathbuf;
 	}
 

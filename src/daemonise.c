@@ -22,7 +22,7 @@ void daemonise(const char *pidpath)
     else if (i != 0)
     {
         logger(LOG_STATUS, "pid %d", i);
-        logger(LOG_STATUS, "running in background mode from %s", SIGYN_ROOT);
+        logger(LOG_STATUS, "running in background mode from %s", PREFIX);
         exit(EXIT_SUCCESS);
     }
 
@@ -35,7 +35,7 @@ void daemonise(const char *pidpath)
 #ifdef HAVE_GETPID
     logger(LOG_STATUS, "pid %d", getpid());
 #endif
-    logger(LOG_STATUS, "running in foreground mode from %s", SIGYN_ROOT);
+    logger(LOG_STATUS, "running in foreground mode from %s", PREFIX);
 #endif
 
 #ifdef HAVE_GETPID
