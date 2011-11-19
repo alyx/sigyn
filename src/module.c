@@ -201,16 +201,8 @@ static module_t *module_load_internal(const char *pathname, char *errbuf, int er
 	m->mflags = MODTYPE_STANDARD;
 	m->header = h;
 
-#if defined(HAVE_DLINFO) && !defined(__UCLIBC__)
-	dlinfo(handle, RTLD_DI_LINKMAP, &map);
-	if (map != NULL)
-		m->address = (void *) map->l_addr;
-	else
-		m->address = handle;
-#else
 	/* best we can do here without dlinfo() --nenolod */
 	m->address = handle;
-#endif
 
 	n = mowgli_node_create();
 	mowgli_node_add(m, n, &modules_inprogress);
