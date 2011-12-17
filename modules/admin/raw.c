@@ -3,7 +3,7 @@
 DECLARE_MODULE("admin/raw", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
         "1.0", "Alyx <alyx@malkier.net>");
 
-static void cmd_raw(irc_event_t *event, int parc, char **parv);
+static void cmd_raw(const irc_event_t *event, int parc, char **parv);
 
 void _modinit(UNUSED module_t *m)
 {
@@ -15,7 +15,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     command_del("raw", cmd_raw);
 }
 
-static void cmd_raw(irc_event_t *event, int parc, char **parv)
+static void cmd_raw(const irc_event_t *event, int parc, char **parv)
 {
     int i;
     char *buffer;

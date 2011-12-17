@@ -4,7 +4,7 @@ DECLARE_MODULE("examples/hello", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddein
         "1.0", "Alyx <alyx@malkier.net>");
 
 static void handle_privmsg(void *data, UNUSED void *udata);
-static void cmd_hello(irc_event_t *event, UNUSED int parc, UNUSED char **parv);
+static void cmd_hello(const irc_event_t *event, UNUSED int parc, UNUSED char **parv);
 static bool timed_cmd_hello(UNUSED void *argument);
 
 void _modinit(UNUSED module_t *m)
@@ -30,7 +30,7 @@ static void handle_privmsg(void *data, UNUSED void *udata)
         irc_privmsg(event->target, "Hello %s!", event->target);
 }
 
-static void cmd_hello(irc_event_t *event, UNUSED int parc, UNUSED char **parv)
+static void cmd_hello(const irc_event_t *event, UNUSED int parc, UNUSED char **parv)
 {
     irc_privmsg(event->target, "Hello %s!", event->origin->nick);
 }

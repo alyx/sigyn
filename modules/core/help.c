@@ -3,7 +3,7 @@
 DECLARE_MODULE("core/help", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
         "1.0", "Alyx <alyx@malkier.net>");
 
-static void cmd_help(irc_event_t *event, int parc, char **parv);
+static void cmd_help(const irc_event_t *event, int parc, char **parv);
 
 void _modinit(UNUSED module_t *m)
 {
@@ -16,7 +16,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
 }
 
 
-static void cmd_help(irc_event_t *event, int parc, char **parv)
+static void cmd_help(const irc_event_t *event, int parc, char **parv)
 {
     command_t *cmd;
 

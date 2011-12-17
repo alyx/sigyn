@@ -3,7 +3,7 @@
 DECLARE_MODULE("example/dns", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
         "1.0", "Alyx <alyx@malkier.net>");
 
-static void cmd_dns(irc_event_t *event, int parc, char **parv);
+static void cmd_dns(const irc_event_t *event, int parc, char **parv);
 
 void _modinit(UNUSED module_t *m)
 {
@@ -15,7 +15,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     command_del("dns", cmd_dns);
 }
 
-static void cmd_dns(irc_event_t *event, int parc, char **parv)
+static void cmd_dns(const irc_event_t *event, int parc, char **parv)
 {
     struct hostent *dns;
 

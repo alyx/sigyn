@@ -176,10 +176,9 @@ dnl Third stage - wrangling the linker.
 if test "$shared_modules" = yes; then
 	# The GNU linker requires the -export-dynamic option to make
 	# all symbols visible in the dynamic symbol table.
-	hold_ldflags=$LDFLAGS
 	AC_MSG_CHECKING(for the ld -export-dynamic flag)
 	LDFLAGS="${LDFLAGS} -Wl,-export-dynamic"
-	LDFLAGS=$hold_ldflags
+	hold_ldflags=$LDFLAGS
 
 	if expr "`uname -s`" : ^IRIX >/dev/null 2>&1; then
 		found="no, IRIX ld uses -B,dynamic"

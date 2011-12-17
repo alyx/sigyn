@@ -9,7 +9,7 @@
 #include "mowgli.h"
 
 typedef struct command_ command_t;
-typedef void (*command_function_t)(void *event, int user_argstack_size, char **user_arguments);
+typedef void (*command_function_t)(const void *event, int user_argstack_size, char **user_arguments);
 
 struct command_
 {

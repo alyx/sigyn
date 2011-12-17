@@ -136,11 +136,14 @@ static void handle_privmsg(void *data, UNUSED void *udata)
 {
     int i, len;
     irc_event_t *event;
+    const irc_event_t *clone;
     command_t *cmd;
     int parc;
     char *parv[MAXPARC + 1], *tmp, *prefix;
 
     event = (irc_event_t *)data;
+    clone = event;
+
     tmp = strdup(event->data);
     prefix = config_get_string("sigyn", "fantasy");
     if (prefix == NULL)
@@ -156,11 +159,10 @@ static void handle_privmsg(void *data, UNUSED void *udata)
 
             cmd = command_find(parv[0] + 1);
             if (cmd != NULL)
-                cmd->function(event, parc, parv);
+                cmd->function(clone, parc, parv);
             break;
         }
     }
 
     free(tmp);
-
 }
