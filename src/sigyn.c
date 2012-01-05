@@ -43,7 +43,6 @@ static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     me.uplink.winsock = false;
 #endif
 
-    mowgli_init();
     mowgli_hook_init();
     signals_init();
     modules_init();
