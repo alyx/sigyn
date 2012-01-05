@@ -47,6 +47,8 @@ AC_PATH_PROG(LN, ln)
 AC_PATH_PROG(TAR, tar)
 AC_PATH_PROG(AR, ar)
 AC_PATH_PROG(RANLIB, ranlib)
+AC_PATH_PROG(XARGS, xargs)
+AC_PATH_PROG(FIND, find)
 AC_C_INLINE
 AC_C_BIGENDIAN
 AC_PROG_MAKE_SET
@@ -394,6 +396,30 @@ RPATH=""
 
 AC_SUBST(RPATH)
 
+CONTRIB="no"
+AC_MSG_CHECKING(if we should compile contrib modules)
+AC_ARG_ENABLE(contrib,
+AC_HELP_STRING([--enable-contrib], [ Enable contrib modules. ]),
+[
+ case "$enableval" in
+     yes)
+        CONTRIB="yes"
+        ;;
+    no)
+        CONTRIB="no"
+        ;;
+    esac
+])
+AC_MSG_RESULT($CONTRIB)
+
+if test "$CONTRIB" = "yes"; then
+    CONTRIB_ENABLE="contrib"
+else
+    CONTRIB_ENABLE=""
+fi
+
+AC_SUBST(CONTRIB_ENABLE)
+
 PKG_CHECK_MODULES(MOWGLI, [libmowgli-2 >= 0.9.90],
 	[MOWGLI_SOURCE="system"], [
 	MOWGLI_SOURCE="internal"
@@ -437,6 +463,7 @@ Configuration:
 	Logfile directory    : ${LOGDIR}
 	Data directory       : ${DATADIR}
 	PID directory        : ${RUNDIR}
+	Contrib modules      : ${CONTRIB}
 	Mowgli installation  : ${MOWGLI_SOURCE}
 	CFLAGS               : ${CFLAGS}
 
