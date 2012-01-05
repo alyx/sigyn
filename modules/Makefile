@@ -4,4 +4,5 @@ include ../buildsys.mk
 SUBDIRS = \
 		  admin \
 		  core \
-		  example
+		  example \
+		  $(CONTRIB_ENABLE)
