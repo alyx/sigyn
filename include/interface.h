@@ -6,6 +6,7 @@
 #include "irc.h"
 
 enum command_failure_reasons {
+    CMD_BADPARAM,
     CMD_NEEDSPARAM,
     CMD_NOAUTH
 };

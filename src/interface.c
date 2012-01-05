@@ -26,9 +26,18 @@ void command_fail(int reason, irc_user_t *origin, const char *command)
 
     switch(reason)
     {
+        case CMD_BADPARAM:
+            irc_notice(origin->nick, "Incorrect parameters for \2%s\2", cmd->name);
+            irc_notice(origin->nick, "Syntax: %s", cmd->syntax);
+            break;
+
         case CMD_NEEDSPARAM:
             irc_notice(origin->nick, "Insufficient parameters for \2%s\2", cmd->name);
             irc_notice(origin->nick, "Syntax: %s", cmd->syntax);
+            break;
+        
+        case CMD_NOAUTH:
+            irc_notice(origin->nick, "You are not authorised to use \2%s\2", cmd->name);
             break;
     }
 }
