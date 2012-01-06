@@ -16,6 +16,7 @@ BASE_SRCS = \
 	module.c \
 	queue.c \
 	sigyn.c \
+	$(STACKTRACE_ENABLE) \
 	timer.c 
 
 SRCS = ${BASE_SRCS}

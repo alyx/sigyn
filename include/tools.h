@@ -36,7 +36,12 @@ extern socket_t uplink_connect(char *uplink, uint16_t port, char *vhost);
 extern void uplink_disconnect(void);
 
 /* signal.c functions */
-void signals_init(void);
+extern void signals_init(void);
+
+/* stack.c functions */
+#ifdef ENABLE_STACK
+extern void sigyn_log_backtrace(void);
+#endif
 
 /* tokenize.c functions */
 extern int tokenize(char *message, char **parv);

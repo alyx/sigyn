@@ -20,6 +20,14 @@ static void signal_int_handler(int signum)
     sigyn_fatal("caught interrupt");
 }
 
+static void signal_segv_handler(int signum)
+{
+#ifdef ENABLE_STACK
+    sigyn_log_backtrace();
+#endif
+    sigyn_fatal("Segmentation fault.");
+}
+
 static void signal_term_handler(int signum)
 {
     /* Do something later */
@@ -37,5 +45,6 @@ void signals_init(void)
     mowgli_signal_install_handler(SIGTERM, signal_term_handler);
 
     mowgli_signal_install_handler(SIGUSR1, signal_usr1_handler);
+    mowgli_signal_install_handler(SIGSEGV, signal_segv_handler);
 }
 

@@ -6,7 +6,12 @@
 #ifndef __SIGYN_H
 #define __SIGYN_H
 
+#include "config.h"
+
 #include <errno.h>
+#ifdef ENABLE_STACK
+#include <libunwind.h>
+#endif
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdbool.h>

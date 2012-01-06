@@ -49,6 +49,7 @@ AC_PATH_PROG(AR, ar)
 AC_PATH_PROG(RANLIB, ranlib)
 AC_PATH_PROG(XARGS, xargs)
 AC_PATH_PROG(FIND, find)
+AC_PATH_PROG(UNAME, uname)
 AC_C_INLINE
 AC_C_BIGENDIAN
 AC_PROG_MAKE_SET
@@ -420,6 +421,28 @@ fi
 
 AC_SUBST(CONTRIB_ENABLE)
 
+OUTPUT_STACKTRACE="yes"
+STACKTRACE_ENABLE=""
+AC_ARG_ENABLE(stack,
+AC_HELP_STRING([--enable-stack], [ Enable a stack trace on crash. ]),
+[
+ case "$enableval" in
+     yes)
+        AC_MSG_CHECKING(for libunwind)
+        AC_CHECK_HEADER(libunwind.h, [OUTPUT_STACKTRACE="yes"
+                                      AC_DEFINE(ENABLE_STACK, 1, "Enable stack tracing through libunwind.")
+                                      LIBS="$LIBS -lunwind -lunwind-`uname -m`"
+                                      STACKTRACE_ENABLE="stack.c"],
+                                      [OUTPUT_STACKTRACE="libunwind not found"])
+        ;;
+    no)
+        OUTPUT_STACKTRACE="no"
+        ;;
+    esac
+])
+AC_MSG_RESULT($OUTPUT_STACKTRACE)
+AC_SUBST(STACKTRACE_ENABLE)
+
 PKG_CHECK_MODULES(MOWGLI, [libmowgli-2 >= 0.9.90],
 	[MOWGLI_SOURCE="system"], [
 	MOWGLI_SOURCE="internal"
@@ -464,6 +487,7 @@ Configuration:
 	Data directory       : ${DATADIR}
 	PID directory        : ${RUNDIR}
 	Contrib modules      : ${CONTRIB}
+	Stacktrace           : ${OUTPUT_STACKTRACE}
 	Mowgli installation  : ${MOWGLI_SOURCE}
 	CFLAGS               : ${CFLAGS}
 
