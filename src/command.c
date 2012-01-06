@@ -94,7 +94,8 @@ void command_add(const char *name, void *function, const char *help, const char 
     c->name = strdup(name);
     c->function = (command_function_t)function;
     c->help = strdup(help);
-    c->syntax = strdup(syntax);
+    if (c->syntax != NULL)
+        c->syntax = strdup(syntax);
 
     mowgli_node_add(c, mowgli_node_create(), &commands);
 }
