@@ -38,10 +38,10 @@ irc_user_t *parse_user(char hostmask[])
 
         token = strtok_r(tmp, "!", &save);
         if (token != NULL)
-            user->nick = token;
+            user->nick = strdup(token);
         token = strtok_r(NULL, "@", &save);
         if (token != NULL)
-            user->user = token;
+            user->user = strdup(token);
         user->host = save;
     }
     else
