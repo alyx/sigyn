@@ -2,8 +2,7 @@ sigyn - a moderately sane IRC bot
 ---------------------------------
 
 1. Run `git submodule init; git submodule update`
-2. Run `./makekit/makekit init`
-3. Move to the 'build' directory.
+2. Run `./autogen.sh`
 4. Run `../configure --prefix=/your/install/dir/here`
 5. Run `make; make install`
 
