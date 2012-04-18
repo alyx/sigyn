@@ -443,19 +443,14 @@ AC_HELP_STRING([--enable-stack], [ Enable a stack trace on crash. ]),
 AC_MSG_RESULT($OUTPUT_STACKTRACE)
 AC_SUBST(STACKTRACE_ENABLE)
 
-PKG_CHECK_MODULES(MOWGLI, [libmowgli-2 >= 0.9.90],
-	[MOWGLI_SOURCE="system"], [
-	MOWGLI_SOURCE="internal"
-	MOWGLI_CFLAGS="-I../libmowgli-2/src/libmowgli -I../../libmowgli-2/src/libmowgli -I../../../libmowgli-2/src/libmowgli"
-	MOWGLI_LIBS="-L../libmowgli-2/src/libmowgli -L../../libmowgli-2/src/libmowgli -L../../../libmowgli-2/src/libmowgli -lmowgli-2"
-	LIBMOWGLI="libmowgli-2"
-	if test "x$enablerpath" = "xyes"; then
-		RPATH="-Wl,-rpath,${libdir}"
-	fi
-])
-
-AS_IF([ test "x$MOWGLI_SOURCE" = "xinternal" ],
-	[ AC_CONFIG_SUBDIRS([libmowgli-2]) ])
+MOWGLI_SOURCE="internal"
+MOWGLI_CFLAGS="-I../libmowgli-2/src/libmowgli -I../../libmowgli-2/src/libmowgli -I../../../libmowgli-2/src/libmowgli"
+MOWGLI_LIBS="-L../libmowgli-2/src/libmowgli -L../../libmowgli-2/src/libmowgli -L../../../libmowgli-2/src/libmowgli -lmowgli-2"
+LIBMOWGLI="libmowgli-2"
+if test "x$enablerpath" = "xyes"; then
+	RPATH="-Wl,-rpath,${libdir}"
+fi
+AC_CONFIG_SUBDIRS([libmowgli-2])
 
 CPPFLAGS="$CPPFLAGS $MOWGLI_CFLAGS"
 LIBS="$LIBS $MOWGLI_LIBS $RPATH"

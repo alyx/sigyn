@@ -36,7 +36,7 @@ static void cmd_help(const irc_event_t *event, int parc, char **parv)
     irc_notice(event->origin->nick, "*** Help for %s ***", cmd->name);
     irc_notice(event->origin->nick, "%s %s", cmd->name, cmd->help);
     irc_notice(event->origin->nick, "Syntax: %s%s %s",
-            config_get_string("sigyn", "fantasy"), cmd->name, cmd->syntax);
+            config_find_entry(config_find_entry(me.config->entries, "sigyn"), "fantasy")->vardata, cmd->name, cmd->syntax);
 }
 
 

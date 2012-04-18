@@ -4,7 +4,6 @@ BASE_SRCS = \
 	config.c \
 	daemonise.c \
 	irc.c \
-	minini.c \
 	parser.c \
 	signal.c \
 	string.c \

@@ -6,11 +6,14 @@
 #ifndef __SIGYN_TOOLS_H
 #define __SIGYN_TOOLS_H
 
-/* config.c functions */
-extern char *config_get_string(const char *section, const char *key);
-extern bool config_get_bool(const char *section, const char *key);
-extern int config_get_int(const char *section, const char *key);
+#include "mowgli.h"
 
+/* config.c functions */
+extern void config_check(mowgli_config_file_t * config);
+extern mowgli_config_file_entry_t * config_fatal_find_entry(
+        mowgli_config_file_entry_t * entries, char * name);
+extern mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t * start,
+        const char * name);
 /* string.c functions */
 extern void strip(char *line, char *strippers);
 #ifndef HAVE_STRLCAT
@@ -26,6 +29,8 @@ extern irc_event_t *parse(char line[]);
 extern void preparse(char line[]);
 
 /* sigyn.c functions */
+extern void initialise_sigyn(char *nick, char *ident, char *gecos, 
+        char *uplink, uint16_t port);
 extern void sigyn_fatal(char *format, ...);
 extern void sigyn_cleanup(void);
 

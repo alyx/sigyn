@@ -20,7 +20,7 @@ static void cmd_raw(const irc_event_t *event, int parc, char **parv)
     int i;
     char *buffer;
 
-    if ((strcmp(config_get_string("admin", "nick"), event->origin->nick)) != 0)
+    if ((strcmp(config_find_entry(me.config->entries, "admin")->vardata, event->origin->nick)) != 0)
         return;
 
     buffer = mowgli_alloc(BUFSIZE);

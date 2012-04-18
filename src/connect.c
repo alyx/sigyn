@@ -7,9 +7,30 @@
 
 #include "sigyn.h"
 
+static mowgli_list_t connection_list;
+
 #ifdef _WIN32
     WSADATA wsaData;
 #endif
+
+static inline int set_nb(socket_t fd)
+{
+#ifdef _WIN32
+    unsigned long flags = 1;
+    if(ioctlsocket(fd, FIONBIO, &flags) != 0)
+        return -1;
+#else
+    int flags;
+
+    flags = fcntl(fd, F_GETFL, 0);
+    flags |= O_NONBLOCK;
+
+    if (fcntl(fd, F_SETFL, flags))
+        return -1;
+#endif
+
+    return 1;
+}
 
 /*
  * Routine Description:
@@ -150,24 +171,19 @@ socket_t uplink_connect(char *uplink, uint16_t port, char *vhost)
 
         freeaddrinfo(bindres);
     }
+    logger(LOG_STATUS, "No vhost found. Not trying to set one.");
 
-    logger(LOG_DEBUG, "Setting file descriptor %d as non-blocking.", sock);
-
-#ifdef _WIN32
-    ioctlsocket(sock, FIONBIO, 1);
-#else
-    flags = fcntl(sock, F_GETFL, 0);
-    flags |= O_NONBLOCK;
-    fcntl(sock, F_SETFL, flags);
-#endif
+    set_nb(sock);
 
     switch(res->ai_family)
     {
         case AF_INET:
             ((struct sockaddr_in *) res->ai_addr)->sin_port = htons(port);
+            logger(LOG_STATUS, "Socket is IPv4.");
             break;
         case AF_INET6:
             ((struct sockaddr_in6 *) res->ai_addr)->sin6_port = htons(port);
+            logger(LOG_STATUS, "Socket is IPv6.");
             break;
     }
 

@@ -67,7 +67,8 @@ void logger(int level, char *format, ...)
     time_t t;
     struct tm tm;
 
-    i = config_get_int("logging", "level");
+    /*i = config_get_int("logging", "level");*/
+    i = 0;
 
     if (level < i)
         return;

@@ -146,7 +146,7 @@ static void handle_privmsg(void *data, UNUSED void *udata)
     clone = event;
 
     tmp = strdup(event->data);
-    prefix = config_get_string("sigyn", "fantasy");
+    prefix = config_find_entry(config_find_entry(me.config->entries, "sigyn"), "fantasy")->vardata;
     if (prefix == NULL)
         return;
 

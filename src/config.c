@@ -1,74 +1,73 @@
-/* Sigyn - A reasonably sane IRC bot.
- * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
- * Released under the BSD license.
- */
-
 #include "sigyn.h"
 
-/*
- * Routine Description:
- * This routine retrieves the value of the section/key requested.
- *
- * Arguments:
- *     section - A string stating the section of the config to locate the key.
- *     key     - A string stating the name of the key to retrieve the value of.
- *
- * Return value:
- *     buf - A string containing the value of the key,
- *           this value is NULL if the key is not found.
- *
- */
-
-char *config_get_string(const char *section, const char *key)
+void config_check(mowgli_config_file_t * config)
 {
-    char *buf;
-    buf = mowgli_alloc(128);
-    ini_gets(section, key, NULL, buf, 128, me.config);
-    return buf;
+    mowgli_config_file_entry_t * entry;
+    
+    char * nick, * desc, * server, fantasy;
+    uint16_t port;
+
+    entry = config_fatal_find_entry(config->entries, "sigyn");
+    nick = (entry = config_fatal_find_entry(entry->entries, "nick"))->vardata;
+    desc = (entry = config_fatal_find_entry(entry, "desc"))->vardata;
+    fantasy = (char)(entry = config_fatal_find_entry(entry, "fantasy"))->vardata;
+
+    entry = config_fatal_find_entry(config->entries, "uplink");
+    server = (entry = config_fatal_find_entry(entry->entries, "server"))->vardata;
+    port = (uint32_t)atoi((entry = config_fatal_find_entry(entry, "port"))->vardata);
+
+    initialise_sigyn(nick, nick, desc, server, port);
+
 }
 
-/*
- * Routine Description:
- * This routine retrieves the true/false value of the section/key requested.
- *
- * Arguments:
- *     section - A string stating the section of the config to locate the key.
- *     key     - A string stating the name of the key to retrieve the value of.
- *
- * Return value:
- *     This function returns a bool, defaulting to false if the key is
- *     not located.
- *
- */
-
-bool config_get_bool(const char *section, const char *key)
+#if 0
+mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t *entries, 
+        char * name)
 {
-    return ini_getbool(section, key, 0, me.config);
+    mowgli_config_file_entry_t * entry, * subentry;
+
+    while(entry != NULL)
+    {
+        if (!strcmp(entry->varname, name))
+            return entry;
+        else
+            entry = entry->next;
+    }
+
+    return NULL;
+}
+#endif
+
+mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t * start,
+        const char * name)
+{
+    mowgli_config_file_entry_t * e;
+
+    e = start;
+
+    while(e != NULL)
+    {
+        if (!strcmp(e->varname, name))
+            return e;
+        else
+            e = e->next;
+    }
+
+    return NULL;
 }
 
-/*
- * Routine Description:
- * This routine retrieves the numeric value of the section/key requested.
- *
- * Arguments:
- *     section - A string stating the section of the config to locate the key.
- *     key     - A string stating the name of the key to retrieve the value of.
- *
- * Return value:
- *     i - An integer containing the numeric value of the section/key,
- *         defaulting to 0 if the key is not found.
- *
- */
 
-int config_get_int(const char *section, const char *key)
+mowgli_config_file_entry_t * config_fatal_find_entry(mowgli_config_file_entry_t * entries,
+        char * name)
 {
-    int i;
-    char buf[128];
+    mowgli_config_file_entry_t * entry;
+    entry = config_find_entry(entries, name);
 
-    ini_gets(section, key, NULL, buf, 128, me.config);
-    if (buf == NULL)
-        return 0;
-    i = atoi(buf);
-   
-    return i;
+    if (entry == NULL)
+    {
+        printf("LOL FAIL! %s\n", name);
+        exit(-1);
+    }
+
+    return entry;
 }

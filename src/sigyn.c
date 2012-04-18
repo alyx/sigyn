@@ -26,7 +26,8 @@ fd_set readfds, writefds, nullfds;
  *    None.
  */
 
-static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, uint16_t port)
+void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, 
+        uint16_t port)
 {
     me.client = mowgli_alloc(sizeof(irc_user_t));
     me.stats.start = time(NULL);
@@ -43,7 +44,7 @@ static void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     me.uplink.winsock = false;
 #endif
 
-    mowgli_hook_init();
+    mowgli_hook_bootstrap();
     signals_init();
     modules_init();
     queue_init();
@@ -174,25 +175,25 @@ static void io_loop(void)
     }
 }
 
-static void loadmodules(void)
+static void loadmodules(mowgli_config_file_entry_t * entry)
 {
-    int i;
-    bool autoload;
-    module_t *m;
-    char buf[BUFSIZE];
+    module_t * m;
 
-    for (i = 0; ini_getkey("modules", i, buf, BUFSIZE, me.config) > 0; i++)
+    while (entry != NULL)
     {
-        autoload = config_get_bool("modules", buf);
-
-        if (autoload == true)
+        logger(LOG_DEBUG, "loadmodules(): Entry name, %s", entry->varname);
+        if (!strcmp(entry->varname, "loadmodule"))
         {
-            m = module_load(buf);
+            m = module_load(entry->vardata);
             if (m != NULL)
-                printf("[Modules] Loaded module %s\n", m->name);
+                logger(LOG_STATUS, "[Modules] Loaded module %s\n", m->name);
             else
-                printf("[Modules] Failed to load module %s\n", buf);
+                logger(LOG_STATUS, "[Modules] Failed to load module %s\n", entry->vardata);
         }
+        if (entry->entries != NULL)
+            loadmodules(entry->entries);
+
+        entry = entry->next;
     }
 }
 
@@ -200,15 +201,16 @@ int main(int argc, char *argv[])
 {
     char config[BUFSIZE];
 
-    snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.ini");
+    snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.conf");
 
-    me.config = config;
+    me.config = mowgli_config_file_load(config);
+    /*moo(me.config->entries, 0);*/
 
-    initialise_sigyn(config_get_string("sigyn", "nick"), config_get_string("sigyn", "nick"), config_get_string("sigyn", "realname"), config_get_string("uplink", "server"),
-            (uint16_t)config_get_int("uplink", "port"));
+    config_check(me.config);
+
     me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, NULL);
 
-    loadmodules();
+    loadmodules(me.config->entries);
     io_loop();
 
     sigyn_cleanup();
