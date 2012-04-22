@@ -34,36 +34,6 @@ void command_init(void)
 
 /*
  * Routine Description:
- * This routine searches through the command list to locate
- * the specified command.
- *
- * Arguments:
- *     name - A string containing the name of the command to seach for.
- *
- * Return value:
- *     c - Returns a command_t object if the command is located,
- *         and returns NULL if it is not.
- *
- */
-
-command_t *command_find(const char *name)
-{
-    command_t *c;
-    mowgli_node_t *n;
-
-    MOWGLI_ITER_FOREACH(n, commands.head)
-    {
-        c = (command_t *)n->data;
-
-        if (!strcasecmp(c->name, name))
-            return c;
-    }
-
-    return NULL;
-}
-
-/*
- * Routine Description:
  * This routine provides a function to create a command and append it to
  * the command list.
  *
