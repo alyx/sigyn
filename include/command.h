@@ -38,7 +38,7 @@ extern void command_del(const char *name, void *function);
  *
  */
 
-inline command_t * command_find(const char * name)
+static inline command_t * command_find(const char * name)
 {
     command_t * c;
     mowgli_node_t * n;
