@@ -20,10 +20,23 @@ enum log_levels {
     LOG_FATAL
 };
 
-FILE *logfile;
+typedef enum log_levels log_level_t;
+typedef struct _logger logger_t;
 
+struct _logger
+{
+    union {
+        FILE * f;
+        char * channel;
+    }
+
+    log_level_t level;
+    bool file;
+}
+
+extern logger_t * logger_add_file(const char * file, log_level_t level);
 extern void logger_init(const char *filename);
 extern void logger_deinit(void);
-extern void logger(int level, char *format, ...);
+extern void logger(log_level_t level, char *format, ...);
 
 #endif

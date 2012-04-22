@@ -5,7 +5,43 @@
  * Abstract: This module implements a method of logging to a file
  */
 
-#include "logger.h"
+#include "sigyn.h"
+
+mowgli_heap_t * logheap;
+mowgli_list_t loglocs;
+
+int logger_add_file(const char * file, log_level_t level)
+{
+    FILE * f;
+    logfile_t * newlog;
+
+    newlog = mowgli_heap_alloc(logheap);
+
+    if ((f = fopen(file, "a")) == NULL)
+        return -1;
+    newlog->f = f;
+    newlog->level = level;
+    newlog->file = true;
+
+    mowgli_node_add(newlog, mowgli_node_create(), &loglocs); 
+
+    return 0;
+}
+
+int logger_add_channel(const char * channel, log_level_t level)
+{
+    logger_t * newlog;
+
+    newlog = mowgli_heap_alloc(logheap);
+
+    newlog->channel = strdup(channel);
+    newlog->level = level;
+    newlog->file = false;
+
+    mowgli_node_add(newlog, mowgli_node_create(), &loglocs);
+
+    return 0;
+}
 
 /*
  * Routine Description:
@@ -19,12 +55,23 @@
  *     None
  */
 
-void logger_init(const char *filename)
+void logger_init(mowgli_config_file_entry_t * config)
 {
-    if ((logfile = fopen(filename, "a")) == NULL)
+    mowgli_config_file_entry_t * e, f;
+    e = config;
+    while (e != NULL)
     {
-        fprintf(stderr, "Cannot open logfile\n");
-        exit(1);
+        if (!strcmp(e->varname, "logfile") && e->entries != NULL)
+        {
+            f = e->entries;
+
+
+            if ((logfile = fopen(filename, "a")) == NULL)
+            {
+                fprintf(stderr, "Cannot open logfile\n");
+                exit(1);
+            }
+        }
     }
 }
 
@@ -41,8 +88,19 @@ void logger_init(const char *filename)
 
 void logger_deinit(void)
 {
-    if (logfile != NULL)
-        fclose(logfile);
+    logger_t * l;
+    mowgli_node_t * n;
+
+    MOWGLI_ITER_FOREACH(n, loglocs.head)
+    {
+        l = (logger_t *)n->data;
+        if (l->file)
+            fclose(l->f);
+        else
+            mowgli_free(l->channel);
+        mowgli_node_delete(n, &loglocs);
+        mowgli_heap_free(logheap, l);
+    }
 }
 
 /*
@@ -60,32 +118,37 @@ void logger_deinit(void)
  *     None
  */
 
-void logger(int level, char *format, ...)
+void logger(log_level_t level, char *format, ...)
 {
     int i;
     char buf[BUFSIZE], datetime[64];
+    logger_t * l;
+    mowgli_node_t * n;
     time_t t;
     struct tm tm;
-
-    /*i = config_get_int("logging", "level");*/
-    i = 0;
-
-    if (level < i)
-        return;
 
     va_list args;
     va_start(args, format);
     vsnprintf(buf, BUFSIZE, format, args);
     va_end(args);
 
-    if (logfile == NULL)
-    {
-        logger_init("sigyn.log");
-    }
-
     time(&t);
     tm = *localtime(&t);
     strftime(datetime, sizeof(datetime) - 1, "[%d/%m/%Y %H:%M:%S]", &tm);
-    fprintf(logfile, "%s %s\n", datetime, buf);
-    fflush(logfile);
+
+    MOWGLI_ITER_FOREACH(n, loglocs.head)
+    {
+        l = (logger_t *)n->data;
+
+        if (l->level <= level)
+        {
+            if (l->file)
+            {
+                fprintf(l->file, "%s %s\n", datetime, buf);
+                fflush(l->file);
+            }
+            else
+                irc_privmsg(l->channel, "%s %s", datetime, buf);
+        }
+    }
 }
