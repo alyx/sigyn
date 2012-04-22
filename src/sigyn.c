@@ -175,6 +175,7 @@ static void io_loop(void)
     }
 }
 
+
 static void loadmodules(mowgli_config_file_entry_t * entry)
 {
     module_t * m;
@@ -204,8 +205,7 @@ int main(int argc, char *argv[])
     snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.conf");
 
     me.config = mowgli_config_file_load(config);
-    /*moo(me.config->entries, 0);*/
-
+    
     config_check(me.config);
 
     me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, NULL);
