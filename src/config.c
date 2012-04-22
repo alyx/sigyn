@@ -17,7 +17,6 @@ void config_check(mowgli_config_file_t * config)
     port = (uint32_t)atoi((entry = config_fatal_find_entry(entry, "port"))->vardata);
 
     initialise_sigyn(nick, nick, desc, server, port);
-
 }
 
 #if 0
@@ -70,4 +69,19 @@ mowgli_config_file_entry_t * config_fatal_find_entry(mowgli_config_file_entry_t 
     }
 
     return entry;
+}
+
+void config_print(mowgli_config_file_entry_t * entries, int level)
+{
+    mowgli_config_file_entry_t * e;
+
+    e = entries;
+
+    while (e != NULL)
+    {
+        fprintf(stderr, "%d:\t%s\t%s\n", level, e->varname, e->vardata);
+        if (e->entries != NULL)
+            config_print(e->entries, level+1);
+        e = e->next;
+    }
 }

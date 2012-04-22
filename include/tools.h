@@ -14,6 +14,7 @@ extern mowgli_config_file_entry_t * config_fatal_find_entry(
         mowgli_config_file_entry_t * entries, char * name);
 extern mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t * start,
         const char * name);
+extern void config_print(mowgli_config_file_entry_t * entries, int level);
 /* string.c functions */
 extern void strip(char *line, char *strippers);
 #ifndef HAVE_STRLCAT
