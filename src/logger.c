@@ -10,33 +10,34 @@
 mowgli_heap_t * logheap;
 mowgli_list_t loglocs;
 
-int logger_add_file(const char * file, log_level_t level)
+int logger_add_file(const char * file, unsigned int level)
 {
     FILE * f;
-    logfile_t * newlog;
+    logger_t * newlog;
 
     newlog = mowgli_heap_alloc(logheap);
 
     if ((f = fopen(file, "a")) == NULL)
         return -1;
-    newlog->f = f;
+
+    newlog->f     = f;
     newlog->level = level;
-    newlog->file = true;
+    newlog->file  = true;
 
     mowgli_node_add(newlog, mowgli_node_create(), &loglocs); 
 
     return 0;
 }
 
-int logger_add_channel(const char * channel, log_level_t level)
+int logger_add_channel(const char * channel, unsigned int level)
 {
     logger_t * newlog;
 
     newlog = mowgli_heap_alloc(logheap);
 
     newlog->channel = strdup(channel);
-    newlog->level = level;
-    newlog->file = false;
+    newlog->level   = level;
+    newlog->file    = false;
 
     mowgli_node_add(newlog, mowgli_node_create(), &loglocs);
 
@@ -57,20 +58,20 @@ int logger_add_channel(const char * channel, log_level_t level)
 
 void logger_init(mowgli_config_file_entry_t * config)
 {
-    mowgli_config_file_entry_t * e, f;
+    logger_t * l;
+    mowgli_config_file_entry_t * e, f, g;
     e = config;
+
+    logheap = mowgli_heap_create(sizeof(logger_t), 1024, BH_NOW);
+    if (!logheap)
+        sigyn_fatal("logger_init(): block allocator failed.");
+
     while (e != NULL)
     {
-        if (!strcmp(e->varname, "logfile") && e->entries != NULL)
+        if (!strcmp(e->varname, "log") && e->entries != NULL)
         {
-            f = e->entries;
-
-
-            if ((logfile = fopen(filename, "a")) == NULL)
-            {
-                fprintf(stderr, "Cannot open logfile\n");
-                exit(1);
-            }
+            /*f = e->entries;*/
+            f = config_find_entry(e->entries, ); 
         }
     }
 }
@@ -94,10 +95,12 @@ void logger_deinit(void)
     MOWGLI_ITER_FOREACH(n, loglocs.head)
     {
         l = (logger_t *)n->data;
+
         if (l->file)
             fclose(l->f);
         else
             mowgli_free(l->channel);
+
         mowgli_node_delete(n, &loglocs);
         mowgli_heap_free(logheap, l);
     }
@@ -118,7 +121,7 @@ void logger_deinit(void)
  *     None
  */
 
-void logger(log_level_t level, char *format, ...)
+void logger(unsigned int level, char *format, ...)
 {
     int i;
     char buf[BUFSIZE], datetime[64];
@@ -140,7 +143,7 @@ void logger(log_level_t level, char *format, ...)
     {
         l = (logger_t *)n->data;
 
-        if (l->level <= level)
+        if (l->level & level)
         {
             if (l->file)
             {

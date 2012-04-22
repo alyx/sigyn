@@ -11,16 +11,12 @@
  * define various log levels;
  * this is only for making calls to logger() look prettier.
  */
-enum log_levels {
-    LOG_RAW,
-    LOG_DEBUG,
-    LOG_WARNING,
-    LOG_STATUS,
-    LOG_GENERAL,
-    LOG_FATAL
-};
+#define LOG_ALL 0x0
+#define LOG_RAW 0x2
+#define LOG_DEBUG 0x4
+#define LOG_ERROR 0x8
+#define LOG_GENERAL 0x20
 
-typedef enum log_levels log_level_t;
 typedef struct _logger logger_t;
 
 struct _logger
@@ -28,15 +24,14 @@ struct _logger
     union {
         FILE * f;
         char * channel;
-    }
-
-    log_level_t level;
+    };
+    unsigned int level;
     bool file;
 }
 
-extern logger_t * logger_add_file(const char * file, log_level_t level);
+extern logger_t * logger_add_file(const char * file, unsigned int level);
 extern void logger_init(const char *filename);
 extern void logger_deinit(void);
-extern void logger(log_level_t level, char *format, ...);
+extern void logger(unsigned int level, char *format, ...);
 
 #endif
