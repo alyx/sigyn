@@ -66,13 +66,13 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
 
 void sigyn_cleanup(void)
 {
-    logger(LOG_STATUS, "Running cleanup.");
+    logger(LOG_GENERAL, "Running cleanup.");
     uplink_disconnect();
 #ifdef _WIN32
     if(me.uplink.winsock == true)
     {
         WSACleanup();
-        logger(LOG_STATUS, "Shut down winsock.");
+        logger(LOG_GENERAL, "Shut down winsock.");
     }
 #endif
     logger_deinit();
@@ -99,7 +99,7 @@ void sigyn_fatal(char *format, ...)
     va_start(args, format);
     vsnprintf(buf, BUFSIZE, format, args);
     va_end(args);
-    logger(LOG_FATAL, buf);
+    logger(LOG_ERROR, buf);
     irc_quit(buf);
     sigyn_cleanup();
     exit(1);
@@ -187,9 +187,9 @@ static void loadmodules(mowgli_config_file_entry_t * entry)
         {
             m = module_load(entry->vardata);
             if (m != NULL)
-                logger(LOG_STATUS, "[Modules] Loaded module %s\n", m->name);
+                logger(LOG_GENERAL, "[Modules] Loaded module %s\n", m->name);
             else
-                logger(LOG_STATUS, "[Modules] Failed to load module %s\n", entry->vardata);
+                logger(LOG_GENERAL, "[Modules] Failed to load module %s\n", entry->vardata);
         }
         if (entry->entries != NULL)
             loadmodules(entry->entries);
@@ -206,6 +206,7 @@ int main(int argc, char *argv[])
 
     me.config = mowgli_config_file_load(config);
     
+    logger_init(me.config->entries);
     config_check(me.config);
 
     me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, NULL);
