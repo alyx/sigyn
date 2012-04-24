@@ -49,7 +49,7 @@ static mowgli_module_t *linker_open_ext(const char *path, char *errbuf, int errl
 	}
 
 	ret = mowgli_module_open(buf);
-	free(buf);
+	mowgli_free(buf);
 
 	if (!ret)
 	{
@@ -99,7 +99,7 @@ module_t *module_load(const char *filespec)
 
 	if ((m = module_find(pathname)))
 	{
-		logger(LOG_GENERAL, "module_load(): module \2%s\2 is already loaded [at 0x%lx]", pathname, (unsigned long)m->address);
+		logger(LOG_DEBUG, "module_load(): module \2%s\2 is already loaded [at 0x%lx]", pathname, (unsigned long)m->address);
 		return NULL;
 	}
 
@@ -116,7 +116,7 @@ module_t *module_load(const char *filespec)
 		if (! hdata.module)
 		{
 			if (!hdata.handled)
-				logger(LOG_WARNING, "%s", errbuf);
+				logger(LOG_DEBUG, "%s", errbuf);
 
 			return NULL;
 		}
@@ -254,7 +254,7 @@ void module_load_dir(const char *dirspec)
 
 	if (!module_dir)
 	{
-		logger(LOG_WARNING, "module_load_dir(): %s: %s", dirspec, strerror(errno));
+		logger(LOG_DEBUG, "module_load_dir(): %s: %s", dirspec, strerror(errno));
 		return;
 	}
 
@@ -294,7 +294,7 @@ void module_load_dir_match(const char *dirspec, const char *pattern)
 
 	if (!module_dir)
 	{
-		logger(LOG_WARNING, "module_load_dir(): %s: %s", dirspec, strerror(errno));
+		logger(LOG_DEBUG, "module_load_dir(): %s: %s", dirspec, strerror(errno));
 		return;
 	}
 
@@ -348,7 +348,7 @@ void module_unload(module_t *m, module_unload_intent_t intent)
 	n = mowgli_node_find(m, &modules);
 	if (n != NULL)
 	{
-		logger(LOG_GENERAL, "module_unload(): unloaded \2%s\2", m->name);
+		logger(LOG_DEBUG, "module_unload(): unloaded \2%s\2", m->name);
 
 		if (m->header && m->header->deinit)
 			m->header->deinit(intent);
@@ -390,7 +390,7 @@ void *module_locate_symbol(const char *modname, const char *sym)
 
 	if (!(m = module_find_published(modname)))
 	{
-		logger(LOG_WARNING, "module_locate_symbol(): %s is not loaded.", modname);
+		logger(LOG_DEBUG, "module_locate_symbol(): %s is not loaded.", modname);
 		return NULL;
 	}
 
@@ -401,7 +401,7 @@ void *module_locate_symbol(const char *modname, const char *sym)
 
 	if (modtarget != NULL && !mowgli_node_find(m, &modtarget->deplist))
 	{
-		logger(LOG_WARNING, "module_locate_symbol(): %s added as a dependency for %s (symbol: %s)",
+		logger(LOG_DEBUG, "module_locate_symbol(): %s added as a dependency for %s (symbol: %s)",
 			m->name, modtarget->name, sym);
 		mowgli_node_add(m, mowgli_node_create(), &modtarget->deplist);
 		mowgli_node_add(modtarget, mowgli_node_create(), &m->dephost);
@@ -410,7 +410,7 @@ void *module_locate_symbol(const char *modname, const char *sym)
 	symptr = mowgli_module_symbol(m->handle, sym);
 
 	if (symptr == NULL)
-		logger(LOG_WARNING, "module_locate_symbol(): could not find symbol %s in module %s.", sym, modname);
+		logger(LOG_DEBUG, "module_locate_symbol(): could not find symbol %s in module %s.", sym, modname);
 	return symptr;
 }
 
@@ -494,7 +494,7 @@ bool module_request(const char *name)
 
 		if (!strcasecmp(m->name, name))
 		{
-			logger(LOG_WARNING, "module_request(): circular dependency between modules %s and %s",
+			logger(LOG_DEBUG, "module_request(): circular dependency between modules %s and %s",
 					modtarget != NULL ? modtarget->name : "?",
 					m->name);
 			return false;

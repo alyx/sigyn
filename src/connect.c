@@ -54,7 +54,7 @@ int StartWSA(void)
     switch(wsres)
     {
         case 0:
-            logger(LOG_STATUS, "Successfully started Winsock.");
+            logger(LOG_DEBUG, "Successfully started Winsock.");
             me.uplink.winsock = true;
         case WSASYSNOTREADY:
             sigyn_fatal("Cannot start winsock: Underlying network is not ready for communication.");
@@ -131,7 +131,7 @@ socket_t uplink_connect(char *uplink, uint16_t port, char *vhost)
         sigyn_fatal("Cannot resolve hostname (%s).");
     }
 
-    logger(LOG_STATUS, "Attempting to connect to %s:%d", uplink, port);
+    logger(LOG_DEBUG, "Attempting to connect to %s:%d", uplink, port);
     if (!(sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol)))
     {
         freeaddrinfo(res);
@@ -171,7 +171,7 @@ socket_t uplink_connect(char *uplink, uint16_t port, char *vhost)
 
         freeaddrinfo(bindres);
     }
-    logger(LOG_STATUS, "No vhost found. Not trying to set one.");
+    logger(LOG_DEBUG, "No vhost found. Not trying to set one.");
 
     set_nb(sock);
 
@@ -179,11 +179,11 @@ socket_t uplink_connect(char *uplink, uint16_t port, char *vhost)
     {
         case AF_INET:
             ((struct sockaddr_in *) res->ai_addr)->sin_port = htons(port);
-            logger(LOG_STATUS, "Socket is IPv4.");
+            logger(LOG_DEBUG, "Socket is IPv4.");
             break;
         case AF_INET6:
             ((struct sockaddr_in6 *) res->ai_addr)->sin6_port = htons(port);
-            logger(LOG_STATUS, "Socket is IPv6.");
+            logger(LOG_DEBUG, "Socket is IPv6.");
             break;
     }
 
