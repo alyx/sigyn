@@ -12,6 +12,35 @@ static void handle_privmsg(void *data, UNUSED void *udata);
 
 /*
  * Routine Description:
+ * This routine searches through the command list to locate
+ * the specified command.
+ *
+ * Arguments:
+ *     name - A string containing the name of the command to seach for.
+ *
+ * Return value:
+ *     c - Returns a command_t object if the command is located,
+ *         and returns NULL if it is not.
+ *
+ */
+
+command_t * command_find(const char * name)
+{
+    command_t * c;
+    mowgli_node_t * n;
+
+    MOWGLI_ITER_FOREACH(n, commands.head)
+    {
+        c = (command_t *)n->data;
+
+        if (!strcasecmp(c->name, name))
+            return c;
+    }
+
+    return NULL;
+}
+/*
+ * Routine Description:
  * This routine initialises the command memory heap.
  *
  * Arguments:
@@ -111,14 +140,21 @@ static void handle_privmsg(void *data, UNUSED void *udata)
     command_t *cmd;
     int parc;
     char *parv[MAXPARC + 1], *tmp, *prefix;
+    mowgli_config_file_entry_t * e;
 
     event = (irc_event_t *)data;
     clone = event;
 
     tmp = strdup(event->data);
-    prefix = config_find_entry(config_find_entry(me.config->entries, "sigyn"), "fantasy")->vardata;
-    if (prefix == NULL)
+    /*e = config_find_entry(config_find_entry(me.config->entries, "sigyn"), "fantasy");*/
+    e = config_find_entry(me.config->entries, "sigyn");
+    if (e == NULL)
         return;
+    e = config_find_entry(e->entries, "fantasy");
+    if (e == NULL)
+        return;
+    else
+        prefix = e->vardata;
 
     len = (strlen(prefix) - 1);
 
