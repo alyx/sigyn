@@ -22,7 +22,7 @@ int logger_add_file(const char * file, unsigned int level)
 
     newlog->f     = f;
     newlog->level = level;
-    newlog->file  = true;
+    newlog->isFile  = true;
 
     mowgli_node_add(newlog, mowgli_node_create(), &loglocs); 
 
@@ -37,7 +37,7 @@ int logger_add_channel(const char * channel, unsigned int level)
 
     newlog->channel = strdup(channel);
     newlog->level   = level;
-    newlog->file    = false;
+    newlog->isFile    = false;
 
     mowgli_node_add(newlog, mowgli_node_create(), &loglocs);
 
@@ -60,7 +60,7 @@ void logger_init(mowgli_config_file_entry_t * config)
 {
     FILE * out;
     logger_t * l;
-    mowgli_config_file_entry_t * e, f, g;
+    mowgli_config_file_entry_t * e, * f, * g;
     e = config;
 
     logheap = mowgli_heap_create(sizeof(logger_t), 1024, BH_NOW);
@@ -78,9 +78,9 @@ void logger_init(mowgli_config_file_entry_t * config)
                 mowgli_heap_free(logheap, l);
 
             if (!strcmp("file", f->vardata))
-                l->file = true;
+                l->isFile = true;
             else if (!strcmp("channel", f->vardata))
-                l->file = false;
+                l->isFile = false;
             else
                 mowgli_heap_free(logheap, l);
 
@@ -110,12 +110,14 @@ void logger_init(mowgli_config_file_entry_t * config)
             f = config_find_entry(e->entries, "location");
             if (f == NULL || f->vardata == NULL)
                 mowgli_heap_free(logheap, l);
-            if (l->file == true)
-                l->f = fopen(f->vardata);
+            if (l->isFile == true)
+                l->f = fopen(f->vardata, "a");
             else
                 l->channel = strdup(f->vardata);
 
+            mowgli_node_add(l, mowgli_node_create(), &loglocs);
         }
+        e = e->next;
     }
 }
 
@@ -139,7 +141,7 @@ void logger_deinit(void)
     {
         l = (logger_t *)n->data;
 
-        if (l->file)
+        if (l->isFile)
             fclose(l->f);
         else
             mowgli_free(l->channel);
@@ -188,10 +190,10 @@ void logger(unsigned int level, char *format, ...)
 
         if (l->level & level)
         {
-            if (l->file)
+            if (l->isFile)
             {
-                fprintf(l->file, "%s %s\n", datetime, buf);
-                fflush(l->file);
+                fprintf(l->f, "%s %s\n", datetime, buf);
+                fflush(l->f);
             }
             else
                 irc_privmsg(l->channel, "%s %s", datetime, buf);

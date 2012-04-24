@@ -26,11 +26,12 @@ struct _logger
         char * channel;
     };
     unsigned int level;
-    bool file;
-}
+    bool isFile;
+};
 
-extern logger_t * logger_add_file(const char * file, unsigned int level);
-extern void logger_init(const char *filename);
+extern int logger_add_file(const char * file, unsigned int level);
+extern int logger_add_channel(const char * channel, unsigned int level);
+extern void logger_init(mowgli_config_file_entry_t * config);
 extern void logger_deinit(void);
 extern void logger(unsigned int level, char *format, ...);
 
