@@ -4,13 +4,12 @@ void config_check(mowgli_config_file_t * config)
 {
     mowgli_config_file_entry_t * entry;
     
-    char * nick, * desc, * server, fantasy;
+    char * nick, * desc, * server;
     uint16_t port;
 
     entry = config_fatal_find_entry(config->entries, "sigyn");
     nick = (entry = config_fatal_find_entry(entry->entries, "nick"))->vardata;
     desc = (entry = config_fatal_find_entry(entry, "desc"))->vardata;
-    fantasy = (char)(entry = config_fatal_find_entry(entry, "fantasy"))->vardata;
 
     entry = config_fatal_find_entry(config->entries, "uplink");
     server = (entry = config_fatal_find_entry(entry->entries, "server"))->vardata;
