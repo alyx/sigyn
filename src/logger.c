@@ -7,7 +7,7 @@
 
 #include "sigyn.h"
 
-mowgli_heap_t * logheap;
+static mowgli_heap_t * logheap;
 mowgli_list_t loglocs;
 
 int logger_add_file(const char * file, unsigned int level)
@@ -58,6 +58,7 @@ int logger_add_channel(const char * channel, unsigned int level)
 
 void logger_init(mowgli_config_file_entry_t * config)
 {
+    FILE * out;
     logger_t * l;
     mowgli_config_file_entry_t * e, f, g;
     e = config;
@@ -70,8 +71,50 @@ void logger_init(mowgli_config_file_entry_t * config)
     {
         if (!strcmp(e->varname, "log") && e->entries != NULL)
         {
+            l = mowgli_heap_alloc(logheap);
             /*f = e->entries;*/
-            f = config_find_entry(e->entries, ); 
+            f = config_find_entry(e->entries, "type");
+            if (f == NULL)
+                mowgli_heap_free(logheap, l);
+
+            if (!strcmp("file", f->vardata))
+                l->file = true;
+            else if (!strcmp("channel", f->vardata))
+                l->file = false;
+            else
+                mowgli_heap_free(logheap, l);
+
+            f = config_find_entry(e->entries, "level");
+            if (f == NULL)
+                mowgli_heap_free(logheap, l);
+            if (f->entries == NULL)
+                mowgli_heap_free(logheap, l);
+            g = f->entries;
+            l->level = 0;
+            while (g != NULL)
+            {
+                if (!strcmp(g->varname, "raw"))
+                    l->level |= LOG_RAW;
+                else if (!strcmp(g->varname, "debug"))
+                    l->level |= LOG_DEBUG;
+                else if (!strcmp(g->varname, "error"))
+                    l->level |= LOG_ERROR;
+                else if (!strcmp(g->varname, "general"))
+                    l->level |= LOG_GENERAL;
+                else if (!strcmp(g->varname, "all"))
+                    l->level |= LOG_ALL;
+
+                g = g->next;
+            }
+
+            f = config_find_entry(e->entries, "location");
+            if (f == NULL || f->vardata == NULL)
+                mowgli_heap_free(logheap, l);
+            if (l->file == true)
+                l->f = fopen(f->vardata);
+            else
+                l->channel = strdup(f->vardata);
+
         }
     }
 }
