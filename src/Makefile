@@ -38,6 +38,6 @@ install-extra:
 	-$(INSTALL) -m 755 -d $(DESTDIR)$(RUNDIR)
 	-$(INSTALL) -m 755 -d $(DESTDIR)$(DATADIR)
 	-$(INSTALL) -m 755 -d $(DESTDIR)$(SHAREDIR)/help
-	$(INSTALL) -m 600 -c ../dist/sigyn.ini.example $(DESTDIR)$(sysconfdir)
+	$(INSTALL) -m 600 -c ../dist/conf.example $(DESTDIR)$(sysconfdir)
 
 include .deps
