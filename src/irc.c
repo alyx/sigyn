@@ -20,7 +20,8 @@
  *
  */
 
-int raw(char *line, ...) {
+int raw(char *line, ...)
+{
     char sendbuf[510];
     int length;
     va_list args;

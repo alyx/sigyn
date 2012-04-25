@@ -11,7 +11,7 @@
 
 #include <errno.h>
 #ifdef ENABLE_STACK
-#include <libunwind.h>
+# include <libunwind.h>
 #endif
 #include <stdio.h>
 #include <stdarg.h>

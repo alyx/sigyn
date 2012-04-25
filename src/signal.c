@@ -12,6 +12,17 @@
      * Thought needed here before development.
      */
 
+static void signal_hup_handler(int signum)
+{
+  logger(LOG_GENERAL, "Received HUP, rehashing.");
+  
+  char config[BUFSIZE];
+  snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.conf");
+  
+  mowgli_config_file_free(me.config);
+  me.config = mowgli_config_file_load(config);
+}
+
 static void signal_int_handler(int signum)
 {
     sigyn_fatal("caught interrupt");
@@ -32,7 +43,7 @@ static void signal_usr1_handler(int signum)
 
 void signals_init(void)
 {
-    mowgli_signal_install_handler(SIGHUP, SIG_IGN);
+    mowgli_signal_install_handler(SIGHUP, signal_hup_handler);
     mowgli_signal_install_handler(SIGINT, signal_int_handler);
     mowgli_signal_install_handler(SIGTERM, SIG_IGN);
 
