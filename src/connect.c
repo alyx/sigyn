@@ -1,5 +1,5 @@
 /* Sigyn - A reasonably sane IRC bot.
- * Copyright (c) 2011 Alyx Wolcott <alyx@malkier.net>
+ * Copyright (c) 2011-2012 Alexandria Wolcott <alyx@malkier.net>
  * Released under the BSD license.
  *
  * Abstract: This module handles connecting to the IRC server.

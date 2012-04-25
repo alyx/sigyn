@@ -1,3 +1,8 @@
+/* Sigyn - A reasonably sane IRC bot.
+ * Copyright (c) 2011-2012 Alexandria Wolcott <alyx@malkier.net>
+ * Released under the BSD license.
+ */
+
 #include "sigyn.h"
 
 void daemonise(const char *pidpath)

@@ -1,5 +1,5 @@
 /* Sigyn - A reasonably sane IRC bot.
- * Copyright (c) Alexandria Wolcott <alyx@malkier.net>
+ * Copyright (c) 2011-2012 Alexandria Wolcott <alyx@malkier.net>
  * Released under the BSD license.
  */
 
@@ -58,7 +58,7 @@ irc_user_t *parse_user(char hostmask[])
 
 /*
  * Routine Description:
- * This routine converts a raw string from the server into a format suitable for placing into the recieve queue.
+ * This routine converts a raw string from the server into a format suitable for placing into the receive queue.
  *
  * Arguments:
  *     line - A string containing the raw IRC line.
