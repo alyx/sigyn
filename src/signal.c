@@ -7,20 +7,15 @@
 
 #include <signal.h>
 
-    /* XXX: I would almost think make to make SIGHUP this rehash the config,
-     * but we really don't have a reason to rehash things, I think.
-     * Thought needed here before development.
-     */
-
 static void signal_hup_handler(int signum)
 {
-  logger(LOG_GENERAL, "Received HUP, rehashing.");
-  
-  char config[BUFSIZE];
-  snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.conf");
-  
-  mowgli_config_file_free(me.config);
-  me.config = mowgli_config_file_load(config);
+    logger(LOG_GENERAL, "Received HUP, rehashing.");
+
+    char config[BUFSIZE];
+    snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.conf");
+
+    mowgli_config_file_free(me.config);
+    me.config = mowgli_config_file_load(config);
 }
 
 static void signal_int_handler(int signum)
