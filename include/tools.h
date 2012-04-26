@@ -17,7 +17,7 @@ extern mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t
 extern void config_print(mowgli_config_file_entry_t * entries, int level);
 /* string.c functions */
 extern void strip(char *line, char *strippers);
-extern const char *strip_colors_codes(const char *message);
+extern const char *strip_colour_codes(const char *message);
 #ifndef HAVE_STRLCAT
 extern size_t strlcat(char *dest, const char *src, size_t count);
 #endif

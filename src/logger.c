@@ -192,7 +192,7 @@ void logger(unsigned int level, char *format, ...)
         {
             if (l->isFile)
             {
-		fprintf(l->f, "%s %s\n", datetime, strip_colors_codes(buf));
+		fprintf(l->f, "%s %s\n", datetime, strip_colour_codes(buf));
                 fflush(l->f);
             }
             else

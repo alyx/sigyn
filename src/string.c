@@ -68,7 +68,7 @@ void strip(char *line, char *strippers)
  *       - none
  */
 // FIXME: This destroys strings! make it /STRIP/ the chars, not remove them!
-const char *strip_colors_codes(const char *buf)
+const char *strip_colour_codes(const char *buf)
 {
     static char outbuf[BUFSIZE];
     const char *in = buf;

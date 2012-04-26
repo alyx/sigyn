@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
     {
 	// FIXME: This should use sigyn_fatal but it seems to crash when it is used.
 	fprintf(stderr, "Cannot load configuration file.\n");
-	return EXIT_FAILURE; // Error code?
+	return EXIT_FAILURE;
     }
     logger_init(me.config->entries);
     config_check(me.config);
