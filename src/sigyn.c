@@ -4,6 +4,7 @@
  */
 
 #include "sigyn.h"
+#include "ext/getopt_long.h"
 
 fd_set readfds, writefds, nullfds;
 
@@ -50,6 +51,51 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     queue_init();
     command_init();
     timer_init();
+}
+
+/*
+ * Routine Description:
+ * This routine provides a way of parsing the provided command line
+ * arguments to the program.
+ *
+ * Arguments:
+ *     Number of arguments - An integer containing the number of arguments
+ *			     for the character array.
+ *     Arguments - A character array containing all the command line options.
+ *
+ * Return value:
+ *     None
+ */
+
+void parse_commandline_options(int argc, char **argv)
+{
+    int r;
+
+    mowgli_getopt_option_t long_opts[] = {
+      { NULL, 0, NULL, 0, 0 },
+    };
+
+    while ((r = mowgli_getopt_long(argc, argv, "hv", long_opts, NULL)) != -1)
+    {
+	switch (r)
+	{
+	    case 'h':
+		printf("usage: sigyn [-hv]\n\n"
+		  " -h		Print this message and exit\n"
+		  " -v		Print the version information and exit\n");
+		exit(EXIT_SUCCESS);
+		break;
+	    case 'v':
+		printf("%s by Alexandria Wolcott.\n", PACKAGE_STRING);
+		exit(EXIT_SUCCESS);
+		break;
+	    default:
+		printf("unknown argument %c\n", (char)r);
+		printf("usage: sigyn [-hv]\n");
+		exit(EXIT_SUCCESS);
+		break;
+	}
+    }
 }
 
 /*
@@ -200,6 +246,8 @@ static void loadmodules(mowgli_config_file_entry_t * entry)
 
 int main(int argc, char *argv[])
 {
+
+    parse_commandline_options(argc, argv);
     char config[BUFSIZE];
 
     snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.conf");
