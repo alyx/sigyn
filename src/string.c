@@ -53,6 +53,46 @@ void strip(char *line, char *strippers)
     }
 }
 
+/*
+ * Routine Description:
+ * Duplicates a string, stripping control codes in the
+ * process.
+ *
+ * Inputs:
+ *       - buffer to strip
+ *
+ * Outputs:
+ *       - duplicated buffer without control codes
+ *
+ * Side Effects:
+ *       - none
+ */
+// FIXME: This destroys strings! make it /STRIP/ the chars, not remove them!
+const char *strip_colors_codes(const char *buf)
+{
+    static char outbuf[BUFSIZE];
+    const char *in = buf;
+    char *out = outbuf;
+
+    for (; *in != '\0'; in++)
+    {
+	if (*in > 31)
+	{
+	    *out++ = *in;
+	    continue;
+	}
+	else if (*in == 3)
+	{
+	    in++;
+	    while (isdigit(*in))
+	      in++;
+	}
+    }
+
+    *out = '\0';
+    return outbuf;
+}
+
 /* These functions are taken from Linux. */
 size_t strlcat(char *dest, const char *src, size_t count)
 {

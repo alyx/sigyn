@@ -18,6 +18,12 @@ static void signal_hup_handler(int signum)
     me.config = mowgli_config_file_load(config);
 }
 
+static void signal_pipe_handler(int signum)
+{
+  logger(LOG_DEBUG, "Received SIGPIPE, broken socket somewhere, ignoring.");
+  mowgli_signal_install_handler(SIGPIPE, SIG_IGN);
+}
+
 static void signal_int_handler(int signum)
 {
     sigyn_fatal("caught interrupt");
@@ -44,5 +50,6 @@ void signals_init(void)
 
     mowgli_signal_install_handler(SIGUSR1, signal_usr1_handler);
     mowgli_signal_install_handler(SIGSEGV, signal_segv_handler);
+    mowgli_signal_install_handler(SIGPIPE, signal_pipe_handler);
 }
 

@@ -46,7 +46,7 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
 #endif
 
     mowgli_hook_bootstrap();
-    signals_init();
+//     signals_init();
     modules_init();
     queue_init();
     command_init();
@@ -112,6 +112,7 @@ void parse_commandline_options(int argc, char **argv)
 void sigyn_cleanup(void)
 {
     logger(LOG_GENERAL, "Running cleanup.");
+    modules_shutdown();
     uplink_disconnect();
 #ifdef _WIN32
     if(me.uplink.winsock == true)
@@ -196,6 +197,7 @@ static void io_loop(void)
             {
                 if (!me.uplink.connected)
                 {
+		    // FIXME: a SIGPIPE is being generated here!
                     sigyn_introduce_client(me.client->nick);
                     sendq_dump(me.uplink.sock);
                     me.uplink.connected = true;
@@ -245,7 +247,7 @@ static void loadmodules(mowgli_config_file_entry_t * entry)
 
 int main(int argc, char *argv[])
 {
-
+    signals_init();
     parse_commandline_options(argc, argv);
     char config[BUFSIZE];
 
@@ -257,9 +259,8 @@ int main(int argc, char *argv[])
     {
 	// FIXME: This should use sigyn_fatal but it seems to crash when it is used.
 	fprintf(stderr, "Cannot load configuration file.\n");
-	return 1; // Error code?
+	return EXIT_FAILURE; // Error code?
     }
-    
     logger_init(me.config->entries);
     config_check(me.config);
 
@@ -269,6 +270,6 @@ int main(int argc, char *argv[])
     io_loop();
 
     sigyn_cleanup();
-    return 0;
+    return EXIT_SUCCESS;
 }
 

@@ -101,6 +101,7 @@ extern void _modinit(module_t *m);
 extern void _moddeinit(module_unload_intent_t intent);
 
 extern void modules_init(void);
+extern void modules_shutdown(void);
 extern module_t *module_load(const char *filespec);
 extern void module_load_dir(const char *dirspec);
 extern void module_load_dir_match(const char *dirspec, const char *pattern);

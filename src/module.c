@@ -69,6 +69,21 @@ void modules_init(void)
 	}
 }
 
+void modules_shutdown(void)
+{
+    mowgli_node_t *n;
+
+    MOWGLI_ITER_FOREACH(n, modules.head)
+    {
+      module_t *m = n->data;
+
+      module_unload(m, MODULE_UNLOAD_INTENT_PERM);
+    }
+  
+    if(module_heap)
+      mowgli_heap_destroy(module_heap);
+}
+
 /*
  * module_load()
  *

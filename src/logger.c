@@ -46,7 +46,7 @@ int logger_add_channel(const char * channel, unsigned int level)
 
 /*
  * Routine Description:
- * This routine initialises the logger by opening the specified file
+ * This routine initializes the logger by opening the specified file
  * and setting it as Sigyn's logfile.
  *
  * Arguments:
@@ -192,7 +192,7 @@ void logger(unsigned int level, char *format, ...)
         {
             if (l->isFile)
             {
-                fprintf(l->f, "%s %s\n", datetime, buf);
+		fprintf(l->f, "%s %s\n", datetime, strip_colors_codes(buf));
                 fflush(l->f);
             }
             else
