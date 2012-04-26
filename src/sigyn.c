@@ -90,8 +90,7 @@ void parse_commandline_options(int argc, char **argv)
 		exit(EXIT_SUCCESS);
 		break;
 	    default:
-		printf("unknown argument %c\n", (char)r);
-		printf("usage: sigyn [-hv]\n");
+		printf("\nusage: sigyn [-hv]\n");
 		exit(EXIT_SUCCESS);
 		break;
 	}
