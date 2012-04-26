@@ -3,7 +3,7 @@ sigyn {
     desc = "Sigyn IRC Bot";
     
     fantasy = "!";
-}
+};
 
 uplink {
     server = "irc.thinstack.net";
@@ -14,10 +14,10 @@ uplink {
 admin = "adminuser";
 
 /* Modules */
-loadmodule "core/ping"
-loadmodule "core/help"
-#loadmodule "admin/raw"
-#loadmodule "example/dns"
-#loadmodule "example/hello"
+loadmodule "core/ping";
+loadmodule "core/help";
+#loadmodule "admin/raw";
+#loadmodule "example/dns";
+#loadmodule "example/hello";
 
 

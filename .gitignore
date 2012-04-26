@@ -1,0 +1,8 @@
+# ignore kate temp files
+*~
+
+# ignore gcc build crap
+*.o
+*.d
+*.so
+*.deps
