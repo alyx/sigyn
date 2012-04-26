@@ -8,8 +8,9 @@
 
 MODULE = admin
 
-SRCS =			\
-	raw.c 
+SRCS =		\
+	raw.c \
+	join.c
 
 include ../../extra.mk
 include ../../buildsys.mk

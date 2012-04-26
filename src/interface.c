@@ -37,7 +37,7 @@ void command_fail(int reason, irc_user_t *origin, const char *command)
             break;
         
         case CMD_NOAUTH:
-            irc_notice(origin->nick, "You are not authorised to use \2%s\2", cmd->name);
+            irc_notice(origin->nick, "You are not authorized to use \2%s\2", cmd->name);
             break;
     }
 }

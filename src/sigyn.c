@@ -208,9 +208,9 @@ int main(int argc, char *argv[])
 
     if(me.config == NULL)
     {
-      // FIXME: This should use sigyn_fatal but it seems to crash when it is used.
-      fprintf(stderr, "Cannot load configuration file.\n");
-      return 1; // Error code?
+	// FIXME: This should use sigyn_fatal but it seems to crash when it is used.
+	fprintf(stderr, "Cannot load configuration file.\n");
+	return 1; // Error code?
     }
     
     logger_init(me.config->entries);

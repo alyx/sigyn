@@ -8,7 +8,7 @@
 
 MODULE = core
 
-SRCS =			\
+SRCS =		\
 	help.c \
 	ping.c
 
