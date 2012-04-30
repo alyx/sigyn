@@ -8,13 +8,7 @@
 
 MODULE = scripting
 
-SRCS =		\
-		python.c
-
 include ../../extra.mk
 include ../../buildsys.mk
-include ../../buildsys.module.mk
 
-CPPFLAGS	+= -I../../include -I../../libmowgli-2/src/libmowgli -I/usr/local/include/python2.7 -I/usr/local/include/python2.7
-CFLAGS      += -DNDEBUG -fno-strict-aliasing
-LDFLAGS     += -L/usr/local/lib/python2.7/config -lutil -lm -lpython2.7 -Wl,--export-dynamic
+SUBDIRS = python
