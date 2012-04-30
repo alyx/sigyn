@@ -46,7 +46,6 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
 #endif
 
     mowgli_hook_bootstrap();
-//     signals_init();
     modules_init();
     queue_init();
     command_init();
@@ -247,9 +246,10 @@ static void loadmodules(mowgli_config_file_entry_t * entry)
 
 int main(int argc, char *argv[])
 {
+    char config[BUFSIZE];
+
     signals_init();
     parse_commandline_options(argc, argv);
-    char config[BUFSIZE];
 
     snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.conf");
 

@@ -72,7 +72,7 @@ void recvq_dump(socket_t sock)
 
         if ((q->sock == sock) && (q->completed == true))
         {
-	    printf(">> %s\n", strip_colour_codes(q->string));
+            printf(">> %s\n", strip_colour_codes(q->string));
             parse(q->string);
             free(q->string);
             mowgli_node_delete(n, &recvq);
@@ -101,13 +101,10 @@ void sendq_dump(socket_t sock)
         q = (io_queue_t *)n->data;
         if (q->sock == sock)
         {
-	    ssize_t bytes = write(q->sock, q->string, q->len);
-	    if(bytes == -1)
-	    {
-		printf("Error writing to socket: %s\n", strerror(errno));
-		return;
-	    }
-	    me.stats.outB += bytes;
+            ssize_t bytes = write(q->sock, q->string, q->len);
+            if(bytes == -1)
+                sigyn_fatal("Error writing to socket: %d", ERRNO);
+            me.stats.outB += bytes;
             mowgli_node_delete(n, &sendq);
         }
     }
