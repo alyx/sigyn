@@ -96,12 +96,18 @@ void sendq_dump(socket_t sock)
     mowgli_node_t *n, *tn;
     io_queue_t *q;
 
-    MOWGLI_LIST_FOREACH_SAFE(n, tn, sendq.head)
+    MOWGLI_LIST_FOREACH(n, sendq.head)
     {
         q = (io_queue_t *)n->data;
         if (q->sock == sock)
         {
-            me.stats.outB += write(q->sock, q->string, q->len);
+	    ssize_t bytes = write(q->sock, q->string, q->len);
+	    if(bytes == -1)
+	    {
+		printf("Error writing to socket: %s\n", strerror(errno));
+		return;
+	    }
+	    me.stats.outB += bytes;
             mowgli_node_delete(n, &sendq);
         }
     }

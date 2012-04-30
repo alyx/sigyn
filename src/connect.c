@@ -124,7 +124,7 @@ socket_t uplink_connect(char *uplink, uint16_t port, char *vhost)
     StartWSA();
 
     if ((error = getaddrinfo(uplink, NULL, &hints, &res)))
-        sigyn_fatal("Cannot resolve hostname(%s): %s", uplink, gai_strerror(error));
+        sigyn_fatal("Cannot resolve hostname (%s): %s", uplink, gai_strerror(error));
     if (res->ai_addr == NULL)
     {
         freeaddrinfo(res);
