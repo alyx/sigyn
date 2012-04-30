@@ -5,4 +5,5 @@ SUBDIRS = \
 		  admin \
 		  core \
 		  example \
+		  scripting \
 		  $(CONTRIB_ENABLE)
