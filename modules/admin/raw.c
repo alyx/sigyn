@@ -25,7 +25,7 @@ static void cmd_raw(const irc_event_t *event, int parc, char **parv)
 
     buffer = mowgli_alloc(BUFSIZE);
 
-    for (i = 1; i <= parc; i++)
+    for (i = 1; i < parc; i++)
     {
         printf("Adding %s to buffer.\n", parv[i]);
         /*snprintf(buffer, BUFSIZE, "%s %s", buffer, parv[i]);*/

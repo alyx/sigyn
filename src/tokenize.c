@@ -19,7 +19,7 @@ int tokenize(char *message, char **parv)
         printf("%d\n", i);
         parv[i] = token;
         i++;
-        if ((strlen(save)) < 1)
+        if (save == NULL || (strlen(save)) < 1)
             break;
     }
     if ((i > MAXPARC) && (save != NULL))

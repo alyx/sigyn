@@ -20,7 +20,7 @@ static void cmd_help(const irc_event_t *event, int parc, char **parv)
 {
     command_t *cmd;
 
-    if (parc < 1)
+    if (parc < 2)
     {
         command_fail(CMD_NEEDSPARAM, event->origin, "help");
         return;
@@ -29,7 +29,7 @@ static void cmd_help(const irc_event_t *event, int parc, char **parv)
     cmd = command_find(parv[1]);
     if (cmd == NULL)
     {
-        irc_notice(event->origin->nick, "Command %s does not exist.");
+        irc_notice(event->origin->nick, "Command %s does not exist.", parv[1]);
         return;
     }
 
