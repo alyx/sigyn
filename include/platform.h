@@ -52,6 +52,7 @@
 #   define ERRNO errno
 #else
 #   define snprintf sprintf_s
+#   define vsnprintf _vsnprintf
 #   define close_portable closesocket
 #   define ERRNO WSAGetLastError()
 #   define errno GetLastError()
