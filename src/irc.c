@@ -88,7 +88,7 @@ void sigyn_introduce_client(char *nick)
     irc_user(nick, hostname, me.uplink.hostname, me.client->gecos);
 }
 
-static void serv_optional(char *server, char *command)
+static void serv_optional(const char *server, const char *command)
 {
     /* Many commands can take a sole
      * optional servername as a param.
@@ -108,7 +108,7 @@ static void serv_optional(char *server, char *command)
 
 /* 4.1: Connection registration. */
 
-void irc_pass(char *password)
+void irc_pass(const char *password)
 {
     /* 4.1.1: PASS
      * Parameters: <password>
@@ -117,7 +117,7 @@ void irc_pass(char *password)
     raw("PASS %s", password);
 }
 
-void irc_nick(char *nick)
+void irc_nick(const char *nick)
 {
     /* 4.1.2: NICK
      * Parameters: <nickname> [ <hopcount> ]
@@ -126,7 +126,7 @@ void irc_nick(char *nick)
     raw("NICK %s", nick);
 }
 
-void irc_user(char *user, char *host, char *server, char *real)
+void irc_user(const char *user, const char *host, const char *server, const char *real)
 {
     /* 4.1.3: USER
      * Parameters: <username> <hostname> <servername> <realname>
@@ -135,7 +135,7 @@ void irc_user(char *user, char *host, char *server, char *real)
     raw("USER %s %s %s :%s", user, host, server, real);
 }
 
-void irc_oper(char *user, char *password)
+void irc_oper(const char *user, const char *password)
 {
     /* 4.1.5: OPER
      * Parameters: <user> <password>
@@ -144,7 +144,7 @@ void irc_oper(char *user, char *password)
     raw("OPER %s %s", user, password);
 }
 
-void irc_quit(char *message)
+void irc_quit(const char *message)
 {
     /* 4.1.6: QUIT
      * Parameters: [<Quit message>]
@@ -153,7 +153,7 @@ void irc_quit(char *message)
     raw("QUIT :%s", message);
 }
 
-void irc_squit(char *server, char *message)
+void irc_squit(const char *server, const char *message)
 {
     /* 4.1.7: SQUIT
      * Parameters: <server> <comment>
@@ -164,7 +164,7 @@ void irc_squit(char *server, char *message)
 
 /* 4.2: Channel operations */
 
-void irc_join(char *channel, char *key)
+void irc_join(const char *channel, const char *key)
 {
     /* 4.2.1: JOIN
      * Parameters: <channel>{,<channel>} [<key>{,<key>}]
@@ -176,7 +176,7 @@ void irc_join(char *channel, char *key)
         raw("JOIN %s", channel);
 }
 
-void irc_part(char *channel)
+void irc_part(const char *channel)
 {
     /* 4.2.2: PART
      * Parameters: <channel>{,<channel>}
@@ -185,7 +185,7 @@ void irc_part(char *channel)
     raw("PART %s", channel);
 }
 
-void irc_mode(char *target, char *modestring)
+void irc_mode(const char *target, const char *modestring)
 {
     /* 4.2.3: MODE
      *  4.2.3.1: Channel modes
@@ -199,7 +199,7 @@ void irc_mode(char *target, char *modestring)
     raw("MODE %s %s", target, modestring);
 }
 
-void irc_topic(char *channel, char *topic)
+void irc_topic(const char *channel, const char *topic)
 {
     /* 4.2.4: TOPIC
      * Parameters: <channel> [<topic>]
@@ -211,7 +211,7 @@ void irc_topic(char *channel, char *topic)
         raw("TOPIC %s", channel);
 }
 
-void irc_names(char *channel)
+void irc_names(const char *channel)
 {
     /* 4.2.5: NAMES
      * Parameters: [<channel>{,<channel>}]
@@ -220,7 +220,7 @@ void irc_names(char *channel)
     raw("NAMES %s", channel);
 }
 
-void irc_invite(char *user, char *channel)
+void irc_invite(const char *user, const char *channel)
 {
     /* 4.2.7: INVITE
      * Parameters: <nickname> <channel>
@@ -229,7 +229,7 @@ void irc_invite(char *user, char *channel)
     raw("INVITE %s %s", user, channel);
 }
 
-void irc_kick(char *channel, char *user, char *comment)
+void irc_kick(const char *channel, const char *user, const char *comment)
 {
     /* 4.2.8: KICK
      * Parameters: <channel> <user> [<comment>]
@@ -243,7 +243,7 @@ void irc_kick(char *channel, char *user, char *comment)
 
 /* 4.3: Server queries and commands */
 
-void irc_version(char *server)
+void irc_version(const char *server)
 {
     /* 4.3.1: VERSION
      * Parameters: [<server>]
@@ -255,7 +255,7 @@ void irc_version(char *server)
         raw("VERSION");
 }
 
-void irc_stats(char *query, char *server)
+void irc_stats(const char *query, const char *server)
 {
     /* 4.3.2: STATS
      * Parameters: [<query> [<server>]]
@@ -267,7 +267,7 @@ void irc_stats(char *query, char *server)
         raw("STATS %s", query);
 }
 
-void irc_links(char *remote, char *mask)
+void irc_links(const char *remote, const char *mask)
 {
     /* 4.3.3: LINKS
      * Parameters: [[<remote server>] <server mask>]
@@ -281,7 +281,7 @@ void irc_links(char *remote, char *mask)
         raw("LINKS");
 }
 
-void irc_time(char *server)
+void irc_time(const char *server)
 {
     /* 4.3.4: TIME
      * Parameters: [<server>]
@@ -290,7 +290,7 @@ void irc_time(char *server)
     serv_optional(server, "TIME");
 }
 
-void irc_connect(char *target, int port, char *remote)
+void irc_connect(const char *target, int port, const char *remote)
 {
     /* 4.3.5: CONNECT
      * Parameters: <target server> [<port> [<remote server>]]
@@ -304,7 +304,7 @@ void irc_connect(char *target, int port, char *remote)
         raw("CONNECT %s", target);
 }
 
-void irc_trace(char *server)
+void irc_trace(const char *server)
 {
     /* 4.3.6: TRACE
      * Parameters: [<server>]
@@ -313,7 +313,7 @@ void irc_trace(char *server)
     serv_optional(server, "TRACE");
 }
 
-void irc_admin(char *server)
+void irc_admin(const char *server)
 {
     /* 4.3.7: ADMIN
      * Parameters: [<server>]
@@ -322,7 +322,7 @@ void irc_admin(char *server)
     serv_optional(server, "ADMIN");
 }
 
-void irc_info(char *server)
+void irc_info(const char *server)
 {
     /* 4.3.8: INFO
      * Parameters: [<server>]
@@ -333,7 +333,7 @@ void irc_info(char *server)
 
 /* 4.4: Sending messages */
 
-void irc_privmsg(char *receiver, char *format, ...)
+void irc_privmsg(const char *receiver, const char *format, ...)
 {
     /* 4.4.1: PRIVMSG
      * Parameters: <receiver>{,<receiver>} <text to be sent>
@@ -349,7 +349,7 @@ void irc_privmsg(char *receiver, char *format, ...)
     raw("PRIVMSG %s :%s", receiver, buf);
 }
 
-void irc_notice(char *nickname, char *format, ...)
+void irc_notice(const char *nickname, const char *format, ...)
 {
     /* 4.4.2: NOTICE
      * Parameters: <nickname> <text>
@@ -367,7 +367,7 @@ void irc_notice(char *nickname, char *format, ...)
 
 /* 4.5: User based queries */
 
-void irc_who(char *name, char *o)
+void irc_who(const char *name, const char *o)
 {
     /* 4.5.1: WHO
      * Parameters: [<name> [<o>]]
@@ -379,7 +379,7 @@ void irc_who(char *name, char *o)
         raw("WHO %s", name);
 }
 
-void irc_whois(char *server, char *nickmask)
+void irc_whois(const char *server, const char *nickmask)
 {
     /* 4.5.2: WHOIS
      * Parameters: [<server>] <nickmask>[,<nickmask>[,...]]
@@ -391,7 +391,7 @@ void irc_whois(char *server, char *nickmask)
         raw("WHOIS %s", nickmask);
 }
 
-void irc_whowas(char *nickname, int count, char *server)
+void irc_whowas(const char *nickname, int count, const char *server)
 {
     /* 4.5.3: WHOWAS
      * Parameters: <nickname> [<count> [<server>]]
@@ -409,7 +409,7 @@ void irc_whowas(char *nickname, int count, char *server)
 
 /* 4.6: Miscellaneous messages */
 
-void irc_kill(char *nickname, char *comment)
+void irc_kill(const char *nickname, const char *comment)
 {
     /* 4.6.1: KILL
      * Parameters: <nickname> <comment>
@@ -418,7 +418,7 @@ void irc_kill(char *nickname, char *comment)
     raw("KILL %s :%s", nickname, comment);
 }
 
-void irc_ping(char *server1, char *server2)
+void irc_ping(const char *server1, const char *server2)
 {
     /* 4.6.2: PING
      * Parameters: <server1> [<server2>]
@@ -430,7 +430,7 @@ void irc_ping(char *server1, char *server2)
         raw("PING %s", server1);
 }
 
-void irc_pong(char *daemon)
+void irc_pong(const char *daemon)
 {
     /* 4.6.3: PONG
      * Parameters: <daemon> [<daemon2>]
@@ -441,7 +441,7 @@ void irc_pong(char *daemon)
 
 /* 5: Optionals */
 
-void irc_away(char *message)
+void irc_away(const char *message)
 {
     /* 5.1: AWAY
      * Parameters: [message]
@@ -453,7 +453,7 @@ void irc_away(char *message)
         raw("AWAY");
 }
 
-void irc_users(char *server)
+void irc_users(const char *server)
 {
     /* 5.5: USERS
      * Parameters: [<server>]
@@ -462,7 +462,7 @@ void irc_users(char *server)
     serv_optional(server, "USERS");
 }
 
-void irc_userhost(char *nickname)
+void irc_userhost(const char *nickname)
 {
     /* 5.7: USERHOST
      * Parameters: <nickname>{<space><nickname>}
