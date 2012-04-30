@@ -103,7 +103,7 @@ void sendq_dump(socket_t sock)
         {
             ssize_t bytes = write(q->sock, q->string, q->len);
             if(bytes == -1)
-                sigyn_fatal("Error writing to socket: %d", ERRNO);
+                sigyn_fatal("Error writing to socket: %s", strerror(ERRNO));
             me.stats.outB += bytes;
             mowgli_node_delete(n, &sendq);
         }
