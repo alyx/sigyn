@@ -196,7 +196,6 @@ static void io_loop(void)
             {
                 if (!me.uplink.connected)
                 {
-		    // FIXME: a SIGPIPE is being generated here!
                     sigyn_introduce_client(me.client->nick);
                     sendq_dump(me.uplink.sock);
                     me.uplink.connected = true;

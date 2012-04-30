@@ -96,7 +96,7 @@ void sendq_dump(socket_t sock)
     mowgli_node_t *n, *tn;
     io_queue_t *q;
 
-    MOWGLI_LIST_FOREACH(n, sendq.head)
+    MOWGLI_LIST_FOREACH_SAFE(n, tn, sendq.head)
     {
         q = (io_queue_t *)n->data;
         if (q->sock == sock)
