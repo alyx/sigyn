@@ -352,12 +352,14 @@ void _modinit(UNUSED module_t * m)
     Py_Initialize();
     Py_InitModule("_sigyn", SigynMethods);
     command_add("loadpy", cmd_loadpy, "Loads and executes a Python file", "<file>");
+    command_add("runpy", cmd_runpy, "Runs a string of Python code", "<string>");
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)
 {
     Py_Finalize();
     command_del("loadpy", cmd_loadpy);
+    command_del("runpy", cmd_runpy);
 }
     
 static void cmd_loadpy(const irc_event_t * event, int parc, char ** parv)
@@ -381,4 +383,22 @@ static void cmd_loadpy(const irc_event_t * event, int parc, char ** parv)
     }
 
     PyRun_AnyFileExFlags(fp, parv[1], 0, NULL);
+}
+
+static void cmd_runpy(const irc_event_t * event, int parc, char ** parv)
+{
+    char * buf;
+    PyObject * main, * result;
+    mowgli_config_file_entry_t * admin;
+
+    if ((admin = config_find_entry(me.config->entries, "admin")) == NULL
+            || strcmp(admin->vardata, event->origin->nick) != 0))
+    {
+        command_fail(CMD_NOAUTH, event->origin, "runpy");
+        return;
+    }
+
+    buf = strdup(event->data+7);
+    PyRun_SimpleStringFlags(buf, NULL);
+    free(buf);
 }
