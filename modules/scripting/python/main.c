@@ -15,6 +15,30 @@ static void cmd_runpy (const irc_event_t * event, int parc, char ** parv);
  * and should not be used by anything not in a Python file.
  */
 
+static void add_constants(PyObject * m)
+{
+    PyModule_AddIntConstant(m, "CMD_BADPARAM", 0);
+    PyModule_AddIntConstant(m, "CMD_NEEDSPARAM", 1);
+    PyModule_AddIntConstant(m, "CMD_NOAUTH", 2);
+
+    PyModule_AddIntConstant(m, "LOG_ALL", 0x0);
+    PyModule_AddIntConstant(m, "LOG_RAW", 0x2);
+    PyModule_AddIntConstant(m, "LOG_DEBUG", 0x4);
+    PyModule_AddIntConstant(m, "LOG_ERROR", 0x8);
+    PyModule_AddIntConstant(m, "LOG_GENERAL", 0x20);
+}
+
+static PyObject * sigyn_logger(PyObject * self, PyObject * args)
+{
+    const unsigned int level;
+    char * msg;
+    PyArg_ParseTuple(args, "is", &level, &msg);
+    py_return_err_if_null(msg);
+    logger(level, msg);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyObject * sigyn_irc_pass(PyObject * self, PyObject * args) 
 { 
     const char * password; 
@@ -340,7 +364,8 @@ static PyMethodDef SigynMethods[] = {
     {"irc_pong", sigyn_irc_pong, METH_VARARGS, "Send PONG to the server."},
     {"irc_away", sigyn_irc_away, METH_VARARGS, "Send AWAY to the server."},
     {"irc_users", sigyn_irc_users, METH_VARARGS, "Send USERS to the server."},
-    {"irc_userhost", sigyn_irc_userhost, METH_VARARGS, "Send USERHOST to the server."}
+    {"irc_userhost", sigyn_irc_userhost, METH_VARARGS, "Send USERHOST to the server."},
+    {"log", sigyn_logger, METH_VARARGS, "Logs the specified message to the locations set in sigyn config."}
 };
 
 /*
@@ -349,8 +374,11 @@ static PyMethodDef SigynMethods[] = {
 
 void _modinit(UNUSED module_t * m)
 {
+    PyObject * module;
+
     Py_Initialize();
-    Py_InitModule("_sigyn", SigynMethods);
+    module = Py_InitModule("_sigyn", SigynMethods);
+    add_constants(module);
     command_add("loadpy", cmd_loadpy, "Loads and executes a Python file", "<file>");
     command_add("runpy", cmd_runpy, "Runs a string of Python code", "<string>");
 }
@@ -392,7 +420,7 @@ static void cmd_runpy(const irc_event_t * event, int parc, char ** parv)
     mowgli_config_file_entry_t * admin;
 
     if ((admin = config_find_entry(me.config->entries, "admin")) == NULL
-            || strcmp(admin->vardata, event->origin->nick) != 0))
+            || strcmp(admin->vardata, event->origin->nick) != 0)
     {
         command_fail(CMD_NOAUTH, event->origin, "runpy");
         return;
