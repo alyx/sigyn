@@ -97,12 +97,19 @@ void logger_init(mowgli_config_file_entry_t * config)
                     l->level |= LOG_RAW;
                 else if (!strcmp(g->varname, "debug"))
                     l->level |= LOG_DEBUG;
+                else if (!strcmp(g->varname, "critical"))
+                    l->level |= LOG_CRITICAL;
                 else if (!strcmp(g->varname, "error"))
                     l->level |= LOG_ERROR;
+                else if (!strcmp(g->varname, "warning"))
+                    l->level |= LOG_WARNING;
                 else if (!strcmp(g->varname, "general"))
                     l->level |= LOG_GENERAL;
                 else if (!strcmp(g->varname, "all"))
+                {
                     l->level |= LOG_ALL;
+                    break;
+                }
 
                 g = g->next;
             }

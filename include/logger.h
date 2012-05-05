@@ -11,11 +11,13 @@
  * define various log levels;
  * this is only for making calls to logger() look prettier.
  */
-#define LOG_ALL 0x0
-#define LOG_RAW 0x2
-#define LOG_DEBUG 0x4
-#define LOG_ERROR 0x8
-#define LOG_GENERAL 0x20
+#define LOG_ALL       0x0
+#define LOG_RAW       0x1
+#define LOG_DEBUG     0x2
+#define LOG_CRITICAL  0x4
+#define LOG_ERROR     0x8
+#define LOG_WARNING   0x10
+#define LOG_GENERAL   0x20
 
 typedef struct _logger logger_t;
 

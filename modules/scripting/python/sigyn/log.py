@@ -1,13 +1,16 @@
 import _sigyn
 
-def raw(msg):
-    _sigyn.log(_sigyn.LOG_RAW, msg)
-
 def debug(msg):
     _sigyn.log(_sigyn.LOG_DEBUG, msg)
+
+def critical(msg):
+    _sigyn.log(_sigyn.LOG_CRITICAL, msg)
 
 def error(msg):
     _sigyn.log(_sigyn.LOG_ERROR, msg)
 
-def general(msg):
+def warning(msg):
+    _sigyn.log(_sigyn.LOG_WARNING, msg)
+
+def info(msg):
     _sigyn.log(_sigyn.LOG_GENERAL, msg)

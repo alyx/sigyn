@@ -21,11 +21,13 @@ static void add_constants(PyObject * m)
     PyModule_AddIntConstant(m, "CMD_NEEDSPARAM", 1);
     PyModule_AddIntConstant(m, "CMD_NOAUTH", 2);
 
-    PyModule_AddIntConstant(m, "LOG_ALL", 0x0);
-    PyModule_AddIntConstant(m, "LOG_RAW", 0x2);
-    PyModule_AddIntConstant(m, "LOG_DEBUG", 0x4);
-    PyModule_AddIntConstant(m, "LOG_ERROR", 0x8);
-    PyModule_AddIntConstant(m, "LOG_GENERAL", 0x20);
+    PyModule_AddIntMacro(m, LOG_ALL);
+    PyModule_AddIntMacro(m, LOG_RAW);
+    PyModule_AddIntMacro(m, LOG_DEBUG);
+    PyModule_AddIntMacro(m, LOG_CRITICAL);
+    PyModule_AddIntMacro(m, LOG_ERROR);
+    PyModule_AddIntMacro(m, LOG_WARNING);
+    PyModule_AddIntMacro(m, LOG_GENERAL);
 }
 
 static PyObject * sigyn_config(PyObject * self, PyObject * args)
