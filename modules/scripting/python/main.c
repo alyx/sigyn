@@ -84,10 +84,10 @@ static PyObject * sigyn_irc_join(PyObject * self, PyObject * args)
 
 static PyObject * sigyn_irc_part(PyObject * self, PyObject * args) 
 { 
-    const char * channel;
-    PyArg_ParseTuple(args, "s", &channel);
+    const char * channel, * message;
+    PyArg_ParseTuple(args, "s|s", &channel, &message);
     py_return_err_if_null(channel);
-    irc_part(channel);
+    irc_part(channel, message);
     Py_INCREF(Py_None); return Py_None;
 }
 
@@ -104,9 +104,8 @@ static PyObject * sigyn_irc_mode(PyObject * self, PyObject * args)
 static PyObject * sigyn_irc_topic(PyObject * self, PyObject * args)
 {
     const char * channel, * topic;
-    PyArg_ParseTuple(args, "ss", &channel, &topic);
+    PyArg_ParseTuple(args, "s|s", &channel, &topic);
     py_return_err_if_null(channel);
-    py_return_err_if_null(topic);
     irc_topic(channel, topic);
     Py_INCREF(Py_None); return Py_None;
 }
