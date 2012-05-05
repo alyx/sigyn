@@ -150,7 +150,10 @@ void irc_quit(const char *message)
      * Parameters: [<Quit message>]
      * Example: QUIT :Gone to have lunch
      */
-    raw("QUIT :%s", message);
+    if (message == NULL)
+        raw("QUIT");
+    else
+        raw("QUIT :%s", message);
 }
 
 void irc_squit(const char *server, const char *message)
