@@ -1,6 +1,6 @@
 import _sigyn
 
-def pass(password):
+def password(password):
     _sigyn.irc_pass(password)
 
 def nick(nick):
