@@ -1,3 +1,5 @@
+import _sigyn
+
 def pass(password):
     _sigyn.irc_pass(password)
 
