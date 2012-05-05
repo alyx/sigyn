@@ -117,7 +117,7 @@ void command_del(const char *name, void *function)
     command_t *c;
     mowgli_node_t *n, *tn;
 
-    MOWGLI_LIST_FOREACH_SAFE(n, tn, commands.head)
+    MOWGLI_ITER_FOREACH_SAFE(n, tn, commands.head)
     {
         c = (command_t *)n->data;
         if ((c->function == (command_function_t)function) && ((strcmp(c->name, name)) == 0))

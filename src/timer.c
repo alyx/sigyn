@@ -62,7 +62,7 @@ void timer_del(const char *name, void *function)
     timer_event_t *event;
     mowgli_node_t *n, *tn;
 
-    MOWGLI_LIST_FOREACH_SAFE(n, tn, timers.head)
+    MOWGLI_ITER_FOREACH_SAFE(n, tn, timers.head)
     {
         event = (timer_event_t *)n->data;
         if ((event->function == (timer_function_t)function) && ((strcasecmp(event->name, name)) == 0))
