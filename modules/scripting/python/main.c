@@ -28,6 +28,17 @@ static void add_constants(PyObject * m)
     PyModule_AddIntConstant(m, "LOG_GENERAL", 0x20);
 }
 
+static PyObject * sigyn_config(PyObject * self, PyObject * args)
+{
+    const char * name;
+    PyArg_ParseTuple(args, "s", &name);
+    py_return_err_if_null(name);
+    const char * value = config_find_entry(me.config->entries, name)->vardata;
+    PyObject *val = (value == NULL ? Py_None : PyString_FromString(value));
+    Py_INCREF(val);
+    return val;
+}
+
 static PyObject * sigyn_logger(PyObject * self, PyObject * args)
 {
     const unsigned int level;
@@ -364,7 +375,8 @@ static PyMethodDef SigynMethods[] = {
     {"irc_away", sigyn_irc_away, METH_VARARGS, "Send AWAY to the server."},
     {"irc_users", sigyn_irc_users, METH_VARARGS, "Send USERS to the server."},
     {"irc_userhost", sigyn_irc_userhost, METH_VARARGS, "Send USERHOST to the server."},
-    {"log", sigyn_logger, METH_VARARGS, "Logs the specified message to the locations set in sigyn config."}
+    {"log", sigyn_logger, METH_VARARGS, "Logs the specified message to the locations set in sigyn config."},
+    {"config", sigyn_config, METH_VARARGS, "Retrieves an entry from sigyn's config."}
 };
 
 /*
