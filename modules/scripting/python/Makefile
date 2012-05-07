@@ -7,6 +7,5 @@ include ../../../buildsys.mk
 
 plugindir = $(MODDIR)/modules/scripting
 
-CPPFLAGS += -I../../../include -I../../../libmowgli-2/src/libmowgli -I/usr/local/include/python2.7 -I/usr/local/include/python2.7 
-CFLAGS += $(PLUGIN_CFLAGS) -DNDEBUG -fno-strict-aliasing
-LDFLAGS += $(PLUGIN_LDFLAGS) -L/usr/local/lib/python2.7/config -lutil -lm -lpython2.7 -Wl,--export-dynamic
+CFLAGS += -I../../../include -I../../../libmowgli-2/src/libmowgli $(PLUGIN_CFLAGS) $(PYTHON_CFLAGS)
+LDFLAGS += $(PLUGIN_LDFLAGS) $(PYTHON_LDFLAGS)

@@ -84,6 +84,30 @@ AC_CHECK_FUNCS([strdup inet_pton inet_ntop gettimeofday umask mmap arc4random ge
 AC_CHECK_FUNC(socket,, AC_CHECK_LIB(socket, socket))
 AC_CHECK_FUNC(gethostbyname,, AC_CHECK_LIB(nsl, gethostbyname))
 
+AC_ARG_WITH([python],
+            [AS_HELP_STRING([--without-python],
+                            [Disable building python scripting module.])],
+            [],
+            [with_python="no"])
+
+AS_IF([test "x$with_python" != "xno"],
+[
+    AC_PATH_PROG(pythonpath, python)
+    if test -n "$pythonpath"; then
+        PYTHON_ENABLE=python
+        PYTHON_CFLAGS=`python-config --cflags`
+        PYTHON_LIBS=`python-config --ldflags`
+    fi
+])
+
+
+AS_IF([test "x$with_python" = "xyes" && test "x$PYTHON_CFLAGS" = "x"],
+      [AC_MSG_ERROR([Python support was requested by Python could not be found.])])
+
+AC_SUBST(PYTHON_CFLAGS)
+AC_SUBST(PYTHON_LIBS)
+AC_SUBST(PYTHON_ENABLE)
+
 dnl gettextize's Makefile.in wants this
 mkdir_p="mkdir -p"
 AC_SUBST(mkdir_p)
@@ -442,6 +466,7 @@ AC_HELP_STRING([--enable-stack], [ Enable a stack trace on crash. ]),
 ])
 AC_MSG_RESULT($OUTPUT_STACKTRACE)
 AC_SUBST(STACKTRACE_ENABLE)
+
 
 MOWGLI_SOURCE="internal"
 MOWGLI_CFLAGS="-I../libmowgli-2/src/libmowgli -I../../libmowgli-2/src/libmowgli -I../../../libmowgli-2/src/libmowgli"

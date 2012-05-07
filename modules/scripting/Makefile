@@ -11,4 +11,4 @@ MODULE = scripting
 include ../../extra.mk
 include ../../buildsys.mk
 
-SUBDIRS = python
+SUBDIRS = $(PYTHON_ENABLE)
