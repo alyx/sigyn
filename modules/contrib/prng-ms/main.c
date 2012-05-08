@@ -11,8 +11,7 @@ static uint32_t square;
 void _modinit(UNUSED module_t *m)
 {
     square = ((int)time(NULL) * (int)getpid);
-    command_add("ms", cmd_ms, 
-            "Returns a random number generated from a middle-square algorithm.", "[RELOAD]");
+    command_add("ms", cmd_ms, 0, AC_NONE, "Returns a random number generated from a middle-square algorithm.", "[RELOAD]");
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)
