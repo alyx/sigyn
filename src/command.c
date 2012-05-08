@@ -164,11 +164,14 @@ static void handle_privmsg(void *data, UNUSED void *udata)
 
     for (i = 0; i <= len; i++)
     {
-        if (*tmp == prefix[i])
+        if (*tmp == prefix[i] || !ischannel(event->target))
         {
             parc = tokenize(tmp, parv);
 
-            cmd = command_find(parv[0] + 1);
+            if (ischannel(event->target))
+                cmd = command_find(parv[0] + 1);
+            else
+                cmd = command_find(parv[0]);
             if (cmd != NULL)
                 if (cmd->perm & AC_NONE || cmd->perm & has_priv(event->origin->nick, cmd->perm))
                     if (cmd->args <= parc)
