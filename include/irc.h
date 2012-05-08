@@ -8,6 +8,7 @@
 
 #include <sys/types.h>
 #include <stdbool.h>
+#include "platform.h"
 
 typedef struct {
     char *name;

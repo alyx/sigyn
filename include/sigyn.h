@@ -26,6 +26,7 @@
 #define BUFSIZE 1024
 #define MAXPARC 20
 
+#include "me.h"
 #include "platform.h"
 #include "command.h"
 #include "interface.h"
@@ -37,25 +38,5 @@
 #include "tools.h"
 #include "version.h"
 #include "permissions.h"
-
-struct me {
-    irc_user_t *client;
-    mowgli_config_file_t * config;
-    struct uplink {
-        bool connected;
-#ifdef _WIN32
-        bool winsock;
-#endif
-		socket_t sock;
-        uint16_t port;
-        char *hostname;
-    } uplink;
-    struct stats {
-        time_t start;
-        int inB;
-        int outB;
-    } stats;
-    int maxfd;
-} me;
 
 #endif /* __SIGYN_H */
