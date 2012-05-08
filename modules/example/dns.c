@@ -7,7 +7,7 @@ static void cmd_dns(const irc_event_t *event, int parc, char **parv);
 
 void _modinit(UNUSED module_t *m)
 {
-    command_add("dns", cmd_dns, "Resolves the IP address(es) of a host.", "<host>");
+    command_add("dns", cmd_dns, 1, "Resolves the IP address(es) of a host.", "<host>");
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)

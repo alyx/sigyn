@@ -10,7 +10,7 @@ static bool timed_cmd_hello(UNUSED void *argument);
 void _modinit(UNUSED module_t *m)
 {
     mowgli_hook_associate("PRIVMSG", handle_privmsg, NULL);
-    command_add("hello", cmd_hello, "says hello to you!", "<user>");
+    command_add("hello", cmd_hello, 0, "says hello to you!", "<user>");
     timer_add("hello", timed_cmd_hello, NULL, 10);
 }
 

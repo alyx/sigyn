@@ -6,7 +6,6 @@
 #include "sigyn.h"
 
 mowgli_heap_t *command_heap;
-mowgli_list_t commands;
 
 static void handle_privmsg(void *data, UNUSED void *udata);
 
@@ -70,6 +69,8 @@ void command_init(void)
  *     name     - A string containing the name of the command.
  *     function - A pointer to the function to be called when
  *                the command is used.
+ *     args     - An integer of the minimum number of arguments the
+                  command requires.
  *     help     - A string containing information about the command.
  *     syntax   - A string containing the command syntax.
  * 
@@ -78,7 +79,7 @@ void command_init(void)
  *
  */
 
-void command_add(const char *name, void *function, const char *help, const char *syntax)
+void command_add(const char *name, void *function, unsigned int args, const char *help, const char *syntax)
 {
     command_t *c;
 
@@ -92,6 +93,7 @@ void command_add(const char *name, void *function, const char *help, const char 
 
     c->name = strdup(name);
     c->function = (command_function_t)function;
+    c->args = args;
     c->help = strdup(help);
     if (c->syntax != NULL)
         c->syntax = strdup(syntax);
@@ -122,9 +124,9 @@ void command_del(const char *name, void *function)
         c = (command_t *)n->data;
         if ((c->function == (command_function_t)function) && ((strcmp(c->name, name)) == 0))
         {
-            mowgli_free(c->name);
-            mowgli_free(c->help);
-            mowgli_free(c->syntax);
+            free(c->name);
+            free(c->help);
+            free(c->syntax);
 
             mowgli_node_delete(n, &commands);
             mowgli_heap_free(command_heap, c);
@@ -166,7 +168,10 @@ static void handle_privmsg(void *data, UNUSED void *udata)
 
             cmd = command_find(parv[0] + 1);
             if (cmd != NULL)
-                cmd->function(clone, parc, parv);
+                if (cmd->args <= parc)
+                    cmd->function(clone, parc, parv);
+                else
+                    command_fail(CMD_NEEDSPARAM, event->origin, cmd->name);
             break;
         }
     }

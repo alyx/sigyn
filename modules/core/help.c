@@ -7,7 +7,7 @@ static void cmd_help(const irc_event_t *event, int parc, char **parv);
 
 void _modinit(UNUSED module_t *m)
 {
-    command_add("help", cmd_help, "displays information on the usage of available commands.", "<command>");
+    command_add("help", cmd_help, 0, "Displays information on the usage of available commands.", "<command>");
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)
@@ -20,9 +20,16 @@ static void cmd_help(const irc_event_t *event, int parc, char **parv)
 {
     command_t *cmd;
 
-    if (parc < 2)
+    if (parc < 1)
     {
-        command_fail(CMD_NEEDSPARAM, event->origin, "help");
+        command_t * c;
+        mowgli_node_t * n;
+        irc_notice(event->origin->nick, "*** Sigyn Help ***");
+        MOWGLI_ITER_FOREACH(n, commands.head)
+        {
+            c = (command_t *)n->data;
+            irc_notice(event->origin->nick, "%s - %s", c->name, c->help);
+        }
         return;
     }
 

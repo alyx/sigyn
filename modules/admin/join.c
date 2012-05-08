@@ -7,7 +7,7 @@ static void cmd_join(const irc_event_t *event, int parc, char **parv);
 
 void _modinit(UNUSED module_t *m)
 {
-    command_add("join", cmd_join, "Joins an IRC channel", "<channel> [<key>]");
+    command_add("join", cmd_join, 1, "Joins an IRC channel", "<channel> [<key>]");
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)
