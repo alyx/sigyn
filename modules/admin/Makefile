@@ -10,7 +10,8 @@ MODULE = admin
 
 SRCS =		\
 	raw.c \
-	join.c
+	join.c \
+        modload.c
 
 include ../../extra.mk
 include ../../buildsys.mk
