@@ -18,9 +18,6 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
 
 static void cmd_join(const irc_event_t *event, int parc, char **parv)
 {
-    if ((strcmp(config_find_entry(me.config->entries, "admin")->vardata, event->origin->nick)) != 0)
-      return;
-
     irc_join(parv[1], parc > 2?parv[2]:NULL);
     irc_notice(event->origin->nick, "Joined \2%s\2 successfully", parv[1]);
 }
