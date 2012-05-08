@@ -19,12 +19,6 @@ static void cmd_dns(const irc_event_t *event, int parc, char **parv)
 {
     struct hostent *dns;
 
-    if (parc < 1)
-    {
-        command_fail(CMD_NEEDSPARAM, event->origin, "dns");
-        return;
-    }
-
     dns = gethostbyname(parv[1]);
 
     if (dns == NULL)

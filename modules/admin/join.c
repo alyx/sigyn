@@ -21,12 +21,6 @@ static void cmd_join(const irc_event_t *event, int parc, char **parv)
     if ((strcmp(config_find_entry(me.config->entries, "admin")->vardata, event->origin->nick)) != 0)
       return;
 
-    if (parc < 1)
-    {
-        command_fail(CMD_NEEDSPARAM, event->origin, "join");
-        return;
-    }
-
     irc_join(parv[1], parc > 2?parv[2]:NULL);
     irc_notice(event->origin->nick, "Joined \2%s\2 successfully", parv[1]);
 }

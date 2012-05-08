@@ -26,12 +26,6 @@ static void cmd_modload(const irc_event_t *event, int parc, char **parv)
     if ((strcmp(config_find_entry(me.config->entries, "admin")->vardata, event->origin->nick)) != 0)
       return;
 
-    if (parc < 1)
-    {
-        command_fail(CMD_NEEDSPARAM, event->origin, "modload");
-        return;
-    }
-
     if (module_find_published(parv[1]))
     {
         irc_notice(event->origin->nick, "Module \2%s\2 is already loaded.", parv[1]);
@@ -53,11 +47,6 @@ static void cmd_modunload(const irc_event_t *event, int parc, char **parv)
     if ((strcmp(config_find_entry(me.config->entries, "admin")->vardata, event->origin->nick)) != 0)
       return;
 
-    if (parc < 1)
-    {
-        command_fail(CMD_NEEDSPARAM, event->origin, "modload");
-        return;
-    }
     mod = module_find_published(parv[1]);
     if (!mod)
     {
