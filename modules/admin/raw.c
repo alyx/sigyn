@@ -7,7 +7,7 @@ static void cmd_raw(const irc_event_t *event, int parc, char **parv);
 
 void _modinit(UNUSED module_t *m)
 {
-    command_add("raw", cmd_raw, "sends a raw command to the IRC server.", "<command>");
+    command_add("raw", cmd_raw, "Sends a raw command to the IRC server.", "<command>");
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)
@@ -25,7 +25,7 @@ static void cmd_raw(const irc_event_t *event, int parc, char **parv)
 
     buffer = mowgli_alloc(BUFSIZE);
 
-    for (i = 1; i < parc; i++)
+    for (i = 1; i <= parc; i++)
     {
         printf("Adding %s to buffer.\n", parv[i]);
         /*snprintf(buffer, BUFSIZE, "%s %s", buffer, parv[i]);*/
