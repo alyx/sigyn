@@ -97,7 +97,7 @@ void command_add(const char *name, void *function, unsigned int args, unsigned i
     c->args = args;
     c->perm = perm;
     c->help = strdup(help);
-    if (c->syntax != NULL)
+    if (syntax != NULL)
         c->syntax = strdup(syntax);
 
     mowgli_node_add(c, mowgli_node_create(), &commands);
