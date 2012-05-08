@@ -36,6 +36,7 @@
 #include "timer.h"
 #include "tools.h"
 #include "version.h"
+#include "permissions.h"
 
 struct me {
     irc_user_t *client;

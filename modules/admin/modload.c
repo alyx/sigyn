@@ -8,8 +8,8 @@ static void cmd_modunload(const irc_event_t *event, int parc, char **parv);
 
 void _modinit(UNUSED module_t *m)
 {
-    command_add("modload", cmd_modload, 1, "Loads a module.", "<name>");
-    command_add("modunload", cmd_modunload, 1, "Unloads a module.", "<name>");
+    command_add("modload", cmd_modload, 1, AC_ADMIN, "Loads a module.", "<name>");
+    command_add("modunload", cmd_modunload, 1, AC_ADMIN, "Unloads a module.", "<name>");
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)

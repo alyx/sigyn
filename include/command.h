@@ -18,13 +18,14 @@ struct command_
     char *name;
     command_function_t function;
     unsigned int args;
+    unsigned int perm;
     char *help;
     char *syntax;
 };
 
 extern void command_init(void);
 extern command_t *command_find(const char *name);
-extern void command_add(const char *name, void *function, unsigned int args, const char *help, const char *syntax);
+extern void command_add(const char *name, void *function, unsigned int args, unsigned int perm, const char *help, const char *syntax);
 extern void command_del(const char *name, void *function);
 
 

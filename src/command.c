@@ -71,6 +71,7 @@ void command_init(void)
  *                the command is used.
  *     args     - An integer of the minimum number of arguments the
                   command requires.
+ *     perm     - Either AC_ADMIN or AC_NONE depending on access. 
  *     help     - A string containing information about the command.
  *     syntax   - A string containing the command syntax.
  * 
@@ -79,7 +80,7 @@ void command_init(void)
  *
  */
 
-void command_add(const char *name, void *function, unsigned int args, const char *help, const char *syntax)
+void command_add(const char *name, void *function, unsigned int args, unsigned int perm, const char *help, const char *syntax)
 {
     command_t *c;
 
@@ -94,6 +95,7 @@ void command_add(const char *name, void *function, unsigned int args, const char
     c->name = strdup(name);
     c->function = (command_function_t)function;
     c->args = args;
+    c->perm = perm;
     c->help = strdup(help);
     if (c->syntax != NULL)
         c->syntax = strdup(syntax);
@@ -168,10 +170,13 @@ static void handle_privmsg(void *data, UNUSED void *udata)
 
             cmd = command_find(parv[0] + 1);
             if (cmd != NULL)
-                if (cmd->args <= parc)
-                    cmd->function(clone, parc, parv);
+                if (cmd->perm & AC_NONE || cmd->perm & has_priv(event->origin->nick, cmd->perm))
+                    if (cmd->args <= parc)
+                        cmd->function(clone, parc, parv);
+                    else
+                        command_fail(CMD_NEEDSPARAM, event->origin, cmd->name);
                 else
-                    command_fail(CMD_NEEDSPARAM, event->origin, cmd->name);
+                    command_fail(CMD_NOAUTH, event->origin, cmd->name);
             break;
         }
     }
