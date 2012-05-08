@@ -7,6 +7,7 @@
 #define __SIGYN_IRC_H
 
 #include <sys/types.h>
+#include <stdbool.h>
 
 typedef struct {
     char *name;
@@ -42,6 +43,13 @@ typedef struct
     char *target;
     char *data;
 } irc_event_t;
+
+static inline bool ischannel(char * target)
+{
+    if (target[0] == '#' || target[0] == '&' || target[0] == '!' || target[0] == '+')
+        return true;
+    return false;
+}
 
 extern int raw(char *line, ...);
 extern int read_irc(socket_t sock, char *buffer);
