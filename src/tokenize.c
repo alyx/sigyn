@@ -11,7 +11,7 @@ int tokenize(char *message, char **parv)
     char *token, *save;
 
     i = 0;
-    save = strdup(message);
+    save = mowgli_strdup(message);
 
     while ((i <= MAXPARC) && (token = strtok_r(NULL, " ", &save)) &&
             (token != NULL))
@@ -23,7 +23,7 @@ int tokenize(char *message, char **parv)
             break;
     }
     if ((i > MAXPARC) && (save != NULL))
-        parv[i] = strdup(save);
+        parv[i] = mowgli_strdup(save);
 
     if (parv[i] == NULL)
         i--;

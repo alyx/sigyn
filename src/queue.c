@@ -40,8 +40,8 @@ io_queue_t *recvq_add(socket_t sock, char *string, bool complete)
         if (tail->completed == false)
         {
             snprintf(tmp, BUFSIZE, "%s%s", tail->string, string);
-            free(tail->string);
-            tail->string = strdup(tmp);
+            mowgli_free(tail->string);
+            tail->string = mowgli_strdup(tmp);
             tail->completed = complete;
             return tail;
         }
@@ -49,7 +49,7 @@ io_queue_t *recvq_add(socket_t sock, char *string, bool complete)
 
     q = mowgli_heap_alloc(sendq_heap);
     q->sock = sock;
-    q->string = strdup(string);
+    q->string = mowgli_strdup(string);
     if (complete)
     {
         q->len = strlen(q->string);
@@ -74,7 +74,7 @@ void recvq_dump(socket_t sock)
         {
             printf(">> %s\n", strip_colour_codes(q->string));
             parse(q->string);
-            free(q->string);
+            mowgli_free(q->string);
             mowgli_node_delete(n, &recvq);
         }
     }
@@ -86,7 +86,7 @@ void sendq_add(socket_t sock, char *string, size_t len)
     q = mowgli_heap_alloc(sendq_heap);
     q->len = len;
     q->sock = sock;
-    q->string = strdup(string);
+    q->string = mowgli_strdup(string);
     q->completed = true;
     mowgli_node_add(q, mowgli_node_create(), &sendq);
 }

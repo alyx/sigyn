@@ -35,7 +35,7 @@ int logger_add_channel(const char * channel, unsigned int level)
 
     newlog = mowgli_heap_alloc(logheap);
 
-    newlog->channel = strdup(channel);
+    newlog->channel = mowgli_strdup(channel);
     newlog->level   = level;
     newlog->isFile    = false;
 
@@ -120,7 +120,7 @@ void logger_init(mowgli_config_file_entry_t * config)
             if (l->isFile == true)
                 l->f = fopen(f->vardata, "a");
             else
-                l->channel = strdup(f->vardata);
+                l->channel = mowgli_strdup(f->vardata);
 
             mowgli_node_add(l, mowgli_node_create(), &loglocs);
         }

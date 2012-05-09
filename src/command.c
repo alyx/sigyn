@@ -92,13 +92,13 @@ void command_add(const char *name, void *function, unsigned int args, unsigned i
 
     c = mowgli_heap_alloc(command_heap);
 
-    c->name = strdup(name);
+    c->name = mowgli_strdup(name);
     c->function = (command_function_t)function;
     c->args = args;
     c->perm = perm;
-    c->help = strdup(help);
+    c->help = mowgli_strdup(help);
     if (syntax != NULL)
-        c->syntax = strdup(syntax);
+        c->syntax = mowgli_strdup(syntax);
 
     mowgli_node_add(c, mowgli_node_create(), &commands);
 }
@@ -126,9 +126,9 @@ void command_del(const char *name, void *function)
         c = (command_t *)n->data;
         if ((c->function == (command_function_t)function) && ((strcmp(c->name, name)) == 0))
         {
-            free(c->name);
-            free(c->help);
-            free(c->syntax);
+            mowgli_free(c->name);
+            mowgli_free(c->help);
+            mowgli_free(c->syntax);
 
             mowgli_node_delete(n, &commands);
             mowgli_heap_free(command_heap, c);
@@ -149,7 +149,7 @@ static void handle_privmsg(void *data, UNUSED void *udata)
     event = (irc_event_t *)data;
     clone = event;
 
-    tmp = strdup(event->data);
+    tmp = mowgli_strdup(event->data);
     /*e = config_find_entry(config_find_entry(me.config->entries, "sigyn"), "fantasy");*/
     e = config_find_entry(me.config->entries, "sigyn");
     if (e == NULL)
@@ -184,5 +184,5 @@ static void handle_privmsg(void *data, UNUSED void *udata)
         }
     }
 
-    free(tmp);
+    mowgli_free(tmp);
 }

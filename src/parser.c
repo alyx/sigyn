@@ -29,7 +29,7 @@ irc_user_t *parse_user(char hostmask[])
     if (hostmask == NULL)
         return NULL;
 
-    tmp = strdup(hostmask);
+    tmp = mowgli_strdup(hostmask);
 
     if (strchr(tmp, '!') != NULL)
     {
@@ -38,20 +38,20 @@ irc_user_t *parse_user(char hostmask[])
 
         token = strtok_r(tmp, "!", &save);
         if (token != NULL)
-            user->nick = strdup(token);
+            user->nick = mowgli_strdup(token);
         token = strtok_r(NULL, "@", &save);
         if (token != NULL)
-            user->user = strdup(token);
+            user->user = mowgli_strdup(token);
         user->host = save;
     }
     else
     {
         /* Origin is a server. */
-        user->nick = strdup(tmp);
+        user->nick = mowgli_strdup(tmp);
         user->server = true;
     }
 
-    free(tmp);
+    mowgli_free(tmp);
 
     return user;
 }
@@ -77,7 +77,7 @@ void preparse(char line[])
     if ((*line == '\n') || (*line == '\000'))
         return;
 
-    save = strdup(line);
+    save = mowgli_strdup(line);
 
     if (strchr(save, '\n') == NULL)
     {
@@ -116,7 +116,7 @@ void preparse(char line[])
 
 irc_event_t *parse(char line[])
 {
-    char *string = strdup(line);
+    char *string = mowgli_strdup(line);
     char *token;
     irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
     if (string == NULL)
@@ -187,7 +187,7 @@ irc_event_t *parse(char line[])
         mowgli_hook_call(event->command, event);
     }
 
-    free(string);
+    mowgli_free(string);
 
     return event;
 }

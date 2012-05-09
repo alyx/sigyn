@@ -43,7 +43,7 @@ time_t timer_add(const char *name, timer_function_t function, void *arg,
     runtime += wait;
 
     event = mowgli_heap_alloc(timer_heap);
-    event->name = strdup(name);
+    event->name = mowgli_strdup(name);
     event->function = function;
     event->arguments = arg;
     event->wait = wait;
