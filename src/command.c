@@ -15,7 +15,7 @@ static void handle_privmsg(void *data, UNUSED void *udata);
  * the specified command.
  *
  * Arguments:
- *     name - A string containing the name of the command to seach for.
+ *     name - A string containing the name of the command to search for.
  *
  * Return value:
  *     c - Returns a command_t object if the command is located,
