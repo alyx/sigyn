@@ -171,7 +171,13 @@ static void handle_privmsg(void *data, UNUSED void *udata)
             if (ischannel(event->target))
                 cmd = command_find(parv[0] + 1);
             else
-                cmd = command_find(parv[0]);
+            {
+                if (*tmp == prefix[i])
+                    cmd = command_find(parv[0] + 1);
+                else
+                    cmd = command_find(parv[0]);
+            }
+
             if (cmd != NULL)
                 if (cmd->perm & AC_NONE || cmd->perm & has_priv(event->origin->nick, cmd->perm))
                     if (cmd->args <= parc)
