@@ -10,7 +10,8 @@ MODULE = core
 
 SRCS =		\
 	help.c \
-	ping.c
+	ping.c \
+        443.c
 
 include ../../extra.mk
 include ../../buildsys.mk
