@@ -78,27 +78,27 @@ void parse_commandline_options(int argc, char **argv)
 
     while ((r = mowgli_getopt_long(argc, argv, "c:hv", long_opts, NULL)) != -1)
     {
-	    switch (r)
-	    {
+        switch (r)
+        {
 	        case 'h':
-		        printf("usage: sigyn [-hv] [-c config]\n\n"
+                printf("usage: sigyn [-hv] [-c config]\n\n"
                 " -c <path>   Specify a configuration file for sigyn to use\n"
-		        " -h          Print this message and exit\n"
-		        " -v          Print the version information and exit\n");
-		        exit(EXIT_SUCCESS);
-		        break;
-	        case 'v':
-		        printf("%s by Alexandria Wolcott.\n", PACKAGE_STRING);
-		        exit(EXIT_SUCCESS);
-		        break;
+                " -h          Print this message and exit\n"
+                " -v          Print the version information and exit\n");
+                exit(EXIT_SUCCESS);
+                break;
+            case 'v':
+                printf("%s by Alexandria Wolcott.\n", PACKAGE_STRING);
+                exit(EXIT_SUCCESS);
+                break;
             case 'c':
                 config_file = mowgli_strdup(mowgli_optarg);
                 break;
-	        default:
-		        printf("\nusage: sigyn [-hv] [-c config]\n");
-		        exit(EXIT_SUCCESS);
-		        break;
-	    }
+            default:
+                printf("\nusage: sigyn [-hv] [-c config]\n");
+                exit(EXIT_SUCCESS);
+                break;
+        }
     }
     if (config_file == NULL)
         config_file = mowgli_strdup(SYSCONFDIR "/sigyn.conf");
