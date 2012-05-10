@@ -191,7 +191,7 @@ void logger(unsigned int level, char *format, ...)
     tm = *localtime(&t);
     strftime(datetime, sizeof(datetime) - 1, "[%d/%m/%Y %H:%M:%S]", &tm);
 
-    fprintf(stderr, "%s %s\n", datetime, strip_colour_codes(buf));
+    fprintf(stdout, "%s %s\n", datetime, strip_colour_codes(buf));
 
     MOWGLI_ITER_FOREACH(n, loglocs.head)
     {
