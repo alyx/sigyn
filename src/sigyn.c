@@ -256,11 +256,7 @@ int main(int argc, char *argv[])
     me.config = mowgli_config_file_load(config);
 
     if(me.config == NULL)
-    {
-	// FIXME: This should use sigyn_fatal but it seems to crash when it is used.
-	fprintf(stderr, "Cannot load configuration file.\n");
-	return EXIT_FAILURE;
-    }
+        sigyn_fatal("Cannot load configuration file.");
     logger_init(me.config->entries);
     config_check(me.config);
 
