@@ -205,10 +205,7 @@ void logger(unsigned int level, char *format, ...)
                 fflush(l->f);
             }
             else
-            {
-                if (channel_find(l->channel) != NULL)
-                    irc_privmsg(l->channel, "%s %s", datetime, buf);
-            }
+                irc_privmsg(l->channel, "%s %s", datetime, buf);
         }
     }
 }
