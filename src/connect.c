@@ -171,7 +171,8 @@ socket_t uplink_connect(char *uplink, uint16_t port, char *vhost)
 
         freeaddrinfo(bindres);
     }
-    logger(LOG_DEBUG, "No vhost found. Not trying to set one.");
+    else
+        logger(LOG_DEBUG, "No vhost found. Not trying to set one.");
 
     set_nb(sock);
 
