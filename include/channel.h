@@ -40,10 +40,10 @@ struct chanuser_
 
 extern void channel_init(void);
 extern irc_channel_t *channel_find(const char *name);
-extern chanuser_t *chanuser_find(const char *channel, const char *nickname);
+extern chanuser_t *chanuser_find(irc_channel_t *channel, const char *nickname);
 extern void channel_add(const char *name);
-extern void chanuser_add(const char *channel, const char *nickname);
-extern void channel_del(const char *name);
-extern void chanuser_del(const char *channel, const char *nickname);
+extern void chanuser_add(irc_channel_t *channel, const char *nickname);
+extern void channel_del(irc_channel_t *name);
+extern void chanuser_del(irc_channel_t *channel, const char *nickname);
 
 #endif /* SIGYN_CHANNEL_H */

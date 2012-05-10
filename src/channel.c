@@ -53,7 +53,7 @@ irc_channel_t * channel_find(const char * name)
  * a specified user.
  *
  * Arguments:
- *     channel - A string containing the name of the channel to search in.
+ *     channel  - The irc_channel_t structure of the channel to search in.
  *     nickname - A string containing the name of the user to search for.
  *
  * Return value:
@@ -62,18 +62,10 @@ irc_channel_t * channel_find(const char * name)
  *
  */
 
-chanuser_t * chanuser_find(const char * channel, const char * nickname)
+chanuser_t * chanuser_find(irc_channel_t * c, const char * nickname)
 {
-    irc_channel_t * c;
     chanuser_t * cu;
     mowgli_node_t * n;
-    
-    c = channel_find(channel);
-    if (c == NULL)
-    {
-        logger(LOG_DEBUG, "Channel %s doesn't exists. Aborting chanuser_find().", channel);
-        return NULL;
-    }
 
     MOWGLI_ITER_FOREACH(n, c->users.head)
     {
@@ -153,7 +145,7 @@ void channel_add(const char *name)
  * the channel user list.
  *
  * Arguments:
- *     channel     - A string containing the name of the channel.
+ *     c           - The irc_channel_t structure of the channel.
  *     nickname    - A string containing the name of the user.
  * 
  * Return value:
@@ -161,20 +153,13 @@ void channel_add(const char *name)
  *
  */
 
-void chanuser_add(const char *channel, const char *nickname)
+void chanuser_add(irc_channel_t *c, const char *nickname)
 {
-    irc_channel_t *c;
     chanuser_t *cu;
 
-    c = channel_find(channel);
-    if (c == NULL)
+    if ((chanuser_find(c, nickname)) != NULL)
     {
-        logger(LOG_DEBUG, "Channel %s doesn't exist. Aborting chanuser_add().", channel);
-        return;
-    }
-    if ((chanuser_find(channel, nickname)) != NULL)
-    {
-        logger(LOG_DEBUG, "User %s exists in %s. Aborting chanuser_add().", nickname, channel);
+        logger(LOG_DEBUG, "User %s exists in %s. Aborting chanuser_add().", nickname, c->name);
         return;
     }
 
@@ -194,34 +179,25 @@ void chanuser_add(const char *channel, const char *nickname)
  * This routine provides a function to remove a channel from the channel list.
  *
  * Arguments:
- *     name     - A string containing the name of the channel.
+ *     c     - The irc_user_t structure of the channel.
  *
  * Return value:
  *     None
  *
  */
 
-void channel_del(const char *channel)
+void channel_del(irc_channel_t *c)
 {
-    irc_channel_t *c;
     mowgli_node_t *n, *tn;
-    
-    c = channel_find(channel);
-    if (c == NULL)
-    {
-        logger(LOG_DEBUG, "channel_del(): channel_find failed.");
-        return;
-    }
 
     MOWGLI_ITER_FOREACH_SAFE(n, tn, c->users.head)
     {
-        chanuser_del(c->name, ((chanuser_t *)n->data)->name);
-        mowgli_free(c->name);
-        mowgli_free(c->topic);
-        mowgli_node_delete(&c->node, &channels);
-        mowgli_heap_free(channel_heap, c);
+        chanuser_del(c, ((chanuser_t *)n->data)->name);
     }
-    logger(LOG_DEBUG, "channel_del(): Deleted channel %s", channel);
+    mowgli_free(c->name);
+    mowgli_free(c->topic);
+    mowgli_node_delete(&c->node, &channels);
+    mowgli_heap_free(channel_heap, c);
 }
 
 /*
@@ -229,7 +205,7 @@ void channel_del(const char *channel)
  * This routine provides a function to remove a channel user from the channel user list.
  *
  * Arguments:
- *     channel     - A string containing the name of the channel.
+ *     c           - The irc_user_t structure of the channel.
  *     nickname    - A string containing the name of the user.
  *
  * Return value:
@@ -237,24 +213,17 @@ void channel_del(const char *channel)
  *
  */
 
-void chanuser_del(const char *channel, const char *nickname)
+void chanuser_del(irc_channel_t *c, const char *nickname)
 {
-    irc_channel_t *c;
     chanuser_t *cu;
-    
-    c = channel_find(channel);
-    if (c == NULL)
-    {
-        logger(LOG_DEBUG, "Channel %s doesn't exist. Aborting chanuser_del().", channel);
-        return;
-    }
-    cu = chanuser_find(channel, nickname);
+
+    cu = chanuser_find(c, nickname);
     if (cu == NULL)
     {
-        logger(LOG_DEBUG, "User %s doesn't exist in %s. Aborting chanuser_del().", nickname, channel);
+        logger(LOG_DEBUG, "User %s doesn't exist in %s. Aborting chanuser_del().", nickname, c->name);
         return;
     }
-    logger(LOG_DEBUG, "chanuser_del(): Deleting user %s from %s", nickname, channel);
+    logger(LOG_DEBUG, "chanuser_del(): Deleting user %s from %s", nickname, c->name);
     c->nusers--;
     mowgli_free(cu->name);
     mowgli_node_delete(&cu->node, &c->users);
@@ -288,7 +257,7 @@ void chanuser_del_from_all(const char *nickname)
             cu = (chanuser_t *)n2->data;
             if (strcmp(cu->name, nickname) == 0)
             {
-                chanuser_del(c->name, cu->name);
+                chanuser_del(c, cu->name);
             }
         }
     }
@@ -306,22 +275,28 @@ static void handle_join(void *data, UNUSED void *udata)
         irc_who(event->target, NULL);
         return;
     }
-    chanuser_add(event->target, event->origin->nick);
+    irc_channel_t *channel;
+    channel = channel_find(event->target);
+    chanuser_add(channel, event->origin->nick);
 }
 
 static void handle_part(void *data, UNUSED void *udata)
 {
     irc_event_t *event;
     event = (irc_event_t *)data;
+    irc_channel_t *c;
+    c = channel_find(event->target);
+    if (c == NULL)
+        return;
     // Check if the user is us.
     if (strcmp(me.client->nick, event->origin->nick) == 0)
     {
-        channel_del(event->target);
+        channel_del(c);
         me.stats.channels--;
         return;
     }
     // channel_del will delete all users for us.
-    chanuser_del(event->target, event->origin->nick);
+    chanuser_del(c, event->origin->nick);
 }
 
 static void handle_quit(void *data, UNUSED void *udata)
@@ -347,18 +322,22 @@ static void handle_kick(void *data, UNUSED void *udata)
     int parc;
     char *parv[MAXPARC + 1], *tmp;
     irc_event_t *event;
+    irc_channel_t *c;
     event = (irc_event_t *)data;
     tmp = mowgli_strdup(event->data);
     parc = tokenize(tmp, parv);
+    c = channel_find(event->target);
+    if (c == NULL)
+        return;
     // Check if the user is us.
     if (strcmp(me.client->nick, parv[0]) == 0)
     {
-        channel_del(event->target);
+        channel_del(c);
         me.stats.channels--;
         return;
     }
     // channel_del will delete all users for us.
-    chanuser_del(event->target, parv[0]);
+    chanuser_del(c, parv[0]);
     mowgli_free(tmp);
 }
 
@@ -400,7 +379,7 @@ static void handle_352(void *data, UNUSED void *udata)
     channel = channel_find(parv[0]);
     if (channel == NULL)
         return;
-    chanuser_add(channel->name, parv[4]);
+    chanuser_add(channel, parv[4]);
     mowgli_free(tmp);
 }
 
