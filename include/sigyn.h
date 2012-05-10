@@ -40,4 +40,7 @@
 #include "permissions.h"
 #include "channel.h"
 
+/* from sigyn.c */
+extern char *config_file;
+
 #endif /* __SIGYN_H */

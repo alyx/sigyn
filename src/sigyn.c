@@ -7,6 +7,7 @@
 #include "ext/getopt_long.h"
 
 fd_set readfds, writefds, nullfds;
+char *config_file;
 
 /*
  * Routine Description:
@@ -75,26 +76,32 @@ void parse_commandline_options(int argc, char **argv)
       { NULL, 0, NULL, 0, 0 },
     };
 
-    while ((r = mowgli_getopt_long(argc, argv, "hv", long_opts, NULL)) != -1)
+    while ((r = mowgli_getopt_long(argc, argv, "c:hv", long_opts, NULL)) != -1)
     {
-	switch (r)
-	{
-	    case 'h':
-		printf("usage: sigyn [-hv]\n\n"
-		  " -h		Print this message and exit\n"
-		  " -v		Print the version information and exit\n");
-		exit(EXIT_SUCCESS);
-		break;
-	    case 'v':
-		printf("%s by Alexandria Wolcott.\n", PACKAGE_STRING);
-		exit(EXIT_SUCCESS);
-		break;
-	    default:
-		printf("\nusage: sigyn [-hv]\n");
-		exit(EXIT_SUCCESS);
-		break;
-	}
+	    switch (r)
+	    {
+	        case 'h':
+		        printf("usage: sigyn [-hv] [-c config]\n\n"
+                " -c <path>   Specify a configuration file for sigyn to use\n"
+		        " -h          Print this message and exit\n"
+		        " -v          Print the version information and exit\n");
+		        exit(EXIT_SUCCESS);
+		        break;
+	        case 'v':
+		        printf("%s by Alexandria Wolcott.\n", PACKAGE_STRING);
+		        exit(EXIT_SUCCESS);
+		        break;
+            case 'c':
+                config_file = mowgli_strdup(mowgli_optarg);
+                break;
+	        default:
+		        printf("\nusage: sigyn [-hv] [-c config]\n");
+		        exit(EXIT_SUCCESS);
+		        break;
+	    }
     }
+    if (config_file == NULL)
+        config_file = mowgli_strdup(SYSCONFDIR "/sigyn.conf");
 }
 
 /*
@@ -246,14 +253,11 @@ static void loadmodules(mowgli_config_file_entry_t * entry)
 
 int main(int argc, char *argv[])
 {
-    char config[BUFSIZE];
-
     signals_init();
+
     parse_commandline_options(argc, argv);
 
-    snprintf(config, BUFSIZE, "%s/%s", SYSCONFDIR, "sigyn.conf");
-
-    me.config = mowgli_config_file_load(config);
+    me.config = mowgli_config_file_load(config_file);
 
     if(me.config == NULL)
         sigyn_fatal("Cannot load configuration file.");
