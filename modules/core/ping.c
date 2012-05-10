@@ -1,6 +1,6 @@
 #include "sigyn.h"
 
-DECLARE_MODULE("core/ping", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
+DECLARE_MODULE("core/ping", MODULE_UNLOAD_CAPABILITY_NEVER, _modinit, _moddeinit,
         "1.0", "Alyx <alyx@malkier.net>");
 
 static void handle_ping(void *data, UNUSED void *udata);
