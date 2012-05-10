@@ -14,7 +14,8 @@ typedef struct {
     char *name;
     char *topic;
     size_t nusers;
-    char **users;
+    mowgli_list_t users;
+    mowgli_node_t node;
 
     size_t nmodes;
     struct {

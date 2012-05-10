@@ -7,26 +7,16 @@
 #define SIGYN_CHANNEL_H
 
 #include "mowgli.h"
+#include "irc.h"
 
 mowgli_list_t channels;
 mowgli_list_t chanusers;
 
-typedef struct channel_ channel_t;
 typedef struct chanuser_ chanuser_t;
-
-struct channel_
-{
-    char *name;
-    char *topic;
-    unsigned int modes;
-    unsigned int usercount;
-    mowgli_list_t users;
-    mowgli_node_t node;
-};
 
 struct chanuser_
 {
-    channel_t *channel;
+    irc_channel_t *channel;
     char *name;
     unsigned int modes;
     mowgli_node_t node;
@@ -49,7 +39,7 @@ struct chanuser_
 #define is_owner(x) ((x) && (x)->modes & CSTATUS_OWNER)
 
 extern void channel_init(void);
-extern channel_t *channel_find(const char *name);
+extern irc_channel_t *channel_find(const char *name);
 extern chanuser_t *chanuser_find(const char *channel, const char *nickname);
 extern void channel_add(const char *name);
 extern void chanuser_add(const char *channel, const char *nickname);
