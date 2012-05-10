@@ -23,13 +23,14 @@ char *config_file;
  *              (Sent in USER).
  *     uplink - A string containing the hostname Sigyn should connect to.
  *     port   - An integer specifying the port number of the IRC server.
+ *     vhost  - A string containing the hostname for Sigyn to bind to (Optional). 
  *
  * Return value:
  *    None.
  */
 
 void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, 
-        uint16_t port)
+        uint16_t port, char *vhost)
 {
     me.client = mowgli_alloc(sizeof(irc_user_t));
     me.stats.start = time(NULL);
@@ -40,6 +41,7 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     me.client->gecos = gecos;
     me.uplink.port = port;
     me.uplink.hostname = uplink;
+    me.uplink.vhost = vhost;
     me.uplink.connected = false;
     me.maxfd = 3;
 #ifdef _WIN32
@@ -264,7 +266,7 @@ int main(int argc, char *argv[])
     logger_init(me.config->entries);
     config_check(me.config);
 
-    me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, NULL);
+    me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, me.uplink.vhost);
 
     loadmodules(me.config->entries);
     io_loop();

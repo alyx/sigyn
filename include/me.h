@@ -14,6 +14,7 @@ struct me {
 		socket_t sock;
         uint16_t port;
         char *hostname;
+        char *vhost;
     } uplink;
     struct stats {
         time_t start;

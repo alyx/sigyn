@@ -38,7 +38,7 @@ extern void preparse(char line[]);
 
 /* sigyn.c functions */
 extern void initialise_sigyn(char *nick, char *ident, char *gecos, 
-        char *uplink, uint16_t port);
+        char *uplink, uint16_t port, char *vhost);
 extern void sigyn_fatal(char *format, ...);
 extern void sigyn_cleanup(void);
 

@@ -8,8 +8,8 @@
 void config_check(mowgli_config_file_t * config)
 {
     mowgli_config_file_entry_t * entry;
-    
-    char * nick, * desc, * server;
+
+    char * nick, * desc, * server, * vhost;
     uint16_t port;
 
     entry = config_fatal_find_entry(config->entries, "sigyn");
@@ -19,8 +19,10 @@ void config_check(mowgli_config_file_t * config)
     entry = config_fatal_find_entry(config->entries, "uplink");
     server = (entry = config_fatal_find_entry(entry->entries, "server"))->vardata;
     port = (uint32_t)atoi((entry = config_fatal_find_entry(entry, "port"))->vardata);
+    if (entry = config_find_entry(entry, "vhost"))
+        vhost = entry->vardata;
 
-    initialise_sigyn(nick, nick, desc, server, port);
+    initialise_sigyn(nick, nick, desc, server, port, vhost);
 }
 
 mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t * start,
