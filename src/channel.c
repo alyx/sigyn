@@ -393,6 +393,8 @@ static void handle_nick(void *data, UNUSED void *udata)
     chanuser_t *cu;
     event = (irc_event_t *)data;
     mowgli_node_t *n, *tn;
+    if (strcmp(me.client->nick, event->origin->nick) == 0)
+        me.client->nick = mowgli_strdup(event->target);
     MOWGLI_ITER_FOREACH_SAFE(n, tn, channels.head)
     {
         c = (irc_channel_t *)n->data;
