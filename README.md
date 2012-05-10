@@ -46,4 +46,4 @@ projects for design concepts, code, and/or inspiration.
 
 Please report all bugs, suggestions, and feature requests using the github issue tracker found [here](https://github.com/alyx/sigyn/issues).
 
-For assistance with sigyn, please visit our support channel: irc.staticbox.net #sigyn [[Webchat]](http://webchat.staticbox.net/?channels=sigyn
+For assistance with sigyn, please visit our support channel: irc.staticbox.net #sigyn [&#91;Webchat&#93;](http://webchat.staticbox.net/?channels=sigyn
