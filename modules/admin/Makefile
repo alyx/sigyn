@@ -12,8 +12,7 @@ SRCS =		\
 	raw.c \
 	join.c \
     modload.c \
-    exec.c \
-    part.c
+    exec.c
 
 include ../../extra.mk
 include ../../buildsys.mk
