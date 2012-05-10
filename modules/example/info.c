@@ -1,6 +1,6 @@
 #include "sigyn.h"
 
-DECLARE_MODULE("examples/info", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
+DECLARE_MODULE("example/info", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
         "1.0", "Matthew <mattwb65@gmail.com>");
 
 static void cmd_info(const irc_event_t *event, UNUSED int parc, UNUSED char **parv);
