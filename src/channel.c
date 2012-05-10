@@ -15,6 +15,7 @@ static void handle_quit(void *data, UNUSED void *udata);
 static void handle_topic(void *data, UNUSED void *udata);
 static void handle_332(void *data, UNUSED void *udata);
 static void handle_352(void *data, UNUSED void *udata);
+static void handle_nick(void *data, UNUSED void *udata);
 
 /*
  * Routine Description:
@@ -110,6 +111,7 @@ void channel_init(void)
     mowgli_hook_associate("KICK", handle_kick, NULL);
     mowgli_hook_associate("QUIT", handle_quit, NULL);
     mowgli_hook_associate("TOPIC", handle_topic, NULL);
+    mowgli_hook_associate("NICK", handle_nick, NULL);
     mowgli_hook_associate("332", handle_332, NULL);
     mowgli_hook_associate("352", handle_352, NULL);
 }
@@ -357,6 +359,7 @@ static void handle_kick(void *data, UNUSED void *udata)
     }
     // channel_del will delete all users for us.
     chanuser_del(event->target, parv[0]);
+    mowgli_free(tmp);
 }
 
 static void handle_332(void *data, UNUSED void *udata)
@@ -382,6 +385,7 @@ static void handle_332(void *data, UNUSED void *udata)
         mowgli_strlcat(topicbuf, parv[i], sizeof(topicbuf));
     }
     channel->topic = mowgli_strdup(topicbuf);
+    mowgli_free(tmp);
 }
 
 static void handle_352(void *data, UNUSED void *udata)
@@ -392,9 +396,31 @@ static void handle_352(void *data, UNUSED void *udata)
     char *parv[MAXPARC + 1], *tmp;
     event = (irc_event_t *)data;
     tmp = mowgli_strdup(event->data);
-    parc = tokenize(event->data, parv);
+    parc = tokenize(tmp, parv);
     channel = channel_find(parv[0]);
     if (channel == NULL)
         return;
     chanuser_add(channel->name, parv[4]);
+    mowgli_free(tmp);
 }
+
+static void handle_nick(void *data, UNUSED void *udata)
+{
+    irc_channel_t *c;
+    irc_event_t *event;
+    chanuser_t *cu;
+    event = (irc_event_t *)data;
+    mowgli_node_t *n, *tn;
+    MOWGLI_ITER_FOREACH_SAFE(n, tn, channels.head)
+    {
+        c = (irc_channel_t *)n->data;
+        mowgli_node_t *n2, *tn2;
+        MOWGLI_ITER_FOREACH_SAFE(n2, tn2, c->users.head)
+        {
+            cu = (chanuser_t *)n2->data;
+            if (strcmp(cu->name, event->origin->nick) == 0)
+                cu->name = event->target;
+        }
+    }
+}
+
