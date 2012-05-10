@@ -1,21 +1,59 @@
+/* Sigyn - A reasonably sane IRC bot.
+ *
+ * This configuration file supports 2 types
+ * of comments:
+ *
+ * - All text after a '#' on a line is ignored, as in shell scripting
+ * - A block of text like this one is ignored, as in C
+ */
+
+/* The sigyn structure is required for the bot
+ * to start correctly. The following values are
+ *
+ * nick - Nickname the bot will take in IRC
+ * desc - Gecos description for the bot on IRC
+ * fantasy - Fantasy character to recognise commands for
+ */
 sigyn {
     nick = "sigyn";
     desc = "Sigyn IRC Bot";
-    
+
     fantasy = "!";
 };
 
+/* The uplink structure is required for the bot to
+ * connect to an IRC network and be any bit useful.
+ *
+ * server - IRC server to connect to
+ * port - Port used to connect to the IRC server
+ * ssl - 0 or 1 stating whether to use SSL or not,
+ * 	1 being true, 0 being false
+ */
 uplink {
     server = "irc.thinstack.net";
     port = 6667;
     ssl = 0;
 };
 
+/* The admin user is required enorder to use IRC
+ * commands that the bot offers as apart of it's
+ * modules, not setting an admin will result in the
+ * bot rejecting your requests for specific commands
+ * which require administrative privileges.
+ *
+ * admin - An IRC nickname of the bot administrator
+ */
 admin = "adminuser";
 
-/* Modules */
+/* The following blocks below are core or optional modules,
+ * these modules do everything from offer python interpretation
+ * to making sure the bot stays connected to the server, their
+ * names should be self explanatory. Any that are commented out
+ * will not be loaded.
+ */
 loadmodule "core/ping";
 loadmodule "core/help";
+#loadmodule "admin/exec"
 #loadmodule "admin/raw";
 #loadmodule "example/dns";
 #loadmodule "example/hello";
