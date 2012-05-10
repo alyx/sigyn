@@ -73,7 +73,7 @@ void recvq_dump(socket_t sock)
         if ((q->sock == sock) && (q->completed == true))
         {
             logger(LOG_RAW, ">> %s\n", strip_colour_codes(q->string));
-            parse(q->string);
+	    parse(q->string);
             mowgli_free(q->string);
             mowgli_node_delete(n, &recvq);
         }

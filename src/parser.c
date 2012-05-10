@@ -123,7 +123,6 @@ irc_event_t *parse(char line[])
         return NULL;
 
     strip(string, "\r\n");
-    logger(LOG_RAW, ">> %s", strip_colour_codes(string));
 
     token = strtok(string, " ");
     if (token == NULL)
