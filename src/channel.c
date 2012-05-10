@@ -139,7 +139,7 @@ void channel_add(const char *name)
 
     c = mowgli_heap_alloc(channel_heap);
 
-    c->name = strdup(name);
+    c->name = mowgli_strdup(name);
 
     mowgli_node_add(c, &c->node, &channels);
     logger(LOG_DEBUG, "channel_add(): Added channel %s", c->name);
@@ -178,7 +178,7 @@ void chanuser_add(const char *channel, const char *nickname)
 
     cu = mowgli_heap_alloc(chanuser_heap);
 
-    cu->name = strdup(nickname);
+    cu->name = mowgli_strdup(nickname);
     cu->channel = c;
     c->usercount++;
 
@@ -214,8 +214,8 @@ void channel_del(const char *channel)
     MOWGLI_ITER_FOREACH_SAFE(n, tn, c->users.head)
     {
         chanuser_del(c->name, ((chanuser_t *)n->data)->name);
-        free(c->name);
-        free(c->topic);
+        mowgli_free(c->name);
+        mowgli_free(c->topic);
         mowgli_node_delete(&c->node, &channels);
         mowgli_heap_free(channel_heap, c);
     }
@@ -254,7 +254,7 @@ void chanuser_del(const char *channel, const char *nickname)
     }
     logger(LOG_DEBUG, "chanuser_del(): Deleting user %s from %s", nickname, channel);
     c->usercount--;
-    free(cu->name);
+    mowgli_free(cu->name);
     mowgli_node_delete(&cu->node, &c->users);
     mowgli_heap_free(chanuser_heap, cu);
 }
@@ -337,7 +337,7 @@ static void handle_topic(void *data, UNUSED void *udata)
     channel = channel_find(event->target);
     if (channel == NULL)
         return;
-    channel->topic = strdup(event->data);
+    channel->topic = mowgli_strdup(event->data);
 }
 
 static void handle_kick(void *data, UNUSED void *udata)
@@ -346,7 +346,7 @@ static void handle_kick(void *data, UNUSED void *udata)
     char *parv[MAXPARC + 1], *tmp;
     irc_event_t *event;
     event = (irc_event_t *)data;
-    tmp = strdup(event->data);
+    tmp = mowgli_strdup(event->data);
     parc = tokenize(tmp, parv);
     // Check if the user is us.
     if (strcmp(me.client->nick, parv[0]) == 0)
@@ -366,7 +366,7 @@ static void handle_332(void *data, UNUSED void *udata)
     channel_t *channel;
     char *parv[MAXPARC + 1], *tmp;
     event = (irc_event_t *)data;
-    tmp = strdup(event->data);
+    tmp = mowgli_strdup(event->data);
     parc = tokenize(event->data, parv);
     channel = channel_find(parv[0]);
     if (channel == NULL)
@@ -381,7 +381,7 @@ static void handle_332(void *data, UNUSED void *udata)
             mowgli_strlcat(topicbuf, " ", sizeof(topicbuf));
         mowgli_strlcat(topicbuf, parv[i], sizeof(topicbuf));
     }
-    channel->topic = strdup(topicbuf);
+    channel->topic = mowgli_strdup(topicbuf);
 }
 
 static void handle_352(void *data, UNUSED void *udata)
@@ -391,7 +391,7 @@ static void handle_352(void *data, UNUSED void *udata)
     channel_t *channel;
     char *parv[MAXPARC + 1], *tmp;
     event = (irc_event_t *)data;
-    tmp = strdup(event->data);
+    tmp = mowgli_strdup(event->data);
     parc = tokenize(event->data, parv);
     channel = channel_find(parv[0]);
     if (channel == NULL)
