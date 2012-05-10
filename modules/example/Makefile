@@ -11,7 +11,7 @@ MODULE = example
 SRCS =			\
 	hello.c \
 	dns.c \
-        info.c
+    info.c
 
 include ../../extra.mk
 include ../../buildsys.mk
