@@ -33,4 +33,5 @@ static void cmd_raw(const irc_event_t *event, int parc, char **parv)
 
     logger(LOG_DEBUG, "[admin/raw]: Final buffer: %s", buffer);
     raw(buffer);
+    mowgli_free(buffer);
 }

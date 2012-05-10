@@ -42,4 +42,5 @@ static void cmd_exec(const irc_event_t *event, int parc, char **parv)
         irc_privmsg(event->target, "%s", data);
     }
     pclose(fp);
+    mowgli_free(buffer);
 }
