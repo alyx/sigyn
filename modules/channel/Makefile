@@ -6,11 +6,10 @@
 # $Id: Makefile.in 8375 2007-06-03 20:03:26Z pippijn $
 #
 
-MODULE = example
+MODULE = channel
 
 SRCS =			\
-	hello.c \
-	dns.c 
+	info.c
 
 include ../../extra.mk
 include ../../buildsys.mk
