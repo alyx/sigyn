@@ -68,8 +68,7 @@ mowgli_config_file_entry_t * config_fatal_find_entry(mowgli_config_file_entry_t 
 
     if (entry == NULL)
     {
-        printf("LOL FAIL! %s\n", name);
-        exit(-1);
+        sigyn_fatal("%s was not found in configuration file. Aborting.", name);
     }
 
     return entry;
