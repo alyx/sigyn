@@ -38,5 +38,6 @@
 #include "tools.h"
 #include "version.h"
 #include "permissions.h"
+#include "channel.h"
 
 #endif /* __SIGYN_H */

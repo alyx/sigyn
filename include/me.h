@@ -19,6 +19,7 @@ struct me {
         time_t start;
         int inB;
         int outB;
+        int channels;
     } stats;
     int maxfd;
 } me;

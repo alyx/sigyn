@@ -49,6 +49,7 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     modules_init();
     queue_init();
     command_init();
+    channel_init();
     timer_init();
 }
 
