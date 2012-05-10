@@ -114,19 +114,19 @@ void preparse(char line[])
  *
  */
 
-irc_event_t *parse(char line[])
+void parse(char line[])
 {
     char *string = mowgli_strdup(line);
     char *token;
     irc_event_t *event = mowgli_alloc(sizeof(irc_event_t));
     if (string == NULL)
-        return NULL;
+        return;
 
     strip(string, "\r\n");
 
     token = strtok(string, " ");
     if (token == NULL)
-        return NULL;
+        return;
 
     if((strncmp(token, ":", 1)) == 0)
     {
@@ -188,5 +188,5 @@ irc_event_t *parse(char line[])
 
     mowgli_free(string);
 
-    return event;
+    mowgli_free(event);
 }

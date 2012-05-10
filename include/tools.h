@@ -18,6 +18,12 @@ extern void config_print(mowgli_config_file_entry_t * entries, int level);
 /* string.c functions */
 extern void strip(char *line, char *strippers);
 extern const char *strip_colour_codes(const char *message);
+
+#define INIT_PARV(x, y) \
+int __i; \
+for(__i = 0; __i < y; ++__i) \
+  x[__i] = '\0';
+  
 #ifndef HAVE_STRLCAT
 extern size_t strlcat(char *dest, const char *src, size_t count);
 #endif
@@ -27,7 +33,7 @@ extern size_t strlcpy(char *dest, const char *src, size_t count);
 
 /* parse.c functions */
 extern irc_user_t *parse_user(char hostmask[]);
-extern irc_event_t *parse(char line[]);
+extern void parse(char line[]);
 extern void preparse(char line[]);
 
 /* sigyn.c functions */

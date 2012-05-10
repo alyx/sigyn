@@ -321,6 +321,7 @@ static void handle_kick(void *data, UNUSED void *udata)
 {
     int parc;
     char *parv[MAXPARC + 1], *tmp;
+    INIT_PARV(parv, MAXPARC + 1);
     irc_event_t *event;
     irc_channel_t *c;
     event = (irc_event_t *)data;
@@ -347,6 +348,7 @@ static void handle_332(void *data, UNUSED void *udata)
     irc_event_t *event;
     irc_channel_t *channel;
     char *parv[MAXPARC + 1], *tmp;
+    INIT_PARV(parv, MAXPARC + 1);
     event = (irc_event_t *)data;
     tmp = mowgli_strdup(event->data);
     parc = tokenize(event->data, parv);
@@ -373,6 +375,7 @@ static void handle_352(void *data, UNUSED void *udata)
     irc_event_t *event;
     irc_channel_t *channel;
     char *parv[MAXPARC + 1], *tmp;
+    INIT_PARV(parv, MAXPARC + 1);
     event = (irc_event_t *)data;
     tmp = mowgli_strdup(event->data);
     parc = tokenize(tmp, parv);

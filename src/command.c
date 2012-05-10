@@ -145,6 +145,7 @@ static void handle_privmsg(void *data, UNUSED void *udata)
     int parc;
     char *parv[MAXPARC + 1], *tmp, *prefix;
     mowgli_config_file_entry_t * e;
+    INIT_PARV(parv, MAXPARC + 1);
 
     event = (irc_event_t *)data;
     clone = event;
