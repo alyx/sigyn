@@ -24,14 +24,13 @@ static void cmd_raw(const irc_event_t *event, int parc, char **parv)
 
     for (i = 1; i <= parc; i++)
     {
-        printf("Adding %s to buffer.\n", parv[i]);
-        /*snprintf(buffer, BUFSIZE, "%s %s", buffer, parv[i]);*/
+        logger(LOG_DEBUG, "[admin/raw]: Adding %s to buffer.", parv[i]);
         strlcat(buffer, parv[i], BUFSIZE);
         if (i != parc)
             strlcat(buffer, " ", BUFSIZE);
-        printf("New buffer: %s\n", buffer);
+        logger(LOG_DEBUG, "[admin/raw]: New buffer: %s", buffer);
     }
 
-    printf("Buffer: %s\n", buffer);
+    logger(LOG_DEBUG, "[admin/raw]: Final buffer: %s", buffer);
     raw(buffer);
 }

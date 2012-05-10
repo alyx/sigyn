@@ -16,7 +16,6 @@ int tokenize(char *message, char **parv)
     while ((i <= MAXPARC) && (token = strtok_r(NULL, " ", &save)) &&
             (token != NULL))
     {
-        printf("%d\n", i);
         parv[i] = token;
         i++;
         if (save == NULL || (strlen(save)) < 1)
@@ -27,6 +26,8 @@ int tokenize(char *message, char **parv)
 
     if (parv[i] == NULL)
         i--;
+
+    logger(LOG_DEBUG, "[tokenize] parc size: %i", i);
 
     return i;
 }
