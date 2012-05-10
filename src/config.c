@@ -23,24 +23,6 @@ void config_check(mowgli_config_file_t * config)
     initialise_sigyn(nick, nick, desc, server, port);
 }
 
-#if 0
-mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t *entries, 
-        char * name)
-{
-    mowgli_config_file_entry_t * entry, * subentry;
-
-    while(entry != NULL)
-    {
-        if (!strcmp(entry->varname, name))
-            return entry;
-        else
-            entry = entry->next;
-    }
-
-    return NULL;
-}
-#endif
-
 mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t * start,
         const char * name)
 {
