@@ -253,6 +253,8 @@ static void loadmodules(mowgli_config_file_entry_t * entry)
     }
 }
 
+int main(int argc, char *argv[])
+{
     signals_init();
 
     parse_commandline_options(argc, argv);
