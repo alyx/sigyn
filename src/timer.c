@@ -108,6 +108,6 @@ time_t get_next_timer(void)
 {
     if (next_event >= time(NULL))
         return next_event;
-    else
-        return 0;
+
+    return 0;
 }
