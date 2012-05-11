@@ -30,7 +30,7 @@ int raw(char *line, ...)
     vsnprintf(sendbuf, 509, line, args);
     va_end(args);
 
-    strlcat(sendbuf, "\r\n", 2);
+    mowgli_strlcat(sendbuf, "\r\n", 2);
     length = strlen(sendbuf);
 
     sendq_add(me.uplink.sock, sendbuf, length); 

@@ -24,13 +24,6 @@ int __i; \
 for(__i = 0; __i < y; ++__i) \
   x[__i] = '\0';
   
-#ifndef HAVE_STRLCAT
-extern size_t strlcat(char *dest, const char *src, size_t count);
-#endif
-#ifndef HAVE_STRLCPY
-extern size_t strlcpy(char *dest, const char *src, size_t count);
-#endif
-
 /* parse.c functions */
 extern irc_user_t *parse_user(char hostmask[]);
 extern void parse(char line[]);

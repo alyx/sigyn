@@ -5,7 +5,6 @@
  * Abstract: This module implements various useful string-related functions.
  */
 
-#include <string.h>
 #include "sigyn.h"
 
 void rmchar(char *line, char *strippers)
@@ -76,53 +75,19 @@ const char *strip_colour_codes(const char *buf)
 
     for (; *in != '\0'; in++)
     {
-	if (*in > 31)
-	{
-	    *out++ = *in;
-	    continue;
-	}
-	else if (*in == 3)
-	{
-	    in++;
-	    while (isdigit(*in))
-	      in++;
-	}
+        if (*in > 31)
+        {
+            *out++ = *in;
+            continue;
+        }
+        else if (*in == 3)
+        {
+            in++;
+            while (isdigit(*in))
+                in++;
+        }
     }
 
     *out = '\0';
     return outbuf;
-}
-
-/* These functions are taken from Linux. */
-size_t strlcat(char *dest, const char *src, size_t count)
-{
-	size_t dsize = strlen(dest);
-	size_t len = strlen(src);
-	size_t res = dsize + len;
-
-	dest += dsize;
-	count -= dsize;
-
-	if (len >= count)
-		len = count - 1;
-
-	memcpy(dest, src, len);
-
-	dest[len] = 0;
-
-	return res;
-}
-
-size_t strlcpy(char *dest, const char *src, size_t size)
-{
-	size_t ret = strlen(src);
-
-	if (size)
-	{
-		size_t len = (ret >= size) ? size - 1 : ret;
-		memcpy(dest, src, len);
-		dest[len] = '\0';
-	}
-
-	return ret;
 }

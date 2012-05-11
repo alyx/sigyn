@@ -13,6 +13,7 @@
 #ifdef ENABLE_STACK
 # include <libunwind.h>
 #endif
+#include <ctype.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdbool.h>

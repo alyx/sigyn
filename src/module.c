@@ -35,16 +35,16 @@ static mowgli_module_t *linker_open_ext(const char *path, char *errbuf, int errl
 	char *buf = mowgli_alloc(strlen(path) + 20);
 	void *ret;
 
-	strlcpy(buf, path, strlen(path) + 20);
+	mowgli_strlcpy(buf, path, strlen(path) + 20);
 
 	if (!strstr(buf, PLATFORM_SUFFIX))
-		strlcat(buf, PLATFORM_SUFFIX, strlen(path) + 20);
+		mowgli_strlcat(buf, PLATFORM_SUFFIX, strlen(path) + 20);
 
 	/* Don't try to open a file that doesn't exist. */
 	struct stat s;
 	if (0 != stat(buf, &s))
 	{
-		strlcpy(errbuf, strerror(errno), errlen);
+		mowgli_strlcpy(errbuf, strerror(errno), errlen);
 		return NULL;
 	}
 
@@ -53,7 +53,7 @@ static mowgli_module_t *linker_open_ext(const char *path, char *errbuf, int errl
 
 	if (!ret)
 	{
-		strlcpy(errbuf, dlerror(), errlen);
+		mowgli_strlcpy(errbuf, dlerror(), errlen);
 	}
 
 	return ret;
@@ -209,8 +209,8 @@ static module_t *module_load_internal(const char *pathname, char *errbuf, int er
 
 	m = mowgli_heap_alloc(module_heap);
 
-	strlcpy(m->modpath, pathname, BUFSIZE);
-	strlcpy(m->name, h->name, BUFSIZE);
+	mowgli_strlcpy(m->modpath, pathname, BUFSIZE);
+	mowgli_strlcpy(m->name, h->name, BUFSIZE);
 	m->can_unload = h->can_unload;
 	m->handle = handle;
 	m->mflags = MODTYPE_STANDARD;
