@@ -27,9 +27,9 @@ static void cmd_exec(const irc_event_t *event, int parc, char **parv)
 
     for (i = 1; i <= parc; i++)
     {
-        strlcat(buffer, parv[i], BUFSIZE);
+        mowgli_strlcat(buffer, parv[i], BUFSIZE);
         if (i != parc)
-            strlcat(buffer, " ", BUFSIZE);
+            mowgli_strlcat(buffer, " ", BUFSIZE);
     }
     fp = popen(buffer, "r");
     if (fp == NULL)

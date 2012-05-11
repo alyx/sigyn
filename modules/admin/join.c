@@ -25,8 +25,8 @@ static void cmd_part(const irc_event_t *event, int parc, char **parv)
   // Started at two so we don't get the command garbage, we only want the message!
   for(i = 2; parv[i] != NULL; ++i)
   {
-    strlcat(message, parv[i], BUFSIZE);
-    strlcat(message, " ", BUFSIZE);
+    mowgli_strlcat(message, parv[i], BUFSIZE);
+    mowgli_strlcat(message, " ", BUFSIZE);
   }
   // There's always a space at the end of the string, we don't want it!
   size_t len = strlen(message);

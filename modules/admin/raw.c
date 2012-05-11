@@ -25,9 +25,9 @@ static void cmd_raw(const irc_event_t *event, int parc, char **parv)
     for (i = 1; i <= parc; i++)
     {
         logger(LOG_DEBUG, "[admin/raw]: Adding %s to buffer.", parv[i]);
-        strlcat(buffer, parv[i], BUFSIZE);
+        mowgli_strlcat(buffer, parv[i], BUFSIZE);
         if (i != parc)
-            strlcat(buffer, " ", BUFSIZE);
+            mowgli_strlcat(buffer, " ", BUFSIZE);
         logger(LOG_DEBUG, "[admin/raw]: New buffer: %s", buffer);
     }
 
