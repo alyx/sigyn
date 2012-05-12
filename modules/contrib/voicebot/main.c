@@ -9,9 +9,11 @@ static mowgli_list_t userlist;
 static mowgli_heap_t * ban_heap;
 static mowgli_heap_t * user_heap;
 
-static void handle_join(void * data, void * udata);
-static void handle_part(void * data, void * udata);
+static void handle_join(void * data, UNUSED void * udata);
+static void handle_part(void * data, UNUSED void * udata);
 static void cmd_vb(const irc_event_t * event, int parc, char ** parv);
+
+static char * voicechan;
 
 struct no_voice
 {
@@ -19,6 +21,7 @@ struct no_voice
     char * reason;
     time_t set;
     time_t length;
+    mowgli_node_t * n;
 };
 
 struct new_user
@@ -29,12 +32,13 @@ struct new_user
 
 void _modinit(UNUSED module_t *m)
 {
-    mowgli_config_file_entry_t * voicechan;
+    mowgli_config_file_entry_t * channel;
 
-    if (voicechan != NULL && (voicechan->vardata != NULL))
+    if (channel != NULL && (channel->vardata != NULL))
     {
-        mowgli_hook_associate("JOIN", handle_join, voicechan->vardata);
-        mowgli_hook_associate("PART", handle_part, voicechan->vardata);
+        voicechan = channel->vardata;
+        mowgli_hook_associate("JOIN", handle_join, NULL);
+        mowgli_hook_associate("PART", handle_part, NULL);
     }
     else
         return;
@@ -54,7 +58,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     mowgli_hook_dissociate("JOIN", handle_join);
 }
 
-static void handle_join(void * data, void * udata)
+static void handle_join(void * data, UNUSED void * udata)
 {
     irc_event_t * event;
     mowgli_node_t * n;
@@ -63,7 +67,7 @@ static void handle_join(void * data, void * udata)
 
     event = (irc_event_t *)data;
 
-    if (strcmp(event->target, (char *)udata) != 0)
+    if (strcmp(event->target, voicechan) != 0)
         return;
 
     MOWGLI_ITER_FOREACH(n, banlist.head)
@@ -81,10 +85,11 @@ static void handle_join(void * data, void * udata)
     new->user->hostmask = mowgli_strdup(event->origin->hostmask);
     new->entered = time(NULL);
 
+
     mowgli_node_add(new, mowgli_node_create(), &userlist);
 }
 
-static void handle_part(void * data, void * udata)
+static void handle_part(void * data, UNUSED void * udata)
 {
     irc_event_t * event;
     struct new_user * nu;
@@ -92,7 +97,7 @@ static void handle_part(void * data, void * udata)
 
     event = (irc_event_t *)data;
 
-    if (strcmp(event->target, (char *)udata) != 0)
+    if (strcmp(event->target, voicechan) != 0)
         return;
 
     MOWGLI_ITER_FOREACH(n, userlist.head)
@@ -103,11 +108,23 @@ static void handle_part(void * data, void * udata)
     }
 }
 
+bool unban(void * argument)
+{
+    char * buf;
+    struct no_voice * banned;
+    banned = (struct no_voice *)argument;
+
+    mowgli_node_delete(banned->n, &banlist);
+    mowgli_free(banned->hostmask);
+    mowgli_heap_free(ban_heap, banned);
+}
+
 static void cmd_vb_ban(const irc_event_t * event, int parc, char ** parv)
 {
     struct no_voice * banned;
     char * reason;
     int i;
+    char * buf;
 
     if (parv[2] == NULL)
     {
@@ -115,7 +132,7 @@ static void cmd_vb_ban(const irc_event_t * event, int parc, char ** parv)
     }
 
     banned = mowgli_heap_alloc(ban_heap);
-    banned->hostmask = parv[2];
+    banned->hostmask = mowgli_strdup(parv[2]);
     banned->set = time(NULL);
 
     if (parv[3] != NULL && !strcmp(parv[3], "!T"))
@@ -125,8 +142,20 @@ static void cmd_vb_ban(const irc_event_t * event, int parc, char ** parv)
             //error here
         }
 
+        buf = mowgli_alloc(1024);
+        snprintf(buf, 1024, "unban %s", banned->hostmask);
         banned->length = (time_t)strtol(parv[4], (char **)NULL, 10);
-        timer_add("unban " banned->hostmask, unban, banned, banned->length);
+        timer_add(buf, unban, banned, banned->length);
+    }
+}
+
+static void cmd_vb_voice(const irc_event_t * event, int parc, char ** parv)
+{
+    time_t wait;
+
+    if (parv[2] != NULL)
+    {
+        wait = (time_t)strtol(parv[2], (char **)NULL, 10);
     }
 }
 
@@ -134,13 +163,13 @@ static void cmd_vb(const irc_event_t * event, int parc, char ** parv)
 {
     if (!strcmp(parv[1], "ban"))
     {
-        cmd_vb_ban(const irc_event_t * event, int parc, char ** parv);
+        cmd_vb_ban(event, parc, parv);
         return;
     }
 
     else if (!strcmp(parv[1], "voice"))
     {
-        cmd_vb_voice(const irc_event_t * event, int parc, char ** parv);
+        /*cmd_vb_voice(event, parc, parv);*/
         return;
     }
 
