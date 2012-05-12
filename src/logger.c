@@ -8,7 +8,6 @@
 #include "sigyn.h"
 
 static mowgli_heap_t * logheap;
-mowgli_list_t loglocs;
 
 int logger_add_file(const char * file, unsigned int level)
 {

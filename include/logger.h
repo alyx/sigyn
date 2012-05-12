@@ -37,4 +37,6 @@ extern void logger_init(mowgli_config_file_entry_t * config);
 extern void logger_deinit(void);
 extern void logger(unsigned int level, char *format, ...);
 
+mowgli_list_t loglocs;
+
 #endif
