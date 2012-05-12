@@ -9,7 +9,8 @@
 MODULE = channel
 
 SRCS =			\
-	info.c
+	info.c 	\
+	autojoin.c
 
 include ../../extra.mk
 include ../../buildsys.mk
