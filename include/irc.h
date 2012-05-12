@@ -32,6 +32,8 @@ typedef struct
     char *host;
     char *gecos;
 
+    char *hostmask;
+
     bool server;
 
     size_t nchans;

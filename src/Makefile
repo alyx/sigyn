@@ -3,6 +3,7 @@ PROG		= sigyn${PROG_SUFFIX}
 BASE_SRCS = \
 	config.c \
 	daemonise.c \
+	glob.c \
 	irc.c \
 	parser.c \
 	signal.c \

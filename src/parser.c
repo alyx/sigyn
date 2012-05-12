@@ -30,6 +30,7 @@ irc_user_t *parse_user(char hostmask[])
         return NULL;
 
     tmp = mowgli_strdup(hostmask);
+    user->hostmask = mowgli_strdup(hostmask);
 
     if (strchr(tmp, '!') != NULL)
     {

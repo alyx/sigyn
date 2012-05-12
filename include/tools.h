@@ -19,6 +19,9 @@ extern void config_print(mowgli_config_file_entry_t * entries, int level);
 extern void strip(char *line, char *strippers);
 extern const char *strip_colour_codes(const char *message);
 
+/* glob.c function */
+bool glob(const char * match, const char * string);
+
 #define INIT_PARV(x, y) \
 int __i; \
 for(__i = 0; __i < y; ++__i) \
