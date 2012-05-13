@@ -55,7 +55,7 @@ static void cmd_modunload(const irc_event_t *event, int parc, char **parv)
     }
     if (mod->can_unload != MODULE_UNLOAD_CAPABILITY_OK)
     {
-        irc_notice(event->origin->nick, "Module \2%s\2 is a permanent module and cannot be unloaded.");
+        irc_notice(event->origin->nick, "Module \2%s\2 is a permanent module and cannot be unloaded.", mod->name);
         return;
     }
 
@@ -76,7 +76,7 @@ static void cmd_modreload(const irc_event_t *event, int parc, char **parv)
     }
     if (mod->can_unload != MODULE_UNLOAD_CAPABILITY_OK)
     {
-      irc_notice(event->origin->nick, "Module \2%s\2 is a permanent module and cannot be unloaded.");
+      irc_notice(event->origin->nick, "Module \2%s\2 is a permanent module and cannot be unloaded.", mod->name);
       return;
     }
     
