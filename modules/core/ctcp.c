@@ -29,20 +29,20 @@ static void handle_ctcp(void *data, UNUSED void *udata)
 
     if(*message == '\001' && message[len-1] == '\001')
     {
-	// Doesn't strip all chars in one call??
-	rmchar(message, "\001");
-	rmchar(message, "\001");
-	int parc = tokenize(message, parv);
+        // Doesn't strip all chars in one call??
+        rmchar(message, "\001");
+        rmchar(message, "\001");
+        int parc = tokenize(message, parv);
 
-	if(parc > 0 && (strcmp(parv[1], "ACTION")) == 1)
-	  return; // Ignore /me's
-	else
-	{
-	    char *command = mowgli_alloc(BUFSIZE);
-	    mowgli_strlcat(command, "CTCP ", BUFSIZE); // Prefix with "CTCP "
-	    mowgli_strlcat(command, message, BUFSIZE);
-	    mowgli_hook_call(command, event);
-	    mowgli_free(command);
-	}
+        if(parc > 0 && (strcmp(parv[1], "ACTION")) == 1)
+            return; // Ignore /me's
+        else
+        {
+            char *command = mowgli_alloc(BUFSIZE);
+            mowgli_strlcat(command, "CTCP ", BUFSIZE); // Prefix with "CTCP "
+            mowgli_strlcat(command, message, BUFSIZE);
+            mowgli_hook_call(command, event);
+            mowgli_free(command);
+        }
     }
 }
