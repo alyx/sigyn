@@ -1,45 +1,34 @@
-#include "sigyn.h"
-
-mowgli_vio_t * new_connection(const char * host, const char * port)
+mowgli_linebuf_t * new_conn(const char * host, const char * port,
+        mowgli_linebuf_readline_cb_t *cb, void * udata)
 {
-    int ret;
-    mowgli_vio_t * vio;
-    mowgli_vio_sockaddr_t * addr;
     struct addrinfo hints, * res;
-    mowgli_vio_evopts_t evopts;
+    mowgli_vio_sockaddr_t addr;
+    mowgli_linebuf_t * linebuf;
+    int ret;
 
-    vio = mowgli_vio_create(NULL);
-    evopts = {
-        .read_cb = reader,
-        .write_cb = writer
-    };
+    linebuf = mowgli_linebuf_create(cb, udata);
 
     memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
     if ((ret = getaddrinfo(host, port, &hints, &res)) != 0)
     {
-        vio->error.op = MOWGLI_VIO_ERR_OP_OTHER;
-        vio->error.type = MOWGLI_VIO_ERR_ERRCODE;
-        vio->error.code = ret;
-
-        mowgli_strlcpy(vio->error.string, gai_strerror(ret), 
-                sizeof(vio->error.string));
-        mowgli_vio_error(vio);
-
+        linebuf->vio->error.op = MOWGLI_VIO_ERR_OP_OTHER;
+        linebuf->vio->error.type = MOWGLI_VIO_ERR_ERRCODE;
+        linebuf->vio->error.code = ret;
+        mowgli_strlcpy(linebuf->vio->error.string, gai_strerror(ret), sizeof(linebuf->vio->error.string));
+        mowgli_vio_error(linebuf->vio);
         return NULL;
     }
 
-    return_if_fail(!(mowgli_vio_socket(vio, res->ai_family, 
-                    res->ai_socktype, res->ai_protocol)));
+    if (mowgli_vio_socket(linebuf->vio, res->ai_family, res->ai_socktype, res->ai_protocol) != 0)
+        return NULL;
 
-    mowgli_vio_eventloop_attach(vio, me->ev, evopts);
+    mowgli_linebuf_attach_to_eventloop(linebuf, me->ev);
 
-    return_if_fail(!(mowgli_vio_connect(vio, 
-                    mowgli_vio_sockaddr_from_struct(&addr, res->ai_addr,
-                        res->addrlen))));
+    if (mowgli_vio_connect(linebuf->vio, mowgli_vio_sockaddr_from_struct(&addr, res->ai_addr, res->ai_addrlen)) != 0)
+        return NULL;
 
-    return vio;
-
+    return linebuf;
 }
