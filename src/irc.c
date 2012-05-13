@@ -85,7 +85,7 @@ void sigyn_introduce_client(char *nick)
     
     /* Introduce ourselves to the server. */
     irc_nick(nick);
-    irc_user(nick, hostname, me.uplink.hostname, me.client->gecos);
+    irc_user(me.client->user, hostname, me.uplink.hostname, me.client->gecos);
 }
 
 static void serv_optional(const char *server, const char *command)

@@ -9,12 +9,13 @@ void config_check(mowgli_config_file_t * config)
 {
     mowgli_config_file_entry_t * entry;
 
-    char * nick, * desc, * server, * vhost;
+    char * nick, * desc, * server, * vhost, * ident;
     uint16_t port;
 
     entry = config_fatal_find_entry(config->entries, "sigyn");
     nick = (entry = config_fatal_find_entry(entry->entries, "nick"))->vardata;
     desc = (entry = config_fatal_find_entry(entry, "desc"))->vardata;
+    ident = (entry = config_fatal_find_entry(entry, "ident"))->vardata;
 
     entry = config_fatal_find_entry(config->entries, "uplink");
     server = (entry = config_fatal_find_entry(entry->entries, "server"))->vardata;
@@ -22,7 +23,7 @@ void config_check(mowgli_config_file_t * config)
     if (entry = config_find_entry(entry, "vhost"))
         vhost = entry->vardata;
 
-    initialise_sigyn(nick, nick, desc, server, port, vhost);
+    initialise_sigyn(nick, ident, desc, server, port, vhost);
 }
 
 mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t * start,
