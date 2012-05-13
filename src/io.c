@@ -4,15 +4,13 @@ void read_irc(mowgli_linebuf_t * linebuf, char * line, size_t len, UNUSED void *
 {
     char buf[BUFSIZE];
 
-    printf("I was called!\n\n");
-
     if (linebuf->flags & MOWGLI_LINEBUF_LINE_HASNULLCHAR)
         return;
 
     mowgli_strlcpy(buf, line, BUFSIZE);
     buf[len + 1] = '\0';
 
-    preparse(buf);
+    parse(buf);
 }
 
 mowgli_linebuf_t * new_conn(const char * host, const char * port,

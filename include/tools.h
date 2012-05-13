@@ -31,7 +31,6 @@ for(__i = 0; __i < y; ++__i) \
 /* parse.c functions */
 extern irc_user_t *parse_user(char hostmask[]);
 extern void parse(char line[]);
-extern void preparse(char line[]);
 
 /* sigyn.c functions */
 extern void initialise_sigyn(char *nick, char *ident, char *gecos, 

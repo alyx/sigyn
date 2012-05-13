@@ -59,51 +59,6 @@ irc_user_t *parse_user(char hostmask[])
 
 /*
  * Routine Description:
- * This routine converts a raw string from the server into a format suitable for placing into the receive queue.
- *
- * Arguments:
- *     line - A string containing the raw IRC line.
- *
- * Return value:
- *     None
- *
- */
-
-void preparse(char line[])
-{
-    char *token, *save;
-
-    me.stats.inB += strlen(line);
-
-    if ((*line == '\n') || (*line == '\000'))
-        return;
-
-    save = mowgli_strdup(line);
-
-    if (strchr(save, '\n') == NULL)
-    {
-        strip(save, "\r");
-        recvq_add(me.uplink.line, save, false);
-    }
-    else
-    {
-        while ((token = strtok_r(NULL, "\n", &save)) && (token != NULL))
-        {
-            strip(token, "\r");
-            recvq_add(me.uplink.line, token, true);
-
-            if (strchr(save, '\n') == NULL)
-            {
-                strip(save, "\r");
-                recvq_add(me.uplink.line, save, false);
-                break;
-            }
-        }
-    }
-
-}
-/*
- * Routine Description:
  * This routine parses a raw IRC line into an irc_event_t object.
  *
  * Arguments:
@@ -122,7 +77,10 @@ void parse(char line[])
     if (string == NULL)
         return;
 
+    me.stats.inB += strlen(string);
+
     strip(string, "\r\n");
+    logger(LOG_RAW, ">> %s", string);
 
     token = strtok(string, " ");
     if (token == NULL)
