@@ -20,7 +20,7 @@ static void cmd_help(const irc_event_t *event, int parc, char **parv)
 {
     command_t *cmd;
 
-    if (parc == 1)
+    if (parc == 0)
     {
         command_t * c;
         mowgli_node_t * n;
