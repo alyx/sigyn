@@ -23,27 +23,27 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
 
 static void handle_ctcp_version(void *data, UNUSED void *udata)
 {
-  irc_event_t *event;
-  event = (irc_event_t *)data;
-  ctcp_reply(event->origin->nick, "VERSION Sigyn %s", SIGYN_VERSION);
+    irc_event_t *event;
+    event = (irc_event_t *)data;
+    ctcp_reply(event->origin->nick, "VERSION Sigyn %s", SIGYN_VERSION);
 }
 
 static void handle_ctcp_time(void *data, UNUSED void *udata)
 {
-  irc_event_t *event;
-  event = (irc_event_t *)data;
-  struct tm *ptm;
-  time_t rawtime;
-  time(&rawtime);
-  char buf[100];
-  ptm = localtime(&rawtime);
-  strftime(buf, 100, "TIME %Z %c", ptm);
-  ctcp_reply(event->origin->nick, buf);
+    irc_event_t *event;
+    event = (irc_event_t *)data;
+    struct tm *ptm;
+    time_t rawtime;
+    time(&rawtime);
+    char buf[100];
+    ptm = localtime(&rawtime);
+    strftime(buf, 100, "TIME %Z %c", ptm);
+    ctcp_reply(event->origin->nick, buf);
 }
 
 static void handle_ctcp_ping(void *data, UNUSED void *udata)
 {
-  irc_event_t *event;
-  event = (irc_event_t *)data;
-  ctcp_reply(event->origin->nick, "PING %d", time(NULL));
+    irc_event_t *event;
+    event = (irc_event_t *)data;
+    ctcp_reply(event->origin->nick, "PING %d", time(NULL));
 }
