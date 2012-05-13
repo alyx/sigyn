@@ -24,12 +24,30 @@ struct chanuser_
 };
 
 /* channel status modes */
-#define CSTATUS_NONE   0x00
-#define CSTATUS_VOICE  0x01
-#define CSTATUS_HALFOP 0x02
-#define CSTATUS_OP     0x04
-#define CSTATUS_ADMIN  0x08
-#define CSTATUS_OWNER  0x10
+#define CSTATUS_NONE   0x00 /* obvious */
+#define CSTATUS_VOICE  0x01 /* v */
+#define CSTATUS_HALFOP 0x02 /* h */
+#define CSTATUS_OP     0x04 /* o */
+#define CSTATUS_ADMIN  0x08 /* a */
+#define CSTATUS_OWNER  0x10 /* q on unreal/inspircd u on sporksircd */
+
+/* channel list modes */
+#define LMODE_BAN       0x00000 /* b */
+#define LMODE_EXCEPTION 0x00001 /* e */
+#define LMODE_INVITE    0x00002 /* I */
+#define LMODE_QUIET     0x00004 /* q */
+
+/* channel modes */
+#define CMODE_INVITE    0x00000 /* i */
+#define CMODE_TOPIC     0x00001 /* t */
+#define CMODE_EXTMSG    0x00002 /* n */
+#define CMODE_KEY       0x00004 /* k */
+#define CMODE_FLOOD     0x00008 /* f on unreal/inspircd/etc */
+#define CMODE_FORWARD   0x00010 /* f on charybdis and friends */
+#define CMODE_MODERATED 0x00012 /* m */
+#define CMODE_SECRET    0x00014 /* s */
+#define CMODE_PRIVATE   0x00016 /* p */
+
 
 /* macros to check status */
 #define is_voice(x) ((x) && (x)->modes & CSTATUS_VOICE)
