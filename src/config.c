@@ -7,20 +7,24 @@
 
 void config_check(mowgli_config_file_t * config)
 {
-    mowgli_config_file_entry_t * entry;
+    mowgli_config_file_entry_t * entry, * root;
 
     char * nick, * desc, * server, * vhost, * ident;
     uint16_t port;
 
-    entry = config_fatal_find_entry(config->entries, "sigyn");
-    nick = (entry = config_fatal_find_entry(entry->entries, "nick"))->vardata;
-    desc = (entry = config_fatal_find_entry(entry, "desc"))->vardata;
-    ident = (entry = config_fatal_find_entry(entry, "ident"))->vardata;
+    root = config_fatal_find_entry(config->entries, "sigyn");
+    nick = (config_fatal_find_entry(root->entries, "nick"))->vardata;
+    desc = (config_fatal_find_entry(root->entries, "desc"))->vardata;
+    entry = config_find_entry(root->entries, "ident");
+    if (entry != NULL && entry->vardata != NULL)
+        ident = entry->vardata;
+    else
+        ident = nick;
 
-    entry = config_fatal_find_entry(config->entries, "uplink");
-    server = (entry = config_fatal_find_entry(entry->entries, "server"))->vardata;
-    port = (uint32_t)atoi((entry = config_fatal_find_entry(entry, "port"))->vardata);
-    if (entry = config_find_entry(entry, "vhost"))
+    root = config_fatal_find_entry(config->entries, "uplink");
+    server = (entry = config_fatal_find_entry(root->entries, "server"))->vardata;
+    port = (uint32_t)atoi((config_fatal_find_entry(root->entries, "port"))->vardata);
+    if (entry = config_find_entry(root->entries, "vhost"))
         vhost = entry->vardata;
 
     initialise_sigyn(nick, ident, desc, server, port, vhost);
