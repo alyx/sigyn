@@ -12,3 +12,4 @@ enum command_failure_reasons {
 };
 
 extern void command_fail(int reason, irc_user_t *origin, const char *command);
+extern void command_reply(const char * target, char * fmt, ...);

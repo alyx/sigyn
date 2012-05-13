@@ -50,3 +50,18 @@ void command_fail(int reason, irc_user_t *origin, const char *command)
             break;
     }
 }
+
+void command_reply(const char * target, char * fmt, ...)
+{
+    char buf[BUFSIZE];
+    va_list args;
+
+    va_start(args, fmt);
+    vsnprintf(buf, BUFSIZE, fmt, args);
+    va_end(args);
+
+    if (ischannel(target))
+        irc_privmsg(target, buf);
+    else
+        irc_notice(target, buf);
+}
