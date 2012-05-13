@@ -1,5 +1,5 @@
 /* Sigyn - A reasonably sane IRC bot.
- *
+ * 
  * This configuration file supports 2 types
  * of comments:
  *
@@ -15,10 +15,11 @@
  * fantasy - Fantasy character to recognise commands for
  */
 sigyn {
-    nick = "sigyn";
-    desc = "Sigyn IRC Bot";
-
-    fantasy = "!";
+  nick = "sigyn";
+  desc = "Sigyn IRC Bot";
+  ident = "sigyn"
+  
+  fantasy = "!";
 };
 
 /* The uplink structure is required for the bot to
@@ -26,13 +27,15 @@ sigyn {
  *
  * server - IRC server to connect to
  * port - Port used to connect to the IRC server
+ * vhost - hostname to bind to
  * ssl - 0 or 1 stating whether to use SSL or not,
  * 	1 being true, 0 being false
  */
 uplink {
-    server = "irc.thinstack.net";
-    port = 6667;
-    ssl = 0;
+  server = "irc.thinstack.net";
+  /* vhost = "0.0.0.0"; */
+  port = 6667;
+  ssl = 0;
 };
 
 /* The admin user is required enorder to use IRC
@@ -53,9 +56,16 @@ admin = "adminuser";
  */
 loadmodule "core/ping";
 loadmodule "core/help";
-#loadmodule "admin/exec"
+loadmodule "core/443";
+loadmodule "core/ctcp";
+loadmodule "core/ctcpbasics";
+#loadmodule "channel/info";
+#loadmodule "channel/autojoin";
+#loadmodule "admin/exec";
+#loadmodule "admin/join";
+#loadmodule "admin/modload";
 #loadmodule "admin/raw";
+#loadmodule "scripting/python/main";
+#loadmodule "contrib/voicebot/main";
 #loadmodule "example/dns";
 #loadmodule "example/hello";
-
-
