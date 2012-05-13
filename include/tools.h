@@ -17,6 +17,7 @@ extern mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t
 extern void config_print(mowgli_config_file_entry_t * entries, int level);
 /* string.c functions */
 extern void strip(char *line, char *strippers);
+extern void rmchar(char *line, char *delims);
 extern const char *strip_colour_codes(const char *message);
 
 /* glob.c function */
