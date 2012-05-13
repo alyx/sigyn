@@ -21,7 +21,7 @@ Sigyn is a reasonably sane IRC bot programmed in C.
 
 ## 2. DEVELOPERS
 
-+ [Alexandria "alyx" Wolcott](https://github.com/alyx) &lt;alyx@malkier.net&gt;
++ [Alyx Wolcott](https://github.com/alyx) &lt;alyx@malkier.net&gt;
 + [Justin "Justasic" Crawford](https://github.com/Justasic) &lt;justasic@gmail.com&gt;
 + [Matthew "mattwb65" Barksdale](https://github.com/mattwb65) &lt;mattwb65@gmail.com&gt;
 
