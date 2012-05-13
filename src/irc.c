@@ -500,5 +500,5 @@ void ctcp_reply(const char * target, const char * fmt, ...)
     vsnprintf(buf, BUFSIZE, fmt, args);
     va_end(args);
 
-    raw("NOTICE %s \1%s\1", target, buf);
+    raw("NOTICE %s :\1%s\1", target, buf);
 }
