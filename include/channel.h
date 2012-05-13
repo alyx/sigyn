@@ -24,18 +24,18 @@ struct chanuser_
 };
 
 /* channel status modes */
-#define CSTATUS_NONE   0x00 /* obvious */
-#define CSTATUS_VOICE  0x01 /* v */
-#define CSTATUS_HALFOP 0x02 /* h */
-#define CSTATUS_OP     0x04 /* o */
-#define CSTATUS_ADMIN  0x08 /* a */
-#define CSTATUS_OWNER  0x10 /* q on unreal/inspircd u on sporksircd */
+#define CSTATUS_NONE   0x01 /* obvious */
+#define CSTATUS_VOICE  0x02 /* v */
+#define CSTATUS_HALFOP 0x04 /* h */
+#define CSTATUS_OP     0x08 /* o */
+#define CSTATUS_ADMIN  0x10 /* a */
+#define CSTATUS_OWNER  0x20 /* q on unreal/inspircd u on sporksircd */
 
 /* channel list modes */
-#define LMODE_BAN       0x00000 /* b */
-#define LMODE_EXCEPTION 0x00001 /* e */
-#define LMODE_INVITE    0x00002 /* I */
-#define LMODE_QUIET     0x00004 /* q */
+#define LMODE_BAN       0x01 /* b */
+#define LMODE_EXCEPTION 0x02 /* e */
+#define LMODE_INVITE    0x04 /* I */
+#define LMODE_QUIET     0x08 /* q */
 
 /* channel modes */
 #define CMODE_INVITE    0x00000 /* i */
@@ -44,9 +44,9 @@ struct chanuser_
 #define CMODE_KEY       0x00004 /* k */
 #define CMODE_FLOOD     0x00008 /* f on unreal/inspircd/etc */
 #define CMODE_FORWARD   0x00010 /* f on charybdis and friends */
-#define CMODE_MODERATED 0x00012 /* m */
-#define CMODE_SECRET    0x00014 /* s */
-#define CMODE_PRIVATE   0x00016 /* p */
+#define CMODE_MODERATED 0x00020 /* m */
+#define CMODE_SECRET    0x00040 /* s */
+#define CMODE_PRIVATE   0x00080 /* p */
 
 
 /* macros to check status */
