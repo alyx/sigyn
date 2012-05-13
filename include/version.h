@@ -6,6 +6,6 @@
 #ifndef SIGYN_VERSION_H
 #define SIGYN_VERSION_H
 
-#define SIGYN_VERSION "1.0.0-alpha"
+#define SIGYN_VERSION "2.0.0"
 
 #endif /* SIGYN_VERSION_H */
