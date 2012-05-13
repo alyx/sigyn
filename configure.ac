@@ -9,7 +9,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(sigyn, 1.0.0-beta1, bugs@ethrik.net)
+AC_INIT(sigyn, 2.0.0, bugs@ethrik.net)
 
 AC_CONFIG_AUX_DIR(autoconf)
 
