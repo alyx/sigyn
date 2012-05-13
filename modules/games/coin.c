@@ -17,9 +17,8 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
 
 static void cmd_coin(const irc_event_t * event, UNUSED int parc, UNUSED char **parv)
 {
-    int result = rand() % 2;
-    irc_privmsg(event->target, "\001ACTION flips a coin.\001");
-    if (result == 0)
+    ctcp_send(event->target, "ACTION flips a coin.");
+    if ((rand() % 2))
         irc_privmsg(event->target, "The coin lands, and it's... heads.");
     else
         irc_privmsg(event->target, "The coin lands, and it's... tails.");
