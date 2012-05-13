@@ -5,17 +5,21 @@ DECLARE_MODULE("admin/modload", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeini
 
 static void cmd_modload(const irc_event_t *event, int parc, char **parv);
 static void cmd_modunload(const irc_event_t *event, int parc, char **parv);
+static void cmd_modlist(const irc_event_t *event, int parc, char **parv);
+extern mowgli_list_t modules;
 
 void _modinit(UNUSED module_t *m)
 {
     command_add("modload", cmd_modload, 1, AC_ADMIN, "Loads a module.", "<name>");
     command_add("modunload", cmd_modunload, 1, AC_ADMIN, "Unloads a module.", "<name>");
+    command_add("modlist", cmd_modlist, 0, AC_ADMIN, "Lists loaded modules.", NULL);
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)
 {
     command_del("modload", cmd_modload);
     command_del("modunload", cmd_modunload);
+    command_del("modlist", cmd_modlist);
 }
 
 
@@ -58,3 +62,15 @@ static void cmd_modunload(const irc_event_t *event, int parc, char **parv)
     irc_notice(event->origin->nick, "Module \2%s\2 successfully unloaded.", parv[1]);
 }
 
+static void cmd_modlist(const irc_event_t *event, int parc, char **parv)
+{
+    mowgli_node_t *n;
+
+    irc_notice(event->origin->nick, "*** Sigyn Module List ***");
+    MOWGLI_ITER_FOREACH(n, modules.head)
+    {
+        module_t *m = n->data;
+
+        irc_notice(event->origin->nick, "%s (version %s) by %s", m->name, m->header->version, m->header->vendor);
+    }
+}
