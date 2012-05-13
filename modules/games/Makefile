@@ -9,7 +9,8 @@
 MODULE = games
 
 SRCS =			\
-		eightball.c
+		eightball.c \
+		coin.c
 
 include ../../extra.mk
 include ../../buildsys.mk
