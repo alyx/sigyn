@@ -477,3 +477,26 @@ void irc_userhost(const char *nickname)
     raw("USERHOST %s", nickname);
 }
 
+/* CTCP commands */
+
+void ctcp_send(const char * target, const char * fmt, ...)
+{
+    char buf[BUFSIZE];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, BUFSIZE, fmt, args);
+    va_end(args);
+
+    raw("PRIVMSG %s \1%s\1", target, buf);
+}
+
+void ctcp_reply(const char * target, const char * fmt, ...)
+{
+    char buf[BUFSIZE];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, BUFSIZE, fmt, args);
+    va_end(args);
+
+    raw("NOTICE %s \1%s\1", target, buf);
+}

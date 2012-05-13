@@ -92,4 +92,7 @@ extern void irc_away(const char *message);
 extern void irc_users(const char *server);
 extern void irc_userhost(const char *nickname);
 
+extern void ctcp_send(const char * target, const char * fmt, ...);
+extern void ctcp_reply(const char * target, const char * fmt, ...);
+
 #endif /* __SIGYN_IRC_H */
