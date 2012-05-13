@@ -26,15 +26,18 @@ void handle_001(void * data, UNUSED void * udata)
     buf = mowgli_alloc(BUFSIZE);
     size = BUFSIZE - 1;
     entry = config_find_entry(me.config->entries, "autojoin");
-    if (entry->entries != NULL)
+    if (entry != NULL)
     {
-        entry = entry->entries;
-        while (entry != NULL)
+        if (entry->entries != NULL)
         {
-            mowgli_strlcat(buf, entry->varname, size);
-            mowgli_strlcat(buf, ",", size);
-            size = size - (strlen(entry->varname) + 1);
-            entry = entry->next;
+            entry = entry->entries;
+            while (entry != NULL)
+            {
+                mowgli_strlcat(buf, entry->varname, size);
+                mowgli_strlcat(buf, ",", size);
+                size = size - (strlen(entry->varname) + 1);
+                entry = entry->next;
+            }
         }
     }
 
