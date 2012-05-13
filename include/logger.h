@@ -14,10 +14,10 @@
 #define LOG_ALL       0x01
 #define LOG_RAW       0x02
 #define LOG_DEBUG     0x04
-#define LOG_CRITICAL  0x06
-#define LOG_ERROR     0x08
-#define LOG_WARNING   0x10
-#define LOG_GENERAL   0x20
+#define LOG_CRITICAL  0x08
+#define LOG_ERROR     0x10
+#define LOG_WARNING   0x20
+#define LOG_GENERAL   0x40
 
 typedef struct _logger logger_t;
 
