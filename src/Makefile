@@ -10,7 +10,7 @@ BASE_SRCS = \
 	string.c \
 	tokenize.c \
 	command.c \
-	connect.c \
+	io.c      \
 	interface.c \
 	logger.c \
 	module.c \
