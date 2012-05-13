@@ -173,6 +173,8 @@ void irc_join(const char *channel, const char *key)
      * Parameters: <channel>{,<channel>} [<key>{,<key>}]
      * Example: JOIN #foo,#bar fubar,foobar 
      */
+    if (channel == NULL)
+        return;
     if (key != NULL)
         raw("JOIN %s %s", channel, key);
     else
@@ -487,7 +489,7 @@ void ctcp_send(const char * target, const char * fmt, ...)
     vsnprintf(buf, BUFSIZE, fmt, args);
     va_end(args);
 
-    raw("PRIVMSG %s \1%s\1", target, buf);
+    raw("PRIVMSG %s :\1%s\1", target, buf);
 }
 
 void ctcp_reply(const char * target, const char * fmt, ...)
