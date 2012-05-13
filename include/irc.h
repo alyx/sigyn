@@ -55,6 +55,13 @@ static inline bool ischannel(const char * target)
     return false;
 }
 
+typedef struct
+{
+    unsigned char letter;
+    unsigned int type;
+    unsigned char symbol;
+} irc_mode_t;
+
 extern int raw(char *line, ...);
 extern int read_irc(socket_t sock, char *buffer);
 extern void sigyn_introduce_client(char *nick);
