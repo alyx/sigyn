@@ -5,6 +5,7 @@ SUBDIRS = \
 		  admin \
 		  core \
 		  channel \
+		  games \
 		  example \
 		  scripting \
 		  $(CONTRIB_ENABLE)

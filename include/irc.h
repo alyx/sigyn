@@ -48,7 +48,7 @@ typedef struct
     char *data;
 } irc_event_t;
 
-static inline bool ischannel(char * target)
+static inline bool ischannel(const char * target)
 {
     if (target[0] == '#' || target[0] == '&' || target[0] == '!' || target[0] == '+')
         return true;
