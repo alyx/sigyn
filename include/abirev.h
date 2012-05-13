@@ -14,6 +14,6 @@
  * digits and set the rest to 0 (e.g. 330000). Otherwise, increment
  * the lower digits.
  */
-#define SIGYN_ABIREV 100000
+#define SIGYN_ABIREV 200000
 
 #endif /* SIGYN_ABIREV_H */
