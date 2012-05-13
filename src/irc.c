@@ -30,12 +30,13 @@ int raw(char *line, ...)
     vsnprintf(sendbuf, 509, line, args);
     va_end(args);
 
-    mowgli_strlcat(sendbuf, "\r\n", 510);
+    logger(LOG_RAW, "<< %s", sendbuf);
+
+    /*mowgli_strlcat(sendbuf, "\r\n", 510);*/
     length = strlen(sendbuf);
 
-    sendq_add(me.uplink.sock, sendbuf, length); 
-    strip(sendbuf, "\r\n");
-    logger(LOG_RAW, "<< %s", sendbuf);
+    mowgli_linebuf_write(me.uplink.line, sendbuf, length);
+
     return length;
 }
 
@@ -52,18 +53,6 @@ int raw(char *line, ...)
  *     n - An integer stating the amount of data read from the socket.
  *
  */
-
-int read_irc(socket_t sock, char *buffer)
-{
-    int n;
-
-    n = read(sock, buffer, BUFSIZE);
-    buffer[n] = '\0';
-
-    me.stats.inB += n;
-    
-    return n;
-}
 
 /*
  * Routine Description:

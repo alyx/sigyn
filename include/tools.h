@@ -35,15 +35,18 @@ extern void preparse(char line[]);
 
 /* sigyn.c functions */
 extern void initialise_sigyn(char *nick, char *ident, char *gecos, 
-        char *uplink, uint16_t port, char *vhost);
+        char *uplink, char *port, char *vhost);
 extern void sigyn_fatal(char *format, ...);
 extern void sigyn_cleanup(void);
 
-/* connect.c functions */
-extern int StartWSA(void);
-extern int sigyn_hostname(char *host, int len);
-extern socket_t uplink_connect(char *uplink, uint16_t port, char *vhost);
-extern void uplink_disconnect(void);
+/* io.c */
+extern mowgli_linebuf_t * new_conn(const char * host, const char * port,
+        mowgli_linebuf_readline_cb_t *cb, void * udata);
+
+static inline int sigyn_hostname(char * host, int len)
+{
+    return gethostname(host, len);
+}
 
 /* signal.c functions */
 extern void signals_init(void);

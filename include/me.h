@@ -3,16 +3,15 @@
 #include "mowgli.h"
 #include "irc.h"
 #include "platform.h"
+
 struct me {
     irc_user_t *client;
     mowgli_config_file_t * config;
     struct uplink {
         bool connected;
-#ifdef _WIN32
-        bool winsock;
-#endif
-		socket_t sock;
-        uint16_t port;
+        mowgli_linebuf_t * line;
+        mowgli_eventloop_t *ev;
+        char *port;
         char *hostname;
         char *vhost;
     } uplink;

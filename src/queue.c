@@ -24,7 +24,7 @@ void queue_init(void)
         sigyn_fatal("queue_init(): block allocator failed.");
 }
 
-io_queue_t *recvq_add(socket_t sock, char *string, bool complete)
+io_queue_t *recvq_add(mowgli_linebuf_t * line, char *string, bool complete)
 {
     mowgli_node_t *n;
     io_queue_t *q, *tail;
@@ -48,7 +48,7 @@ io_queue_t *recvq_add(socket_t sock, char *string, bool complete)
     }
 
     q = mowgli_heap_alloc(sendq_heap);
-    q->sock = sock;
+    q->line = line;
     q->string = mowgli_strdup(string);
     if (complete)
     {
@@ -61,7 +61,7 @@ io_queue_t *recvq_add(socket_t sock, char *string, bool complete)
     return q;
 }
 
-void recvq_dump(socket_t sock)
+void recvq_dump(mowgli_linebuf_t * line)
 {
     mowgli_node_t *n, *tn;
     io_queue_t *q;
@@ -70,7 +70,7 @@ void recvq_dump(socket_t sock)
     {
         q = (io_queue_t *)n->data;
 
-        if ((q->sock == sock) && (q->completed == true))
+        if ((q->line == line) && (q->completed == true))
         {
             logger(LOG_RAW, ">> %s\n", strip_colour_codes(q->string));
 	    parse(q->string);
@@ -80,6 +80,7 @@ void recvq_dump(socket_t sock)
     }
 }
 
+#if 0
 void sendq_add(socket_t sock, char *string, size_t len)
 {
     io_queue_t *q;
@@ -122,3 +123,4 @@ void sendq_flush(socket_t sock)
             mowgli_node_delete(n, &sendq);
     }
 }
+#endif

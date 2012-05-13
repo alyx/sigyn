@@ -63,7 +63,7 @@ typedef struct
 } irc_mode_t;
 
 extern int raw(char *line, ...);
-extern int read_irc(socket_t sock, char *buffer);
+extern void read_irc(mowgli_linebuf_t * linebuf, char * line, size_t len, UNUSED void * userdata);
 extern void sigyn_introduce_client(char *nick);
 
 extern void irc_pass(const char *password);

@@ -30,7 +30,7 @@ char *config_file;
  */
 
 void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, 
-        uint16_t port, char *vhost)
+        char * port, char *vhost)
 {
     me.client = mowgli_alloc(sizeof(irc_user_t));
     me.stats.start = time(NULL);
@@ -44,9 +44,6 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     me.uplink.vhost = vhost;
     me.uplink.connected = false;
     me.maxfd = 3;
-#ifdef _WIN32
-    me.uplink.winsock = false;
-#endif
 
     mowgli_hook_bootstrap();
     modules_init();
@@ -122,14 +119,9 @@ void sigyn_cleanup(void)
 {
     logger(LOG_GENERAL, "Running cleanup.");
     modules_shutdown();
-    uplink_disconnect();
-#ifdef _WIN32
-    if(me.uplink.winsock == true)
-    {
-        WSACleanup();
-        logger(LOG_GENERAL, "Shut down winsock.");
-    }
-#endif
+    mowgli_vio_close(me.uplink.line->vio);
+    mowgli_linebuf_destroy(me.uplink.line);
+    mowgli_eventloop_break(me.uplink.ev);
     logger_deinit();
 }
 
@@ -159,77 +151,6 @@ void sigyn_fatal(char *format, ...)
     sigyn_cleanup();
     exit(1);
 }
-
-static void io_loop(void)
-{
-    int sr;
-    struct timeval to;
-    time_t currtime, next_event;
-    static char buffer[BUFSIZE + 1];
-    
-    to.tv_usec = 0;
-    
-    while (1)
-    {
-        currtime = time(NULL);
-        next_event = get_next_timer();
-
-        if (next_event <= currtime)
-        {
-            run_timers(currtime);
-        }
-        
-        if (next_event > currtime)
-            to.tv_sec = (next_event - currtime);
-        else
-            to.tv_sec  = 1;
-
-        memset(buffer, '\0', BUFSIZE + 1);
-        FD_ZERO(&readfds);
-        FD_ZERO(&writefds);
-
-        if (((!me.uplink.connected) && (me.uplink.sock != -1)) || (sendq.count != 0))
-        {
-            FD_SET(me.uplink.sock, &writefds);
-        }
-        else if (me.uplink.sock != -1)
-        {
-            FD_SET(me.uplink.sock, &readfds);
-        }
-
-        if (me.uplink.sock == -1)
-            sigyn_fatal("Socked dead. Dying.");
-
-        if ((sr = select(me.maxfd + 1, &readfds, &writefds, &nullfds, &to)) > 0)
-        {
-            if (FD_ISSET(me.uplink.sock, &writefds))
-            {
-                if (!me.uplink.connected)
-                {
-                    sigyn_introduce_client(me.client->nick);
-                    sendq_dump(me.uplink.sock);
-                    me.uplink.connected = true;
-                }
-                else
-                {
-                    sendq_dump(me.uplink.sock);
-                }
-            }
-
-            if(!(read_irc(me.uplink.sock, buffer)))
-                sigyn_fatal("Lost connection to uplink.");
-
-            preparse(buffer);
-            recvq_dump(me.uplink.sock);
-        }
-        else
-        {
-            if ((sr == -1) && errno != EINTR)
-                sigyn_fatal("Lost connection to server: %s", strerror(errno));
-        }
-    }
-}
-
 
 static void loadmodules(mowgli_config_file_entry_t * entry)
 {
@@ -266,10 +187,13 @@ int main(int argc, char *argv[])
     logger_init(me.config->entries);
     config_check(me.config);
 
-    me.uplink.sock = uplink_connect(me.uplink.hostname, me.uplink.port, me.uplink.vhost);
+    me.uplink.ev = mowgli_eventloop_create();
+    me.uplink.line = new_conn(me.uplink.hostname, me.uplink.port, read_irc, NULL);
 
     loadmodules(me.config->entries);
-    io_loop();
+
+    sigyn_introduce_client(me.client->nick);
+    mowgli_eventloop_run(me.uplink.ev);
 
     sigyn_cleanup();
     return EXIT_SUCCESS;

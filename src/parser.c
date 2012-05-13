@@ -83,26 +83,25 @@ void preparse(char line[])
     if (strchr(save, '\n') == NULL)
     {
         strip(save, "\r");
-        recvq_add(me.uplink.sock, save, false);
+        recvq_add(me.uplink.line, save, false);
     }
     else
     {
         while ((token = strtok_r(NULL, "\n", &save)) && (token != NULL))
         {
             strip(token, "\r");
-            recvq_add(me.uplink.sock, token, true);
+            recvq_add(me.uplink.line, token, true);
 
             if (strchr(save, '\n') == NULL)
             {
                 strip(save, "\r");
-                recvq_add(me.uplink.sock, save, false);
+                recvq_add(me.uplink.line, save, false);
                 break;
             }
         }
     }
 
 }
-
 /*
  * Routine Description:
  * This routine parses a raw IRC line into an irc_event_t object.
