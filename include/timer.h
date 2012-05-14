@@ -8,23 +8,14 @@
 
 #include "mowgli.h"
 
-typedef struct timer_event_ timer_event_t;
-typedef bool (*timer_function_t)(void *argument);
+#define timer_del(x) mowgli_timer_destroy(me.ev, x);
 
-struct timer_event_
+static inline mowgli_eventloop_timer_t * timer_add(const char * name, mowgli_event_dispatch_func_t * func, void * arg, time_t when, bool repeat)
 {
-    char *name;
-    timer_function_t function;
-    void *arguments;
-    unsigned int wait;
-    time_t time;
-};
-
-extern void timer_init(void);
-extern time_t timer_add(const char *name, timer_function_t function, void *arg,
-        unsigned int wait);
-extern void timer_del(const char *name, void *function);
-extern void run_timers(time_t currtime);
-extern time_t get_next_timer(void);
+    if (repeat)
+        return mowgli_timer_add(me.ev, name, func, arg, when);
+    else
+        return mowgli_timer_add_once(me.ev, name, func, arg, when);
+}
 
 #endif /* SIGYN_TIMER_H */

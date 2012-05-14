@@ -16,9 +16,8 @@ BASE_SRCS = \
 	module.c \
 	queue.c \
 	sigyn.c \
-    channel.c \
 	$(STACKTRACE_ENABLE) \
-	timer.c 
+    channel.c
 
 SRCS = ${BASE_SRCS}
 
