@@ -2,8 +2,8 @@
  * Copyright (c) 2011-2012 Alyx Wolcott <alyx@malkier.net>
  * Released under the BSD license.
  */
-#ifndef __SIGYN_LOG_H
-#define __SIGYN_LOG_H
+#ifndef SIGYN_LOG_H
+#define SIGYN_LOG_H
 
 #include "sigyn.h"
 
@@ -39,4 +39,4 @@ extern void logger(unsigned int level, char *format, ...);
 
 mowgli_list_t loglocs;
 
-#endif
+#endif /* SIGYN_LOG_H */

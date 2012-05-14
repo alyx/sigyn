@@ -3,8 +3,8 @@
  * Released under the BSD license.
  */
 
-#ifndef __SIGYN_TOOLS_H
-#define __SIGYN_TOOLS_H
+#ifndef SIGYN_TOOLS_H
+#define SIGYN_TOOLS_H
 
 #include "mowgli.h"
 
@@ -59,4 +59,4 @@ extern void sigyn_log_backtrace(void);
 /* tokenize.c functions */
 extern int tokenize(char *message, char **parv);
 
-#endif /* __SIGYN_TOOLS_H */
+#endif /* SIGYN_TOOLS_H */

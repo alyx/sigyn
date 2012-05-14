@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef __SIGYN_MODULE_H
-#define __SIGYN_MODULE_H
+#ifndef SIGYN_MODULE_H
+#define SIGYN_MODULE_H
 
 #include "config.h"
 #include "abirev.h"
@@ -134,7 +134,7 @@ typedef struct module_dependency_ {
 	module_unload_capability_t can_unload;
 } module_dependency_t;
 
-#endif /* __SIGYN_MODULE_H */
+#endif /* SIGYN_MODULE_H */
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

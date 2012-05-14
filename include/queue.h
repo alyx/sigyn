@@ -2,8 +2,8 @@
  * Copyright (c) 2011-2012 Alyx Wolcott <alyx@malkier.net>
  * Released under the BSD license.
  */
-#ifndef __SIGYN_QUEUE_H
-#define __SIGYN_QUEUE_H
+#ifndef SIGYN_QUEUE_H
+#define SIGYN_QUEUE_H
 
 #include <sys/types.h>
 #include "mowgli.h"
@@ -28,4 +28,4 @@ extern void recvq_dump(mowgli_linebuf_t * line);
 //extern void sendq_dump(socket_t sock);
 //extern void sendq_flush(socket_t sock);
 
-#endif /* __SIGYN_QUEUE_H */
+#endif /* SIGYN_QUEUE_H */

@@ -3,8 +3,8 @@
  * Released under the BSD license.
  */
 
-#ifndef __SIGYN_H
-#define __SIGYN_H
+#ifndef SIGYN_H
+#define SIGYN_H
 
 #include "config.h"
 #include "mowgli.h"
@@ -44,4 +44,4 @@
 /* from sigyn.c */
 extern char *config_file;
 
-#endif /* __SIGYN_H */
+#endif /* SIGYN_H */

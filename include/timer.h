@@ -3,8 +3,8 @@
  * Released under the BSD license.
  */
 
-#ifndef __SIGYN_TIMER_H
-#define __SIGYN_TIMER_H
+#ifndef SIGYN_TIMER_H
+#define SIGYN_TIMER_H
 
 #include "mowgli.h"
 
@@ -27,4 +27,4 @@ extern void timer_del(const char *name, void *function);
 extern void run_timers(time_t currtime);
 extern time_t get_next_timer(void);
 
-#endif /* __SIGYN_TIMER_H */
+#endif /* SIGYN_TIMER_H */

@@ -3,8 +3,8 @@
  * Released under the BSD license.
  */
 
-#ifndef __SIGYN_IRC_H
-#define __SIGYN_IRC_H
+#ifndef SIGYN_IRC_H
+#define SIGYN_IRC_H
 
 #include <sys/types.h>
 #include <stdbool.h>
@@ -102,4 +102,4 @@ extern void irc_userhost(const char *nickname);
 extern void ctcp_send(const char * target, const char * fmt, ...);
 extern void ctcp_reply(const char * target, const char * fmt, ...);
 
-#endif /* __SIGYN_IRC_H */
+#endif /* SIGYN_IRC_H */

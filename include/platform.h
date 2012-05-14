@@ -3,8 +3,8 @@
  * Released under the BSD license.
  */
 
-#ifndef __SIGYN_PLATFORM_H
-#define __SIGYN_PLATFORM_H
+#ifndef SIGYN_PLATFORM_H
+#define SIGYN_PLATFORM_H
 
 /* Create some magic for hiding warnings about unused variables. */
 #if defined(GCC) || defined(__clang__) || defined(__ICC)
@@ -73,4 +73,4 @@
 #   error Unknown platform - Dynamic library suffix unknown.
 #endif
 
-#endif /* __SIGYN_PLATFORM_H */
+#endif /* SIGYN_PLATFORM_H */

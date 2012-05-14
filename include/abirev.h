@@ -3,8 +3,8 @@
  * Released under the BSD license.
  */
 
-#ifndef __SIGYN_ABIREV_H
-#define __SIGYN_ABIREV_H
+#ifndef SIGYN_ABIREV_H
+#define SIGYN_ABIREV_H
 
 /*
  * Increment this in case of changes to the module ABI (i.e. changes
@@ -16,4 +16,4 @@
  */
 #define SIGYN_ABIREV 100000
 
-#endif /* __SIGYN_ABIREV_H */
+#endif /* SIGYN_ABIREV_H */

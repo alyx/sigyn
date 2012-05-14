@@ -3,8 +3,8 @@
  * Released under the BSD license.
  */
 
-#ifndef __SIGYN_COMMAND_H
-#define __SIGYN_COMMAND_H
+#ifndef SIGYN_COMMAND_H
+#define SIGYN_COMMAND_H
 
 #include "mowgli.h"
 
@@ -29,4 +29,4 @@ extern void command_add(const char *name, void *function, unsigned int args, uns
 extern void command_del(const char *name, void *function);
 
 
-#endif /* __SIGYN_COMMAND_H */
+#endif /* SIGYN_COMMAND_H */

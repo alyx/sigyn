@@ -3,9 +3,9 @@
  * Released under the BSD license.
  */
 
-#ifndef __SIGYN_VERSION_H
-#define __SIGYN_VERSION_H
+#ifndef SIGYN_VERSION_H
+#define SIGYN_VERSION_H
 
 #define SIGYN_VERSION "1.0.0-alpha"
 
-#endif /* __SIGYN_VERSION_H */
+#endif /* SIGYN_VERSION_H */
