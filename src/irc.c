@@ -5,6 +5,21 @@
 
 #include <sigyn.h>
 
+/* This routine parses data from IRC */
+
+void read_irc(mowgli_linebuf_t * linebuf, char * line, size_t len, UNUSED void * userdata)
+{
+    char buf[BUFSIZE];
+
+    if (linebuf->flags & MOWGLI_LINEBUF_LINE_HASNULLCHAR)
+        return;
+
+    mowgli_strlcpy(buf, line, BUFSIZE);
+    buf[len + 1] = '\0';
+
+    parse(buf);
+}
+
 /*
  * Routine Description:
  * This routine sends a raw line of IRC data to the socket specified in me.uplink.sock.
