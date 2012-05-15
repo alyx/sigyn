@@ -9,7 +9,8 @@ void config_check(mowgli_config_file_t * config)
 {
     mowgli_config_file_entry_t * entry, * root;
 
-    char * nick, * desc, * server, * vhost, * ident, * port;
+    char * nick, * desc, * server, * vhost, * ident, * port, * ssl;
+    bool use_ssl = false;
 
     root = config_fatal_find_entry(config->entries, "sigyn");
     nick = (config_fatal_find_entry(root->entries, "nick"))->vardata;
@@ -23,10 +24,13 @@ void config_check(mowgli_config_file_t * config)
     root = config_fatal_find_entry(config->entries, "uplink");
     server = (config_fatal_find_entry(root->entries, "server"))->vardata;
     port = ((config_fatal_find_entry(root->entries, "port"))->vardata);
+    if (entry = config_find_entry(root->entries, "ssl"))
+        if ((int)strtol(entry->vardata, (char **)NULL, 10) == 1)
+            use_ssl = true;
     if (entry = config_find_entry(root->entries, "vhost"))
         vhost = entry->vardata;
 
-    initialise_sigyn(nick, ident, desc, server, port, vhost);
+    initialise_sigyn(nick, ident, desc, server, port, use_ssl, vhost);
 }
 
 mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t * start,

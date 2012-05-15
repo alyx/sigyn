@@ -34,13 +34,13 @@ extern void parse(char line[]);
 
 /* sigyn.c functions */
 extern void initialise_sigyn(char *nick, char *ident, char *gecos, 
-        char *uplink, char *port, char *vhost);
+        char *uplink, char *port, bool use_ssl, char *vhost);
 extern void sigyn_fatal(char *format, ...);
 extern void sigyn_cleanup(void);
 
 /* io.c */
 extern mowgli_linebuf_t * new_conn(const char * host, const char * port,
-        mowgli_linebuf_readline_cb_t *cb, void * udata);
+        bool use_ssl, mowgli_linebuf_readline_cb_t *cb, void * udata);
 
 static inline int sigyn_hostname(char * host, int len)
 {

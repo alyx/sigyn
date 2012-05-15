@@ -1,7 +1,8 @@
 #include "sigyn.h"
 
 mowgli_linebuf_t * new_conn(const char * host, const char * port,
-        mowgli_linebuf_readline_cb_t *cb, void * udata)
+        bool use_ssl, mowgli_linebuf_readline_cb_t *cb, 
+        void * udata)
 {
     struct addrinfo hints, * res;
     mowgli_vio_sockaddr_t addr;
@@ -23,6 +24,10 @@ mowgli_linebuf_t * new_conn(const char * host, const char * port,
         mowgli_vio_error(linebuf->vio);
         return NULL;
     }
+
+    if (use_ssl)
+        if (mowgli_vio_openssl_setssl(linebuf->vio, NULL, NULL) != 0)
+            return NULL;
 
     if (mowgli_vio_socket(linebuf->vio, res->ai_family, res->ai_socktype, res->ai_protocol) != 0)
         return NULL;

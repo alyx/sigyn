@@ -15,22 +15,23 @@ char *config_file;
  * throughout Sigyn's runtime.
  *
  * Arguments:
- *     nick   - A string containing the nickname Sigyn should use
- *              to connect with (Sent in the first NICK command).
- *     ident  - A string containing the username Sigyn should use
- *              (Sent in USER).
- *     gecos  - A string containing the "real name" Sigyn should use
- *              (Sent in USER).
- *     uplink - A string containing the hostname Sigyn should connect to.
- *     port   - An integer specifying the port number of the IRC server.
- *     vhost  - A string containing the hostname for Sigyn to bind to (Optional). 
+ *     nick    - A string containing the nickname Sigyn should use
+ *               to connect with (Sent in the first NICK command).
+ *     ident   - A string containing the username Sigyn should use
+ *               (Sent in USER).
+ *     gecos   - A string containing the "real name" Sigyn should use
+ *               (Sent in USER).
+ *     uplink  - A string containing the hostname Sigyn should connect to.
+ *     port    - An integer specifying the port number of the IRC server.
+ *     use_ssl - A boolean specifying whether to use SSL or not.
+ *     vhost   - A string containing the hostname for Sigyn to bind to (Optional). 
  *
  * Return value:
  *    None.
  */
 
 void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, 
-        char * port, char *vhost)
+        char * port, bool use_ssl, char *vhost)
 {
     me.client = mowgli_alloc(sizeof(irc_user_t));
     me.stats.start = time(NULL);
@@ -41,6 +42,7 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     me.client->gecos = gecos;
     me.uplink.port = port;
     me.uplink.hostname = uplink;
+    me.uplink.ssl = use_ssl;
     me.uplink.vhost = vhost;
     me.uplink.connected = false;
     me.maxfd = 3;
@@ -190,7 +192,7 @@ int main(int argc, char *argv[])
     logger_init(me.config->entries);
     config_check(me.config);
 
-    me.uplink.line = new_conn(me.uplink.hostname, me.uplink.port, read_irc, NULL);
+    me.uplink.line = new_conn(me.uplink.hostname, me.uplink.port, me.uplink.ssl, read_irc, NULL);
     if (me.uplink.line == NULL)
         sigyn_fatal("Connection to uplink failed.");
     me.uplink.connected = true;

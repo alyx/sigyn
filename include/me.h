@@ -13,6 +13,7 @@ struct me {
         mowgli_linebuf_t * line;
         char *port;
         char *hostname;
+        bool ssl;
         char *vhost;
     } uplink;
     struct stats {
