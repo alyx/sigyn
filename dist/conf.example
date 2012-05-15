@@ -12,12 +12,15 @@
  *
  * nick - Nickname the bot will take in IRC
  * desc - Gecos description for the bot on IRC
+ * ident - The ident the bot will use on IRC
+ * modes - The modes the bot will (un)set upon connecting
  * fantasy - Fantasy character to recognise commands for
  */
 sigyn {
   nick = "sigyn";
   desc = "Sigyn IRC Bot";
-  ident = "sigyn"
+  ident = "sigyn";
+  modes = "+i";
   
   fantasy = "!";
 };
@@ -56,7 +59,7 @@ admin = "adminuser";
  */
 loadmodule "core/ping";
 loadmodule "core/help";
-loadmodule "core/443";
+loadmodule "core/registration";
 loadmodule "core/ctcp";
 loadmodule "core/ctcpbasics";
 #loadmodule "channel/info";
