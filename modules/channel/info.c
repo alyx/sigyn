@@ -20,7 +20,15 @@ static void cmd_info(const irc_event_t *event, UNUSED int parc, UNUSED char **pa
     irc_channel_t * c;
 
     if (parc == 0)
-        c = channel_find(event->target);
+    {
+        if (ischannel(event->target))
+            c = channel_find(event->target);
+        else
+        {
+            command_reply(event->target, "Without a parameter, this command can only be executed in a channel.");
+            return;
+        }
+    }
     else
         c = channel_find(parv[1]);
 
