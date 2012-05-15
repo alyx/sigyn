@@ -28,7 +28,8 @@ static void cmd_help(const irc_event_t *event, int parc, char **parv)
         MOWGLI_ITER_FOREACH(n, commands.head)
         {
             c = (command_t *)n->data;
-            irc_notice(event->origin->nick, "%s - %s", c->name, c->help);
+            if (c->perm & AC_NONE || c->perm & has_priv(event->origin->nick, c->perm))
+               irc_notice(event->origin->nick, "%s - %s", c->name, c->help);
         }
         return;
     }
