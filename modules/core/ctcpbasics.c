@@ -7,8 +7,9 @@ static void handle_ctcp_version(void *data, UNUSED void *udata);
 static void handle_ctcp_time(void *data, UNUSED void *udata);
 static void handle_ctcp_ping(void *data, UNUSED void *udata);
 
-void _modinit(UNUSED module_t *m)
+void _modinit(module_t *m)
 {
+    MODULE_TRY_REQUEST_DEPENDENCY(m, "core/ctcp");
     mowgli_hook_associate("CTCP VERSION", handle_ctcp_version, NULL);
     mowgli_hook_associate("CTCP TIME", handle_ctcp_time, NULL);
     mowgli_hook_associate("CTCP PING", handle_ctcp_ping, NULL);
