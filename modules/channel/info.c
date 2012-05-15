@@ -7,7 +7,7 @@ static void cmd_info(const irc_event_t *event, UNUSED int parc, UNUSED char **pa
 
 void _modinit(UNUSED module_t *m)
 {
-    command_add("info", cmd_info, 0, AC_NONE, "Returns information on the channel the command is executed in.", NULL);
+    command_add("info", cmd_info, 0, AC_NONE, "Returns information on the channel the command is executed in.", "[channel]");
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)
@@ -19,12 +19,14 @@ static void cmd_info(const irc_event_t *event, UNUSED int parc, UNUSED char **pa
 {
     irc_channel_t * c;
 
-    if (!ischannel(event->target))
-        return;
-    c = channel_find(event->target);
-    if (c == NULL)
-        irc_privmsg(event->target, "Unable to find channel.");
+    if (parc == 0)
+        c = channel_find(event->target);
     else
-        irc_privmsg(event->target, "Name: %s Users: %i Topic: %s", c->name, c->nusers, c->topic);
+        c = channel_find(parv[1]);
+
+    if (c == NULL)
+        command_reply(event->target, "Unable to find channel.");
+    else
+        command_reply(event->target, "Name: %s Users: %i Topic: %s", c->name, c->nusers, c->topic);
 }
 
