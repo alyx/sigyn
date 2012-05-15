@@ -1,5 +1,8 @@
 import _sigyn
 
+def action(target, message):
+    _sigyn.irc_action(target, message)
+
 def password(password):
     _sigyn.irc_pass(password)
 
