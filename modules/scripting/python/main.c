@@ -35,8 +35,8 @@ static PyObject * sigyn_config(PyObject * self, PyObject * args)
     const char * name;
     PyArg_ParseTuple(args, "s", &name);
     py_return_err_if_null(name);
-    const char * value = config_find_entry(me.config->entries, name)->vardata;
-    PyObject *val = (value == NULL ? Py_None : PyString_FromString(value));
+    mowgli_config_file_entry_t * value = config_find_entry(me.config->entries, name);
+    PyObject *val = (value == NULL ? Py_None : PyString_FromString(value->vardata));
     Py_INCREF(val);
     return val;
 }
@@ -343,6 +343,16 @@ static PyObject * sigyn_irc_userhost(PyObject * self, PyObject * args)
     Py_INCREF(Py_None); return Py_None;
 }
 
+static PyObject * sigyn_irc_action(PyObject * self, PyObject * args)
+{
+    const char * target, * message;
+    PyArg_ParseTuple(args, "ss", &target, &message);
+    py_return_err_if_null(target);
+    py_return_err_if_null(message);
+    irc_action(target, message);
+    Py_INCREF(Py_None); return Py_None;
+}
+
 
 static PyMethodDef SigynMethods[] = {
     {"irc_pass", sigyn_irc_pass, METH_VARARGS, "Send PASS to the server."},
@@ -377,6 +387,7 @@ static PyMethodDef SigynMethods[] = {
     {"irc_away", sigyn_irc_away, METH_VARARGS, "Send AWAY to the server."},
     {"irc_users", sigyn_irc_users, METH_VARARGS, "Send USERS to the server."},
     {"irc_userhost", sigyn_irc_userhost, METH_VARARGS, "Send USERHOST to the server."},
+    {"irc_action", sigyn_irc_action, METH_VARARGS, "Sends a CTCP ACTION to a target."},
     {"log", sigyn_logger, METH_VARARGS, "Logs the specified message to the locations set in sigyn config."},
     {"config", sigyn_config, METH_VARARGS, "Retrieves an entry from sigyn's config."}
 };
@@ -392,8 +403,8 @@ void _modinit(UNUSED module_t * m)
     Py_Initialize();
     module = Py_InitModule("_sigyn", SigynMethods);
     add_constants(module);
-    command_add("loadpy", cmd_loadpy, "Loads and executes a Python file", "<file>");
-    command_add("runpy", cmd_runpy, "Runs a string of Python code", "<string>");
+    command_add("loadpy", cmd_loadpy, 1, AC_ADMIN, "Loads and executes a Python file", "<file>");
+    command_add("runpy", cmd_runpy, 1, AC_ADMIN, "Runs a string of Python code", "<string>");
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)
@@ -405,18 +416,8 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     
 static void cmd_loadpy(const irc_event_t * event, int parc, char ** parv)
 {
-    mowgli_config_file_entry_t * admin;
     FILE * fp;
-
-    if ((admin = config_find_entry(me.config->entries, "admin")) == NULL)
-        return;
-
-    if (parc < 1)
-    {
-        command_fail(CMD_NEEDSPARAM, event->origin, "loadpy");
-        return;
-    }
-
+    logger(LOG_DEBUG, "cmd_loadpy called");
     if ((fp = fopen(parv[1], "r")) == NULL)
     {
         irc_notice(event->origin->nick, "Opening the file %s failed.", parv[1]);
@@ -430,15 +431,7 @@ static void cmd_runpy(const irc_event_t * event, int parc, char ** parv)
 {
     char * buf;
     PyObject * main, * result;
-    mowgli_config_file_entry_t * admin;
-
-    if ((admin = config_find_entry(me.config->entries, "admin")) == NULL
-            || strcmp(admin->vardata, event->origin->nick) != 0)
-    {
-        command_fail(CMD_NOAUTH, event->origin, "runpy");
-        return;
-    }
-
+    logger(LOG_DEBUG, "cmd_runpy called");
     buf = strdup(event->data+7);
     PyRun_SimpleStringFlags(buf, NULL);
     free(buf);
