@@ -11,7 +11,7 @@ MODULE = core
 SRCS =		\
 	help.c \
 	ping.c \
-	443.c \
+	registration.c \
 	ctcp.c \
     ctcpbasics.c
 

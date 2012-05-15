@@ -1,6 +1,6 @@
 #include "sigyn.h"
 
-DECLARE_MODULE("core/433", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
+DECLARE_MODULE("core/registration", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
         "1.0", "Matthew <mattwb65@gmail.com>");
 
 static void handle_433(void *data, UNUSED void *udata);
