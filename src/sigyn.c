@@ -121,7 +121,7 @@ void sigyn_cleanup(void)
     modules_shutdown();
     mowgli_vio_close(me.uplink.line->vio);
     mowgli_linebuf_destroy(me.uplink.line);
-    mowgli_eventloop_break(me.uplink.ev);
+    mowgli_eventloop_break(me.ev);
     logger_deinit();
 }
 
@@ -187,13 +187,13 @@ int main(int argc, char *argv[])
     logger_init(me.config->entries);
     config_check(me.config);
 
-    me.uplink.ev = mowgli_eventloop_create();
+    me.ev = mowgli_eventloop_create();
     me.uplink.line = new_conn(me.uplink.hostname, me.uplink.port, read_irc, NULL);
 
     loadmodules(me.config->entries);
 
     sigyn_introduce_client(me.client->nick);
-    mowgli_eventloop_run(me.uplink.ev);
+    mowgli_eventloop_run(me.ev);
 
     sigyn_cleanup();
     return EXIT_SUCCESS;

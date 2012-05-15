@@ -27,7 +27,7 @@ mowgli_linebuf_t * new_conn(const char * host, const char * port,
     if (mowgli_vio_socket(linebuf->vio, res->ai_family, res->ai_socktype, res->ai_protocol) != 0)
         return NULL;
 
-    mowgli_linebuf_attach_to_eventloop(linebuf, me.uplink.ev);
+    mowgli_linebuf_attach_to_eventloop(linebuf, me.ev);
 
     if (mowgli_vio_connect(linebuf->vio, mowgli_vio_sockaddr_from_struct(&addr, res->ai_addr, res->ai_addrlen)) != 0)
         return NULL;

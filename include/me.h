@@ -7,10 +7,10 @@
 struct me {
     irc_user_t *client;
     mowgli_config_file_t * config;
+    mowgli_eventloop_t *ev;
     struct uplink {
         bool connected;
         mowgli_linebuf_t * line;
-        mowgli_eventloop_t *ev;
         char *port;
         char *hostname;
         char *vhost;
