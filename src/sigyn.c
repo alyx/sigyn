@@ -188,6 +188,9 @@ int main(int argc, char *argv[])
 
     me.ev = mowgli_eventloop_create();
     me.uplink.line = new_conn(me.uplink.hostname, me.uplink.port, read_irc, NULL);
+    if (me.uplink.line == NULL)
+        sigyn_fatal("Connection to uplink failed.");
+    me.uplink.connected = true;
 
     loadmodules(me.config->entries);
 
