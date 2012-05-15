@@ -34,12 +34,12 @@ static void cmd_exec(const irc_event_t *event, int parc, char **parv)
     fp = popen(buffer, "r");
     if (fp == NULL)
     {
-        irc_privmsg(event->target, "Couldn't open pipe for output");
+        command_reply(event->target, "Couldn't open pipe for output");
         return;
     }
     while (fgets(data, sizeof(data), fp) != NULL)
     {
-        irc_privmsg(event->target, "%s", data);
+        command_reply(event->target, "%s", data);
     }
     pclose(fp);
     mowgli_free(buffer);

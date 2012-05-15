@@ -32,11 +32,11 @@ static void handle_privmsg(void *data, UNUSED void *udata)
 
 static void cmd_hello(const irc_event_t *event, UNUSED int parc, UNUSED char **parv)
 {
-    irc_privmsg(event->target, "Hello %s!", event->origin->nick);
+    command_reply(event->target, "Hello %s!", event->origin->nick);
 }
 
 static bool timed_cmd_hello(UNUSED void *argument)
 {
-    fprintf(stderr, "Oh look, this timer says hai thar!\n");
+    logger(LOG_DEBUG, "Oh look, this timer says hai thar!");
     return true;
 }

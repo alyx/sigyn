@@ -25,7 +25,7 @@ static void cmd_dns(const irc_event_t *event, int parc, char **parv)
 
     if (dns == NULL)
     {
-        irc_privmsg(event->target, "DNS resolution failed.");
+        command_reply(event->target, "DNS resolution failed.");
         return;
     }
 
@@ -35,7 +35,7 @@ static void cmd_dns(const irc_event_t *event, int parc, char **parv)
         mowgli_strlcat(buf, " ", sizeof(buf));
         mowgli_strlcat(buf, inet_ntoa(*(struct in_addr *)(dns->h_addr_list[i])), sizeof(buf));
     }
-    irc_privmsg(event->target, "%s (%i):%s", dns->h_name, i, buf);
+    command_reply(event->target, "%s (%i):%s", dns->h_name, i, buf);
 
 
 }

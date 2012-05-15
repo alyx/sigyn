@@ -19,7 +19,7 @@ static void cmd_coin(const irc_event_t * event, UNUSED int parc, UNUSED char **p
 {
     ctcp_send(event->target, "ACTION flips a coin.");
     if ((rand() % 2))
-        irc_privmsg(event->target, "The coin lands, and it's... heads.");
+        command_reply(event->target, "The coin lands, and it's... heads.");
     else
-        irc_privmsg(event->target, "The coin lands, and it's... tails.");
+        command_reply(event->target, "The coin lands, and it's... tails.");
 }
