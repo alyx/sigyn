@@ -119,9 +119,8 @@ void sigyn_cleanup(void)
 {
     logger(LOG_GENERAL, "Running cleanup.");
     modules_shutdown();
-    mowgli_vio_close(me.uplink.line->vio);
     mowgli_linebuf_destroy(me.uplink.line);
-    mowgli_eventloop_break(me.ev);
+    mowgli_eventloop_destroy(me.ev);
     logger_deinit();
 }
 
