@@ -119,7 +119,8 @@ void sigyn_cleanup(void)
 {
     logger(LOG_GENERAL, "Running cleanup.");
     modules_shutdown();
-    mowgli_linebuf_destroy(me.uplink.line);
+    if (me.uplink.connected)
+        mowgli_linebuf_destroy(me.uplink.line);
     mowgli_eventloop_destroy(me.ev);
     logger_deinit();
 }
@@ -146,7 +147,8 @@ void sigyn_fatal(char *format, ...)
     vsnprintf(buf, BUFSIZE, format, args);
     va_end(args);
     logger(LOG_ERROR, buf);
-    irc_quit(buf);
+    if (me.uplink.connected)
+        irc_quit(buf);
     sigyn_cleanup();
     exit(1);
 }
@@ -175,6 +177,8 @@ static void loadmodules(mowgli_config_file_entry_t * entry)
 
 int main(int argc, char *argv[])
 {
+    me.ev = mowgli_eventloop_create();
+
     signals_init();
 
     parse_commandline_options(argc, argv);
@@ -186,7 +190,6 @@ int main(int argc, char *argv[])
     logger_init(me.config->entries);
     config_check(me.config);
 
-    me.ev = mowgli_eventloop_create();
     me.uplink.line = new_conn(me.uplink.hostname, me.uplink.port, read_irc, NULL);
     if (me.uplink.line == NULL)
         sigyn_fatal("Connection to uplink failed.");
