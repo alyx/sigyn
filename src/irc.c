@@ -485,6 +485,17 @@ void irc_userhost(const char *nickname)
 
 /* CTCP commands */
 
+void irc_action(const char * target, const char * fmt, ...)
+{
+    char buf[BUFSIZE];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, BUFSIZE, fmt, args);
+    va_end(args);
+
+    raw("PRIVMSG %s :\1ACTION %s\1", target, buf);
+}
+
 void ctcp_send(const char * target, const char * fmt, ...)
 {
     char buf[BUFSIZE];
