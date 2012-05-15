@@ -353,6 +353,26 @@ static PyObject * sigyn_irc_action(PyObject * self, PyObject * args)
     Py_INCREF(Py_None); return Py_None;
 }
 
+static PyObject * sigyn_ctcp_send(PyObject * self, PyObject * args)
+{
+    const char * target, * contents;
+    PyArg_ParseTuple(args, "ss", &target, &contents);
+    py_return_err_if_null(target);
+    py_return_err_if_null(contents);
+    ctcp_send(target, contents);
+    Py_INCREF(Py_None); return Py_None;
+}
+
+static PyObject * sigyn_ctcp_reply(PyObject * self, PyObject * args)
+{
+    const char * target, * contents;
+    PyArg_ParseTuple(args, "ss", &target, &contents);
+    py_return_err_if_null(target);
+    py_return_err_if_null(contents);
+    ctcp_reply(target, contents);
+    Py_INCREF(Py_None); return Py_None;
+}
+
 
 static PyMethodDef SigynMethods[] = {
     {"irc_pass", sigyn_irc_pass, METH_VARARGS, "Send PASS to the server."},
@@ -388,6 +408,8 @@ static PyMethodDef SigynMethods[] = {
     {"irc_users", sigyn_irc_users, METH_VARARGS, "Send USERS to the server."},
     {"irc_userhost", sigyn_irc_userhost, METH_VARARGS, "Send USERHOST to the server."},
     {"irc_action", sigyn_irc_action, METH_VARARGS, "Sends a CTCP ACTION to a target."},
+    {"ctcp_send", sigyn_ctcp_send, METH_VARARGS, "Sends a CTCP to a target."},
+    {"ctcp_reply", sigyn_ctcp_reply, METH_VARARGS, "Replies to a CTCP."},
     {"log", sigyn_logger, METH_VARARGS, "Logs the specified message to the locations set in sigyn config."},
     {"config", sigyn_config, METH_VARARGS, "Retrieves an entry from sigyn's config."}
 };
