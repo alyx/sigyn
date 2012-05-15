@@ -34,6 +34,14 @@ static void handle_433(void *data, UNUSED void *udata)
 
 static void handle_001(void *data, UNUSED void *udata)
 {
+    mowgli_config_file_entry_t *entry, *root;
     got_001 = true;
+    root = config_find_entry(me.config->entries, "sigyn");
+    if (root == NULL)
+        return;
+    entry = config_find_entry(root->entries, "modes");
+    if (entry == NULL || entry->vardata == NULL)
+        return;
+    irc_mode(me.client->nick, entry->vardata);
 }
 
