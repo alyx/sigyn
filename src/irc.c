@@ -81,15 +81,17 @@ int raw(char *line, ...)
  *
  */
 
-void sigyn_introduce_client(char *nick)
+void sigyn_introduce_client(const char * nick, const char * ident, const char * password)
 {
 	/* Generate the system hostname; RFC1459 wants us to send this. */
 	char hostname[256];
     sigyn_hostname(hostname, 255);
     
     /* Introduce ourselves to the server. */
+    if (password)
+        irc_pass(password);
     irc_nick(nick);
-    irc_user(me.client->user, hostname, me.uplink.hostname, me.client->gecos);
+    irc_user(ident, hostname, me.uplink.hostname, me.client->gecos);
 }
 
 static void serv_optional(const char *server, const char *command)

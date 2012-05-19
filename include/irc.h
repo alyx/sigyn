@@ -64,7 +64,7 @@ typedef struct
 
 extern int raw(char *line, ...);
 extern void read_irc(mowgli_linebuf_t * linebuf, char * line, size_t len, UNUSED void * userdata);
-extern void sigyn_introduce_client(char *nick);
+void sigyn_introduce_client(const char * nick, const char * ident, const char * password);
 
 extern void irc_pass(const char *password);
 extern void irc_nick(const char *nick);

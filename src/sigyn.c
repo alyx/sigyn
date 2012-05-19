@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
 
     loadmodules(me.config->entries);
 
-    sigyn_introduce_client(me.client->nick);
+    sigyn_introduce_client(me.client->nick, me.client->user, NULL);
     mowgli_eventloop_run(me.ev);
 
     sigyn_cleanup();
