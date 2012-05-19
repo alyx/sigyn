@@ -34,6 +34,7 @@ void _modinit(UNUSED module_t *m)
 {
     mowgli_config_file_entry_t * channel;
 
+    channel = config_find_entry(me.config->entries, "voicechan");
     if (channel != NULL && (channel->vardata != NULL))
     {
         voicechan = channel->vardata;
@@ -41,7 +42,10 @@ void _modinit(UNUSED module_t *m)
         mowgli_hook_associate("PART", handle_part, NULL);
     }
     else
+    {
+        printf("Failures and stuff\n");
         return;
+    }
 
     ban_heap  = mowgli_heap_create(sizeof(struct no_voice), 128, BH_NOW);
     user_heap = mowgli_heap_create(sizeof(struct new_user), 128, BH_NOW);
@@ -56,6 +60,8 @@ void _modinit(UNUSED module_t *m)
 void _moddeinit(UNUSED module_unload_intent_t intent)
 {
     mowgli_hook_dissociate("JOIN", handle_join);
+    mowgli_hook_dissociate("PART", handle_part);
+    command_del("voicebot", cmd_vb);
 }
 
 static void handle_join(void * data, UNUSED void * udata)
@@ -108,11 +114,27 @@ static void handle_part(void * data, UNUSED void * udata)
     }
 }
 
-bool unban(void * argument)
+void do_voice(void * userdata)
+{
+    char buf[256];
+    struct new_user * u;
+    mowgli_node_t * n;
+
+    MOWGLI_ITER_FOREACH(n, userlist.head)
+    {
+        /*buf = "+v ";*/
+        u = (struct new_user *)n->data;
+        /*mowgli_strlcat(buf, u);*/
+        snprintf(buf, 256, "+v %s", u->user->nick);
+        irc_mode(voicechan, buf);
+    }
+}
+    
+void unban(void * userdata)
 {
     char * buf;
     struct no_voice * banned;
-    banned = (struct no_voice *)argument;
+    banned = (struct no_voice *)userdata;
 
     mowgli_node_delete(banned->n, &banlist);
     mowgli_free(banned->hostmask);
@@ -145,7 +167,7 @@ static void cmd_vb_ban(const irc_event_t * event, int parc, char ** parv)
         buf = mowgli_alloc(1024);
         snprintf(buf, 1024, "unban %s", banned->hostmask);
         banned->length = (time_t)strtol(parv[4], (char **)NULL, 10);
-        timer_add(buf, unban, banned, banned->length);
+        timer_add(buf, unban, banned, banned->length, false);
     }
 }
 
@@ -156,6 +178,8 @@ static void cmd_vb_voice(const irc_event_t * event, int parc, char ** parv)
     if (parv[2] != NULL)
     {
         wait = (time_t)strtol(parv[2], (char **)NULL, 10);
+        timer_add((char *)wait, do_voice, (void *)wait, wait, false); 
+        return;
     }
 }
 
@@ -163,13 +187,15 @@ static void cmd_vb(const irc_event_t * event, int parc, char ** parv)
 {
     if (!strcmp(parv[1], "ban"))
     {
+        printf("running ban\n");
         cmd_vb_ban(event, parc, parv);
         return;
     }
 
     else if (!strcmp(parv[1], "voice"))
     {
-        /*cmd_vb_voice(event, parc, parv);*/
+        printf("running voice\n");
+        cmd_vb_voice(event, parc, parv);
         return;
     }
 
