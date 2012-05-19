@@ -51,24 +51,75 @@ uplink {
  */
 admin = "adminuser";
 
-/* The following blocks below are core or optional modules,
- * these modules do everything from offer python interpretation
- * to making sure the bot stays connected to the server, their
- * names should be self explanatory. Any that are commented out
- * will not be loaded.
+/* The following blocks below are optional modules
+ * which can be loaded and unloaded. All modules
+ * have a small description on what they do.
+ * 
+ * Any module that is in core/ will be uncommented
+ * in the config, any module in admin/ will require
+ * that the user be a bot administrator to use that
+ * command.
+ * Any module that is in channel/ is used for channel
+ * management (such as bans/auto-voice).
+ * Any module in scripting allows for other scripts
+ * to be loaded via scripting engines and work as
+ * modules.
+ * Any module in contrib/ was a module that was
+ * contributed to the sigyn development and the
+ * developers felt it was a good module.
+ * Any module in example/ can be used to learn how
+ * to make sigyn modules.
  */
+
+/* Keep the bot connected to the server */
 loadmodule "core/ping";
+
+/* General Help about commands */
 loadmodule "core/help";
+
+/* Handles nickname collisions when connecting to IRC */
 loadmodule "core/registration";
+
+/* Handles CTCP replies for other modules */
 loadmodule "core/ctcp";
+
+/* Handles CTCP TIME, CTCP VERSION, CTCP PING.
+ * Requires that core/ctcp be loaded
+ */
 loadmodule "core/ctcpbasics";
+
+/* Returns information on the channel */
 #loadmodule "channel/info";
+
+/* Auto joins a channel on startup
+ *
+ * autojoin - Channel to join
+ * joinlogchan - Channel to join for logging
+ */
 #loadmodule "channel/autojoin";
+#autojoin = "#Sigyn";
+#joinlogchan = "#SigynAdmins";
+
+/* Executes a terminal command */
 #loadmodule "admin/exec";
+
+/* Joins or parts a channel */
 #loadmodule "admin/join";
+
+/* Handles module unloading/loading/reloading */
 #loadmodule "admin/modload";
+
+/* Send raw lines out the socket to the server */
 #loadmodule "admin/raw";
+
+/* Allows Sigyn to load python scripts as modules */
 #loadmodule "scripting/python";
+
+/* alyx needs to document this module */
 #loadmodule "contrib/voicebot";
+
+/* Example module which resolves a DNS hostname to ip */
 #loadmodule "example/dns";
+
+/* Example module that says hello! */
 #loadmodule "example/hello";

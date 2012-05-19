@@ -1,6 +1,6 @@
 #include "sigyn.h"
 
-DECLARE_MODULE("admin/modload", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
+DECLARE_MODULE("admin/modload", MODULE_UNLOAD_CAPABILITY_NEVER, _modinit, _moddeinit,
         "1.0", "Matthew <mattwb65@gmail.com>");
 
 static void cmd_modload(const irc_event_t *event, int parc, char **parv);
@@ -22,6 +22,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     command_del("modload", cmd_modload);
     command_del("modunload", cmd_modunload);
     command_del("modlist", cmd_modlist);
+    command_del("modreload", cmd_modreload);
 }
 
 
