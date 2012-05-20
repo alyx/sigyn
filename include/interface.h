@@ -14,7 +14,10 @@ enum command_failure_reasons {
     CMD_NOAUTH
 };
 
-extern void command_fail(int reason, irc_user_t *origin, const char *command);
+extern void command_fail(const int reason,
+                         const irc_user_t *origin,
+                         const char *command);
+
 extern void command_reply(const char * target, char * fmt, ...);
 
 #endif /* SIGYN_INTERFACE_H */
