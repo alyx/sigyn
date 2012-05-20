@@ -23,11 +23,11 @@ irc_user_t *parse_user(char hostmask[])
 {
     char *save, *token, *tmp;
     irc_user_t *user;
-    
-    user = mowgli_alloc(sizeof(irc_user_t));
 
     if (hostmask == NULL)
         return NULL;
+
+    user = mowgli_alloc(sizeof(irc_user_t));
 
     tmp = mowgli_strdup(hostmask);
     user->hostmask = mowgli_strdup(hostmask);
