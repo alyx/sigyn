@@ -22,6 +22,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     command_del("modload", cmd_modload);
     command_del("modunload", cmd_modunload);
     command_del("modlist", cmd_modlist);
+    command_del("modreload", cmd_modreload);
 }
 
 
