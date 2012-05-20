@@ -28,7 +28,7 @@ int logger_add_file(const char * file, unsigned int level)
     return 0;
 }
 
-int logger_add_channel(const char * channel, unsigned int level)
+void logger_add_channel(const char * channel, const unsigned int level)
 {
     logger_t * newlog;
 
@@ -39,8 +39,6 @@ int logger_add_channel(const char * channel, unsigned int level)
     newlog->isFile    = false;
 
     mowgli_node_add(newlog, mowgli_node_create(), &loglocs);
-
-    return 0;
 }
 
 /*
