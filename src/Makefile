@@ -1,14 +1,17 @@
 PROG		= sigyn${PROG_SUFFIX}
 
 BASE_SRCS = \
+	base64.c \
 	config.c \
 	daemonise.c \
 	glob.c \
 	irc.c \
+	isupport.c \
 	parser.c \
 	signal.c \
 	string.c \
 	tokenize.c \
+	cap.c     \
 	command.c \
 	io.c      \
 	interface.c \

@@ -22,6 +22,14 @@ struct me {
         int outB;
         int channels;
     } stats;
+    struct isupport {
+        char * casemapping;
+        struct len {
+            size_t channel;
+            size_t nick;
+            size_t topic;
+        } len;
+    } isupport;
     int maxfd;
 } me;
 
