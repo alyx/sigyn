@@ -10,7 +10,6 @@ BASE_SRCS = \
 	signal.c \
 	string.c \
 	tokenize.c \
-	cap.c     \
 	command.c \
 	io.c      \
 	interface.c \
