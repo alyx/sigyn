@@ -25,7 +25,7 @@ static void handle_ctcp(void *data, UNUSED void *udata)
     char message[BUFSIZE+1];
     strcpy(message, event->data);
     size_t len = strlen(message);
-    message[len] == '\0';
+    message[len] = '\0';
 
     if(*message == '\001' && message[len-1] == '\001')
     {

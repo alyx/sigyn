@@ -55,7 +55,6 @@ void logger_add_channel(const char * channel, const unsigned int level)
 
 void logger_init(mowgli_config_file_entry_t * config)
 {
-    FILE * out;
     logger_t * l;
     mowgli_config_file_entry_t * e, * f, * g;
     e = config;
@@ -172,7 +171,6 @@ void logger_deinit(void)
 
 void logger(unsigned int level, char *format, ...)
 {
-    int i;
     char buf[BUFSIZE], datetime[64];
     logger_t * l;
     mowgli_node_t * n;

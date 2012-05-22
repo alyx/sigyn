@@ -373,6 +373,17 @@ static PyObject * sigyn_ctcp_reply(PyObject * self, PyObject * args)
     Py_INCREF(Py_None); return Py_None;
 }
 
+static PyObject * sigyn_isupport(PyObject * self, PyObject * args)
+{
+    const char * key;
+    PyObject * value;
+
+    PyArg_ParseTuple(args, "s", &key);
+    py_return_err_if_null(key);
+    value = Py_BuildValue("s", mowgli_patricia_retrieve(isupport_table, key));
+    Py_INCREF(value);
+    return value;
+}
 
 static PyMethodDef SigynMethods[] = {
     {"irc_pass", sigyn_irc_pass, METH_VARARGS, "Send PASS to the server."},
@@ -411,7 +422,8 @@ static PyMethodDef SigynMethods[] = {
     {"ctcp_send", sigyn_ctcp_send, METH_VARARGS, "Sends a CTCP to a target."},
     {"ctcp_reply", sigyn_ctcp_reply, METH_VARARGS, "Replies to a CTCP."},
     {"log", sigyn_logger, METH_VARARGS, "Logs the specified message to the locations set in sigyn config."},
-    {"config", sigyn_config, METH_VARARGS, "Retrieves an entry from sigyn's config."}
+    {"config", sigyn_config, METH_VARARGS, "Retrieves an entry from sigyn's config."},
+    {"isupport", sigyn_isupport, METH_VARARGS, "Finds value of an ISUPPORT entry."}
 };
 
 /*
@@ -452,7 +464,6 @@ static void cmd_loadpy(const irc_event_t * event, int parc, char ** parv)
 static void cmd_runpy(const irc_event_t * event, int parc, char ** parv)
 {
     char * buf;
-    PyObject * main, * result;
     logger(LOG_DEBUG, "cmd_runpy called");
     buf = strdup(event->data+7);
     PyRun_SimpleStringFlags(buf, NULL);
