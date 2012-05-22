@@ -8,6 +8,10 @@
 
 #include "mowgli.h"
 
+/* base64.c functions */
+unsigned char * base64_encode(const unsigned char *str, int length);
+unsigned char * base64_decode(const unsigned char *str, int length, int *ret);
+
 /* config.c functions */
 extern void config_check(mowgli_config_file_t * config);
 extern mowgli_config_file_entry_t * config_fatal_find_entry(
@@ -16,6 +20,7 @@ extern mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t
         const char * name);
 extern void config_print(mowgli_config_file_entry_t * entries, int level);
 /* string.c functions */
+extern void strcasecanon(char *str);
 extern void strip(char *line, char *strippers);
 extern void rmchar(char *line, char *delims);
 extern const char *strip_colour_codes(const char *message);
@@ -29,6 +34,8 @@ for(__i = 0; __i < y; ++__i) \
   x[__i] = '\0';
   
 /* parse.c functions */
+mowgli_patricia_t * isupport_table;
+
 extern irc_user_t *parse_user(char hostmask[]);
 extern void parse(char line[]);
 

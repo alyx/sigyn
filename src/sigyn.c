@@ -52,6 +52,7 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     queue_init();
     command_init();
     channel_init();
+    isupport_table = mowgli_patricia_create(strcasecanon);
 }
 
 /*

@@ -5,6 +5,31 @@
 
 #include "sigyn.h"
 
+static void parse_isupport(char * string)
+{
+    /*char * save, * token, * tmp, * ptr;*/
+    char * tmp, * save, * token, * ptr;
+
+    tmp = mowgli_strdup(string);
+
+    token = strtok_r(tmp, " ", &save);
+
+    while (token != NULL)
+    {
+        ptr = strchr(token, '=');
+        if (ptr == NULL)
+            mowgli_patricia_add(isupport_table, token, NULL);
+        else
+        {
+            *ptr = '\0';
+            mowgli_patricia_add(isupport_table, token, mowgli_strdup(ptr+1));
+            printf("Added:\n\tKey: %s\n\tValue: %s\n", token, ptr+1);
+        }
+        token = strtok_r(NULL, " ", &save);
+    }
+    mowgli_free(tmp);
+}
+
 /*
  * Routine Description:
  * This function parses a given hostmask and returns an irc_user_t object
@@ -141,6 +166,9 @@ void parse(char line[])
 
     if (event != NULL)
     {
+        if (!strcmp(event->command, "005"))
+            parse_isupport(event->data);
+
         mowgli_hook_call(event->command, event);
     }
 

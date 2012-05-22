@@ -7,6 +7,18 @@
 
 #include "sigyn.h"
 
+/* copied from atheme */
+void strcasecanon(char *str)                                                                                                                                                                    
+{
+    while (*str)
+    {
+        *str = toupper(*str);
+        str++;
+    }
+    return;
+}
+
+
 void rmchar(char *line, char *strippers)
 {
     int i = 0;

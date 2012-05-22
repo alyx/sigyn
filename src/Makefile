@@ -6,7 +6,6 @@ BASE_SRCS = \
 	daemonise.c \
 	glob.c \
 	irc.c \
-	isupport.c \
 	parser.c \
 	signal.c \
 	string.c \
