@@ -173,6 +173,6 @@ void parse(char line[])
     }
 
     mowgli_free(string);
-    mowgli_free(event->origin);
+
     mowgli_free(event);
 }
