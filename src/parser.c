@@ -68,7 +68,7 @@ irc_user_t *parse_user(char hostmask[])
         token = strtok_r(NULL, "@", &save);
         if (token != NULL)
             user->user = mowgli_strdup(token);
-        user->host = save;
+        user->host = mowgli_strdup(save);
     }
     else
     {
@@ -173,6 +173,20 @@ void parse(char line[])
     }
 
     mowgli_free(string);
+    if (event->origin)
+    {
+        mowgli_free(event->origin->hostmask);
 
+        if (event->origin->server)
+            mowgli_free(event->origin->nick);
+        else
+        {
+            mowgli_free(event->origin->nick);
+            mowgli_free(event->origin->user);
+            mowgli_free(event->origin->host);
+        }
+        
+        mowgli_free(event->origin);
+    }
     mowgli_free(event);
 }
