@@ -187,16 +187,29 @@ void irc_join(const char *channel, const char *key)
         raw("JOIN %s", channel);
 }
 
-void irc_part(const char *channel, const char *message)
+bool irc_part(const char *channel, const char *message)
 {
+    irc_channel_t *c;
+
+    if ((c = channel_find(channel)) == NULL)
+        return false;
+
     /* 4.2.2: PART
      * Parameters: <channel>{,<channel>}
      * Example: PART #twilight_zone
      */
     if (message != NULL)
-        raw("PART %s :%s", channel, message);
-    else
-        raw("PART %s", channel);
+    {
+        raw("PART %s :%s", c->name, message);
+        channel_del(c);
+
+        return true;
+    }
+
+    raw("PART %s", c->name);
+    channel_del(c);
+
+    return true;
 }
 
 void irc_mode(const char *target, const char *modestring)

@@ -73,7 +73,7 @@ extern void irc_oper(const char *user, const char *password);
 extern void irc_quit(const char *message);
 extern void irc_squit(const char *server, const char *message);
 extern void irc_join(const char *channel, const char *key);
-extern void irc_part(const char *channel, const char *message);
+extern bool irc_part(const char *channel, const char *message);
 extern void irc_mode(const char *target, const char *modestring);
 extern void irc_topic(const char *channel, const char *topic);
 extern void irc_names(const char *channel);
