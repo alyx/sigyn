@@ -17,6 +17,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
 
 void handle_001(void * data, UNUSED void * udata)
 {
+#if 0
     mowgli_config_file_entry_t * entry;
     mowgli_node_t * n;
     logger_t * loc;
@@ -56,6 +57,6 @@ void handle_001(void * data, UNUSED void * udata)
             }
         }
     }
-
-    irc_join(buf, NULL);
+#endif
+    irc_join("#sigyn", NULL);
 }
