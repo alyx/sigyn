@@ -173,18 +173,25 @@ void irc_squit(const char *server, const char *message)
 
 /* 4.2: Channel operations */
 
-void irc_join(const char *channel, const char *key)
+bool irc_join(const char *channel, const char *key)
 {
-    /* 4.2.1: JOIN
-     * Parameters: <channel>{,<channel>} [<key>{,<key>}]
-     * Example: JOIN #foo,#bar fubar,foobar 
-     */
-    if (channel == NULL)
-        return;
-    if (key != NULL)
-        raw("JOIN %s %s", channel, key);
-    else
+    irc_channel_t *c;
+
+    if ((c = channel_find(channel)) == NULL)
+    {
+        /* TODO: Check to see if we actually joined. */
+        if (key != NULL)
+        {
+            raw("JOIN %s %s", channel, key);
+
+            channel_add(channel);
+            return true;
+        }
+
         raw("JOIN %s", channel);
+        return true;
+    }
+    return false;
 }
 
 bool irc_part(const char *channel, const char *message)

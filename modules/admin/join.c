@@ -52,7 +52,9 @@ cmd_part(const irc_event_t *event, int parc, char **parv)
 static void
 cmd_join(const irc_event_t *event, int parc, char **parv)
 {
-    if (irc_join(parv[1], (parc > 2) ? parv[2] : NULL))
+    char *message = ((parc > 2) ? parv[2] : NULL);
+
+    if (irc_join(parv[1], message)
     {
         irc_notice(event->origin->nick, "Joined \2%s\2 successfully", parv[1]);
         return;
