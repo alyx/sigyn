@@ -152,7 +152,7 @@ void sigyn_fatal(char *format, ...)
     if (me.uplink.connected)
         irc_quit(buf);
     sigyn_cleanup();
-    exit(1);
+    exit(EXIT_FAILURE);
 }
 
 static void loadmodules(mowgli_config_file_entry_t * entry)
