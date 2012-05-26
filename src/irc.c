@@ -189,6 +189,8 @@ bool irc_join(const char *channel, const char *key)
         }
 
         raw("JOIN %s", channel);
+        channel_add(c);
+
         return true;
     }
     return false;
