@@ -42,7 +42,7 @@ static mowgli_module_t *linker_open_ext(const char *path, char *errbuf, int errl
 
 	/* Don't try to open a file that doesn't exist. */
 	struct stat s;
-	if (0 != stat(buf, &s))
+	if (stat(buf, &s) != 0)
 	{
 		mowgli_strlcpy(errbuf, strerror(errno), errlen);
 		return NULL;
