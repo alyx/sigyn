@@ -2,6 +2,7 @@
 #include "sigyn.h"
 
 #define py_return_err_if_null(x) if (x == NULL) { fprintf(stderr, "Argument %s is undefined.", #x); PyErr_Format(PyExc_TypeError, "Argument %s is undefined.", #x); } 
+#define py_return_err_if_zero(x) if (x == 0) { fprintf(stderr, "Argument %s is undefined.", #x); PyErr_Format(PyExc_TypeError, "Argument %s is undefined.", #x); } 
 
 DECLARE_MODULE("scripting/python", MODULE_UNLOAD_CAPABILITY_OK,
         _modinit, _moddeinit, "1.0", "Alyx <alyx@malkier.net>");
@@ -9,11 +10,25 @@ DECLARE_MODULE("scripting/python", MODULE_UNLOAD_CAPABILITY_OK,
 static void cmd_loadpy(const irc_event_t * event, int parc, char ** parv);
 static void cmd_runpy (const irc_event_t * event, int parc, char ** parv);
 
+static mowgli_patricia_t * py_cmd_list;
+
 /*
  * Python shim section.
  * All PyObject functions are for the Python<->C API
  * and should not be used by anything not in a Python file.
  */
+
+static void py_cmd_cb(const irc_event_t * event, int parc, char ** parv)
+{
+    PyObject * o;
+
+    o = mowgli_patricia_retrieve(py_cmd_list, event->command);
+    if (o == NULL)
+        return;
+    PyObject_CallFunction(o, "sssssss", event->command, event->target, 
+            event->data, event->origin->nick, event->origin->user, 
+            event->origin->host, event->origin->hostmask);
+}
 
 static void add_constants(PyObject * m)
 {
@@ -28,6 +43,9 @@ static void add_constants(PyObject * m)
     PyModule_AddIntMacro(m, LOG_ERROR);
     PyModule_AddIntMacro(m, LOG_WARNING);
     PyModule_AddIntMacro(m, LOG_GENERAL);
+
+    PyModule_AddIntMacro(m, AC_NONE);
+    PyModule_AddIntMacro(m, AC_ADMIN);
 }
 
 static PyObject * sigyn_config(PyObject * self, PyObject * args)
@@ -385,6 +403,24 @@ static PyObject * sigyn_isupport(PyObject * self, PyObject * args)
     return value;
 }
 
+static PyObject * sigyn_cmd_add(PyObject * self, PyObject * args)
+{
+    const char * cmd, * help, * syntax;
+    unsigned int argc, perm;
+    PyObject * cb;
+
+    PyArg_ParseTuple(args, "OsIIss", &cb, &cmd, &argc, &perm, &help, &syntax);
+    py_return_err_if_null(cmd);
+    py_return_err_if_zero(args);
+    py_return_err_if_zero(perm);
+    py_return_err_if_null(help);
+    py_return_err_if_null(syntax);
+    mowgli_patricia_add(py_cmd_list, cmd, cb);
+    command_add(cmd, py_cmd_cb, argc, perm, help, syntax);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyMethodDef SigynMethods[] = {
     {"irc_pass", sigyn_irc_pass, METH_VARARGS, "Send PASS to the server."},
     {"irc_nick", sigyn_irc_nick, METH_VARARGS, "Send NICK to the server."},
@@ -423,7 +459,8 @@ static PyMethodDef SigynMethods[] = {
     {"ctcp_reply", sigyn_ctcp_reply, METH_VARARGS, "Replies to a CTCP."},
     {"log", sigyn_logger, METH_VARARGS, "Logs the specified message to the locations set in sigyn config."},
     {"config", sigyn_config, METH_VARARGS, "Retrieves an entry from sigyn's config."},
-    {"isupport", sigyn_isupport, METH_VARARGS, "Finds value of an ISUPPORT entry."}
+    {"isupport", sigyn_isupport, METH_VARARGS, "Finds value of an ISUPPORT entry."},
+    {"cmd_add", sigyn_cmd_add, METH_VARARGS, "Adds a command to the command tree."}
 };
 
 /*
@@ -435,6 +472,7 @@ void _modinit(UNUSED module_t * m)
     PyObject * module;
 
     Py_Initialize();
+    py_cmd_list = mowgli_patricia_create(strcasecanon);
     module = Py_InitModule("_sigyn", SigynMethods);
     add_constants(module);
     command_add("loadpy", cmd_loadpy, 1, AC_ADMIN, "Loads and executes a Python file", "<file>");
@@ -469,3 +507,4 @@ static void cmd_runpy(const irc_event_t * event, int parc, char ** parv)
     PyRun_SimpleStringFlags(buf, NULL);
     free(buf);
 }
+

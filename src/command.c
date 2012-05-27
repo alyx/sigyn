@@ -139,7 +139,7 @@ void command_del(const char *name, void *function)
 static void handle_privmsg(void *data, UNUSED void *udata)
 {
     int i, len;
-    irc_event_t *event;
+    irc_event_t *orig, *event;
     const irc_event_t *clone;
     command_t *cmd;
     int parc;
@@ -147,7 +147,11 @@ static void handle_privmsg(void *data, UNUSED void *udata)
     mowgli_config_file_entry_t * e;
     INIT_PARV(parv, MAXPARC + 1);
 
-    event = (irc_event_t *)data;
+    orig = (irc_event_t *)data;
+    event = mowgli_alloc(sizeof(irc_event_t));
+    event->data = orig->data;
+    event->target = orig->target;
+    event->origin = orig->origin;
     clone = event;
 
     tmp = mowgli_strdup(event->data);
@@ -170,13 +174,22 @@ static void handle_privmsg(void *data, UNUSED void *udata)
             parc = tokenize(tmp, parv);
 
             if (ischannel(event->target))
+            {
                 cmd = command_find(parv[0] + 1);
+                event->command = mowgli_strdup(parv[0] + 1);
+            }
             else
             {
                 if (*tmp == prefix[i])
+                {
                     cmd = command_find(parv[0] + 1);
+                    event->command = mowgli_strdup(parv[0] + 1);
+                }
                 else
+                {
                     cmd = command_find(parv[0]);
+                    event->command = mowgli_strdup(parv[0]);
+                }
             }
 
             if (cmd != NULL)
@@ -192,4 +205,7 @@ static void handle_privmsg(void *data, UNUSED void *udata)
     }
 
     mowgli_free(tmp);
+    if (event->command)
+        mowgli_free(event->command);
+    mowgli_free(event);
 }
