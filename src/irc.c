@@ -189,7 +189,7 @@ bool irc_join(const char *channel, const char *key)
         }
 
         raw("JOIN %s", channel);
-        channel_add(c);
+        channel_add(channel);
 
         return true;
     }
