@@ -9,7 +9,7 @@
 
 static mowgli_heap_t * logheap;
 
-int logger_add_file(const char * file, unsigned int level)
+bool logger_add_file(const char * file, unsigned int level)
 {
     FILE * f;
     logger_t * newlog;
@@ -17,15 +17,14 @@ int logger_add_file(const char * file, unsigned int level)
     newlog = mowgli_heap_alloc(logheap);
 
     if ((f = fopen(file, "a")) == NULL)
-        return -1;
+        return false;
 
     newlog->f     = f;
     newlog->level = level;
     newlog->isFile  = true;
 
     mowgli_node_add(newlog, mowgli_node_create(), &loglocs); 
-
-    return 0;
+    return true;
 }
 
 void logger_add_channel(const char * channel, const unsigned int level)
