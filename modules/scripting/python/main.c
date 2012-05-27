@@ -503,8 +503,8 @@ static void cmd_runpy(const irc_event_t * event, int parc, char ** parv)
 {
     char * buf;
     logger(LOG_DEBUG, "cmd_runpy called");
-    buf = strdup(event->data+7);
+    buf = mowgli_strdup(event->data+7);
     PyRun_SimpleStringFlags(buf, NULL);
-    free(buf);
+    mowgli_free(buf);
 }
 
