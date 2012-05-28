@@ -142,7 +142,7 @@ static void handle_privmsg(void *data, UNUSED void *udata)
     irc_event_t *orig, *event;
     const irc_event_t *clone;
     command_t *cmd;
-    int parc;
+    unsigned int parc;
     char *parv[MAXPARC + 1], *tmp, *prefix;
     mowgli_config_file_entry_t * e;
     INIT_PARV(parv, MAXPARC + 1);

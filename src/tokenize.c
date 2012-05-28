@@ -5,7 +5,7 @@
 
 #include "sigyn.h"
 
-int tokenize(char *message, char **parv)
+unsigned int tokenize(char *message, char **parv)
 {
     int i;
     char *token, *save;

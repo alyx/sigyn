@@ -63,6 +63,6 @@ extern void sigyn_log_backtrace(void);
 #endif
 
 /* tokenize.c functions */
-extern int tokenize(char *message, char **parv);
+extern unsigned int tokenize(char *message, char **parv);
 
 #endif /* SIGYN_TOOLS_H */
