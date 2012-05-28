@@ -20,7 +20,6 @@ static void cmd_exec(const irc_event_t *event, int parc, char **parv)
     int i;
     char *buffer;
     FILE *fp;
-    int status;
     char data[512];
 
     buffer = mowgli_alloc(BUFSIZE);

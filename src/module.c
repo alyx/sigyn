@@ -160,9 +160,6 @@ static module_t *module_load_internal(const char *pathname, char *errbuf, int er
 	module_t *m, *old_modtarget;
 	module_header_t *h;
 	mowgli_module_t *handle = NULL;
-#if defined(HAVE_DLINFO) && !defined(__UCLIBC__)
-	struct link_map *map;
-#endif
 	char linker_errbuf[BUFSIZE];
 
 	handle = linker_open_ext(pathname, linker_errbuf, BUFSIZE);
