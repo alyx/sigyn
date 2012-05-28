@@ -80,7 +80,7 @@ void command_init(void)
  *
  */
 
-void command_add(const char *name, void *function, unsigned int args, unsigned int perm, const char *help, const char *syntax)
+void command_add(const char *name, command_function_t function, unsigned int args, unsigned int perm, const char *help, const char *syntax)
 {
     command_t *c;
 
@@ -116,7 +116,7 @@ void command_add(const char *name, void *function, unsigned int args, unsigned i
  *
  */
 
-void command_del(const char *name, void *function)
+void command_del(const char *name, command_function_t function)
 {
     command_t *c;
     mowgli_node_t *n, *tn;

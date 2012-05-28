@@ -7,11 +7,12 @@
 #define SIGYN_COMMAND_H
 
 #include "mowgli.h"
+#include "irc.h"
 
 mowgli_list_t commands;
 
 typedef struct command_ command_t;
-typedef void (*command_function_t)(const void *event, int user_argstack_size, char **user_arguments);
+typedef void (*command_function_t)(const irc_event_t *event, int user_argstack_size, char **user_arguments);
 
 struct command_
 {
@@ -25,8 +26,8 @@ struct command_
 
 extern void command_init(void);
 extern command_t *command_find(const char *name);
-extern void command_add(const char *name, void *function, unsigned int args, unsigned int perm, const char *help, const char *syntax);
-extern void command_del(const char *name, void *function);
+extern void command_add(const char *name, command_function_t function, unsigned int args, unsigned int perm, const char *help, const char *syntax);
+extern void command_del(const char *name, command_function_t function);
 
 
 #endif /* SIGYN_COMMAND_H */
