@@ -23,8 +23,10 @@ typedef struct _logger logger_t;
 
 struct _logger
 {
-    FILE * f;
-    char * channel;
+    union {
+        FILE * f;
+        char * channel;
+    };
     unsigned int level;
     bool isFile;
 };
