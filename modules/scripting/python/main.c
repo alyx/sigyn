@@ -1,8 +1,19 @@
 #include <Python.h>
 #include "sigyn.h"
 
-#define py_return_err_if_null(x) if (x == NULL) { fprintf(stderr, "Argument %s is undefined.", #x); PyErr_Format(PyExc_TypeError, "Argument %s is undefined.", #x); } 
-#define py_return_err_if_zero(x) if (x == 0) { fprintf(stderr, "Argument %s is undefined.", #x); PyErr_Format(PyExc_TypeError, "Argument %s is undefined.", #x); } 
+#define py_return_err_if_null(x) \
+    if (x == NULL) \
+    { \
+        fprintf(stderr, "Argument %s is undefined.", #x); \
+        PyErr_Format(PyExc_TypeError, "Argument %s is undefined.", #x); \
+    } 
+
+#define py_return_err_if_zero(x) \
+    if (x == 0) \
+    { \
+        fprintf(stderr, "Argument %s is undefined.", #x); \
+        PyErr_Format(PyExc_TypeError, "Argument %s is undefined.", #x); \
+    } 
 
 DECLARE_MODULE("scripting/python", MODULE_UNLOAD_CAPABILITY_OK,
         _modinit, _moddeinit, "1.0", "Alyx <alyx@malkier.net>");
