@@ -85,8 +85,8 @@ AC_CHECK_FUNC(socket,, AC_CHECK_LIB(socket, socket))
 AC_CHECK_FUNC(gethostbyname,, AC_CHECK_LIB(nsl, gethostbyname))
 
 AC_ARG_WITH([python],
-            [AS_HELP_STRING([--without-python],
-                            [Disable building python scripting module.])],
+            [AS_HELP_STRING([--with-python],
+                            [Enable building python scripting module.])],
             [],
             [with_python="no"])
 
@@ -102,11 +102,35 @@ AS_IF([test "x$with_python" != "xno"],
 
 
 AS_IF([test "x$with_python" = "xyes" && test "x$PYTHON_CFLAGS" = "x"],
-      [AC_MSG_ERROR([Python support was requested by Python could not be found.])])
+      [AC_MSG_ERROR([Python support was requested but Python could not be found.])])
 
 AC_SUBST(PYTHON_CFLAGS)
 AC_SUBST(PYTHON_LIBS)
 AC_SUBST(PYTHON_ENABLE)
+
+
+AC_ARG_WITH([perl],
+            [AS_HELP_STRING([--with-perl],
+                            [Enable building perl scripting module.])],
+            [],
+            [with_perl="no"])
+
+AS_IF([test "x$with_perl" != "xno"],
+[
+    AC_PATH_PROG(perlpath, perl)
+    if test -n "$perlpath"; then
+        PERL_ENABLE=perl
+        PERL_CFLAGS=`perl -MExtUtils::Embed -e ccopts`
+        PERL_LIBS=`perl -MExtUtils::Embed -e ldopts`
+    fi
+])
+
+AS_IF([test "x$with_perl" = "xyes" && test "x$PERL_CFLAGS" = "x"],
+      [AC_MSG_ERROR([Perl support was requested but Perl could not be found.])])
+
+AC_SUBST(PERL_CFLAGS)
+AC_SUBST(PERL_LIBS)
+AC_SUBST(PERL_ENABLE)
 
 dnl gettextize's Makefile.in wants this
 mkdir_p="mkdir -p"
