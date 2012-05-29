@@ -32,6 +32,7 @@
 #include "logger.h"
 #include "module.h"
 #include "queue.h"
+#include "stack.h"
 #include "timer.h"
 #include "tools.h"
 #include "version.h"
