@@ -477,9 +477,22 @@ AC_HELP_STRING([--enable-stack], [ Enable a stack trace on crash. ]),
  case "$enableval" in
      yes)
         AC_MSG_CHECKING(for libunwind)
+        platform=`uname -m`
+        case "$platform" in
+            i686)
+                platform=x86
+                ;;
+            amd64)
+                platform=x86_64
+                ;;
+            i386)
+                platform=x86
+                ;;
+        esac
+
         AC_CHECK_HEADER(libunwind.h, [OUTPUT_STACKTRACE="yes"
                                       AC_DEFINE(ENABLE_STACK, 1, "Enable stack tracing through libunwind.")
-                                      LIBS="$LIBS -lunwind -lunwind-`uname -m`"
+                                      LIBS="$LIBS -lunwind -lunwind-$platform"
                                       STACKTRACE_ENABLE="stack.c"],
                                       [OUTPUT_STACKTRACE="libunwind not found"])
         ;;

@@ -28,9 +28,7 @@ static void signal_int_handler(int signum)
 
 static void signal_segv_handler(int signum)
 {
-#ifdef ENABLE_STACK
     sigyn_log_backtrace();
-#endif
     sigyn_fatal("Segmentation fault.");
 }
 
