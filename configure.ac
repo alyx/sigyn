@@ -473,9 +473,9 @@ OUTPUT_STACKTRACE="no"
 AC_ARG_ENABLE(stack,
 AC_HELP_STRING([--enable-stack], [ Enable a stack trace on crash. ]),
 [
+ AC_MSG_CHECKING(for libunwind)
  case "$enableval" in
      yes)
-        AC_MSG_CHECKING(for libunwind)
         platform=`uname -m`
         case "$platform" in
             i686)
