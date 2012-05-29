@@ -17,6 +17,7 @@ BASE_SRCS = \
 	module.c \
 	queue.c \
 	sigyn.c \
+	stack.c \
     channel.c
 
 SRCS = ${BASE_SRCS}

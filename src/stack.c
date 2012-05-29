@@ -1,9 +1,10 @@
-#include "config.h"
+#include "sigyn.h"
 
-#ifdef ENABLE_STACK
-#   include <stdio.h>
-#   include <libunwind.h>
-static inline void sigyn_log_backtrace(void)
+#ifndef ENABLE_STACK
+void sigyn_log_backtrace(void) { return; }
+#else
+#include <libunwind.h>
+void sigyn_log_backtrace(void)
 {
     char func[64];
     unw_word_t    offset, pc;
@@ -21,6 +22,4 @@ static inline void sigyn_log_backtrace(void)
         fprintf(stderr, "%p : (%s+0x%x) [%x]\n", (void *)pc, func, offset, pc);
     }
 }
-#else
-static inline void sigyn_log_backtrace(void) { return; }
 #endif
