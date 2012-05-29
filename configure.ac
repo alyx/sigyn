@@ -469,7 +469,7 @@ fi
 
 AC_SUBST(CONTRIB_ENABLE)
 
-OUTPUT_STACKTRACE="yes"
+OUTPUT_STACKTRACE="no"
 STACKTRACE_ENABLE=""
 AC_ARG_ENABLE(stack,
 AC_HELP_STRING([--enable-stack], [ Enable a stack trace on crash. ]),
