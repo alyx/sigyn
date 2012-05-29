@@ -6,7 +6,6 @@
 #include "sigyn.h"
 #ifdef ENABLE_STACK
 #include <libunwind.h>
-
 void sigyn_log_backtrace(void)
 {
     char func[64];
@@ -25,7 +24,4 @@ void sigyn_log_backtrace(void)
         fprintf(stderr, "%p : (%s+0x%x) [%x]\n", (void *)pc, func, offset, pc);
     }
 }
-
-#else
-void sigyn_log_backtrace(void) { }
 #endif /* ENABLE_STACK */

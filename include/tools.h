@@ -58,7 +58,11 @@ static inline int sigyn_hostname(char * host, int len)
 extern void signals_init(void);
 
 /* stack.c functions */
+#ifdef ENABLE_STACK
 extern void sigyn_log_backtrace(void);
+#else
+static void sigyn_log_backtrace(void) { }
+#endif
 
 /* tokenize.c functions */
 extern unsigned int tokenize(char *message, char **parv);
