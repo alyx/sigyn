@@ -432,6 +432,20 @@ static PyObject * sigyn_cmd_add(PyObject * self, PyObject * args)
     return Py_None;
 }
 
+static PyObject * sigyn_cmd_del(PyObject * self, PyObject * args)
+{
+    const char * cmd;
+    PyObject * cb;
+
+    PyArg_ParseTuple(args, "Os", &cb, &cmd);
+    py_return_err_if_null(cb);
+    py_return_err_if_null(cmd);
+    command_del(cmd, py_cmd_cb);
+    mowgli_patricia_delete(py_cmd_list, cmd);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static PyMethodDef SigynMethods[] = {
     {"irc_pass", sigyn_irc_pass, METH_VARARGS, "Send PASS to the server."},
     {"irc_nick", sigyn_irc_nick, METH_VARARGS, "Send NICK to the server."},
@@ -471,7 +485,8 @@ static PyMethodDef SigynMethods[] = {
     {"log", sigyn_logger, METH_VARARGS, "Logs the specified message to the locations set in sigyn config."},
     {"config", sigyn_config, METH_VARARGS, "Retrieves an entry from sigyn's config."},
     {"isupport", sigyn_isupport, METH_VARARGS, "Finds value of an ISUPPORT entry."},
-    {"cmd_add", sigyn_cmd_add, METH_VARARGS, "Adds a command to the command tree."}
+    {"cmd_add", sigyn_cmd_add, METH_VARARGS, "Adds a command to the command tree."},
+    {"cmd_del", sigyn_cmd_del, METH_VARARGS, "Deletes a command from the command tree."}
 };
 
 /*
