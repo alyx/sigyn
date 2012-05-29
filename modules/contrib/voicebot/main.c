@@ -168,6 +168,7 @@ static void cmd_vb_ban(const irc_event_t * event, int parc, char ** parv)
         snprintf(buf, 1024, "unban %s", banned->hostmask);
         banned->length = (time_t)strtol(parv[4], (char **)NULL, 10);
         timer_add(buf, unban, banned, banned->length, false);
+        mowgli_node_add(banned, mowgli_node_create(), &banlist);
     }
 }
 
