@@ -577,6 +577,8 @@ void _modinit(UNUSED module_t * m)
 void _moddeinit(UNUSED module_unload_intent_t intent)
 {
     Py_Finalize();
+    mowgli_patricia_destory(py_cmd_list);
+    mowgli_patricia_destroy(py_timer_list);
     command_del("loadpy", cmd_loadpy);
     command_del("runpy", cmd_runpy);
 }
