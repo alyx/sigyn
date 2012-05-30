@@ -22,6 +22,15 @@ static void cmd_loadpy(const irc_event_t * event, int parc, char ** parv);
 static void cmd_runpy (const irc_event_t * event, int parc, char ** parv);
 
 static mowgli_patricia_t * py_cmd_list;
+static mowgli_patricia_t * py_timer_list;
+
+struct timer_data
+{
+    PyObject *cb;
+    PyObject *args;
+    const char *name;
+    bool repeats;
+};
 
 /*
  * Python shim section.
@@ -40,6 +49,16 @@ static void py_cmd_cb(const irc_event_t * event, int parc, char ** parv)
             event->data, event->origin->nick, event->origin->user, 
             event->origin->host, event->origin->hostmask);
 }
+
+static void py_timer_cb(void * data)
+{
+    struct timer_data * timerdata;
+    timerdata = (struct timer_data *)data;
+    PyObject_CallFunction(timerdata->cb, "sO", timerdata->name, timerdata->args);
+    if (!timerdata->repeats)
+        mowgli_free(timerdata);
+}
+
 
 static void add_constants(PyObject * m)
 {
@@ -420,7 +439,7 @@ static PyObject * sigyn_cmd_add(PyObject * self, PyObject * args)
     unsigned int argc, perm;
     PyObject * cb;
 
-    PyArg_ParseTuple(args, "OsIIss", &cb, &cmd, &argc, &perm, &help, &syntax);
+    PyArg_ParseTuple(args, "sOIIss", &cmd, &cb, &argc, &perm, &help, &syntax);
     py_return_err_if_null(cmd);
     py_return_err_if_zero(args);
     py_return_err_if_zero(perm);
@@ -437,7 +456,7 @@ static PyObject * sigyn_cmd_del(PyObject * self, PyObject * args)
     const char * cmd;
     PyObject * cb;
 
-    PyArg_ParseTuple(args, "Os", &cb, &cmd);
+    PyArg_ParseTuple(args, "sO", &cmd, &cb);
     py_return_err_if_null(cb);
     py_return_err_if_null(cmd);
     command_del(cmd, py_cmd_cb);
@@ -445,6 +464,47 @@ static PyObject * sigyn_cmd_del(PyObject * self, PyObject * args)
     Py_INCREF(Py_None);
     return Py_None;
 }
+
+static PyObject * sigyn_timer_add(PyObject * self, PyObject * args)
+{
+    const char * name;
+    unsigned int when;
+    PyObject * cb, * repeat, * arg;
+    struct timer_data * tdata;
+    mowgli_eventloop_timer_t * timer;
+    tdata = mowgli_alloc(sizeof(struct timer_data));
+    PyArg_ParseTuple(args, "sOOIO", &name, &cb, &arg, &when, &repeat);
+    py_return_err_if_null(name);
+    py_return_err_if_null(cb);
+    py_return_err_if_zero(when);
+    tdata->cb = cb;
+    tdata->args = arg;
+    tdata->name = name;
+    bool continuous;
+    if (repeat == NULL || repeat == Py_False)
+        continuous = false;
+    if (repeat == Py_True)
+        continuous = true;
+    tdata->repeats = continuous;
+    timer = timer_add(name, py_timer_cb, tdata, (time_t)when, continuous);
+    mowgli_patricia_add(py_timer_list, name, timer);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject * sigyn_timer_del(PyObject * self, PyObject *args)
+{
+    const char * name;
+    mowgli_eventloop_timer_t * timer;
+    PyArg_ParseTuple(args, "s", &name);
+    py_return_err_if_null(name);
+    timer = mowgli_patricia_retrieve(py_timer_list, name);
+    timer_del(timer);
+    mowgli_patricia_delete(py_timer_list, name);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 
 static PyMethodDef SigynMethods[] = {
     {"irc_pass", sigyn_irc_pass, METH_VARARGS, "Send PASS to the server."},
@@ -486,7 +546,9 @@ static PyMethodDef SigynMethods[] = {
     {"config", sigyn_config, METH_VARARGS, "Retrieves an entry from sigyn's config."},
     {"isupport", sigyn_isupport, METH_VARARGS, "Finds value of an ISUPPORT entry."},
     {"cmd_add", sigyn_cmd_add, METH_VARARGS, "Adds a command to the command tree."},
-    {"cmd_del", sigyn_cmd_del, METH_VARARGS, "Deletes a command from the command tree."}
+    {"cmd_del", sigyn_cmd_del, METH_VARARGS, "Deletes a command from the command tree."},
+    {"timer_add", sigyn_timer_add, METH_VARARGS, "Adds a timer."},
+    {"timer_del", sigyn_timer_del, METH_VARARGS, "Deletes a timer."}
 };
 
 /*
@@ -499,6 +561,7 @@ void _modinit(UNUSED module_t * m)
 
     Py_Initialize();
     py_cmd_list = mowgli_patricia_create(strcasecanon);
+    py_timer_list = mowgli_patricia_create(strcasecanon);
     module = Py_InitModule("_sigyn", SigynMethods);
     add_constants(module);
     command_add("loadpy", cmd_loadpy, 1, AC_ADMIN, "Loads and executes a Python file", "<file>");
