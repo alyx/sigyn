@@ -1,10 +1,8 @@
-/* Sigyn - A reasonably sane IRC bot.
- * Copyright (c) 2011-2012 Alyx Wolcott <alyx@malkier.net>
- * Released under the BSD license.
- */
-
 #include "sigyn.h"
-#ifdef ENABLE_STACK
+
+#ifndef ENABLE_STACK
+void sigyn_log_backtrace(void) { return; }
+#else
 #include <libunwind.h>
 void sigyn_log_backtrace(void)
 {
@@ -24,4 +22,4 @@ void sigyn_log_backtrace(void)
         fprintf(stderr, "%p : (%s+0x%x) [%x]\n", (void *)pc, func, offset, pc);
     }
 }
-#endif /* ENABLE_STACK */
+#endif

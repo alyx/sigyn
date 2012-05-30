@@ -469,14 +469,13 @@ fi
 
 AC_SUBST(CONTRIB_ENABLE)
 
-OUTPUT_STACKTRACE="yes"
-STACKTRACE_ENABLE=""
+OUTPUT_STACKTRACE="no"
 AC_ARG_ENABLE(stack,
 AC_HELP_STRING([--enable-stack], [ Enable a stack trace on crash. ]),
 [
+ AC_MSG_CHECKING(for libunwind)
  case "$enableval" in
      yes)
-        AC_MSG_CHECKING(for libunwind)
         platform=`uname -m`
         case "$platform" in
             i686)
@@ -492,8 +491,7 @@ AC_HELP_STRING([--enable-stack], [ Enable a stack trace on crash. ]),
 
         AC_CHECK_HEADER(libunwind.h, [OUTPUT_STACKTRACE="yes"
                                       AC_DEFINE(ENABLE_STACK, 1, "Enable stack tracing through libunwind.")
-                                      LIBS="$LIBS -lunwind -lunwind-$platform"
-                                      STACKTRACE_ENABLE="stack.c"],
+                                      STACKTRACE_LIBS="-lunwind -lunwind-$platform"],
                                       [OUTPUT_STACKTRACE="libunwind not found"])
         ;;
     no)
@@ -502,7 +500,7 @@ AC_HELP_STRING([--enable-stack], [ Enable a stack trace on crash. ]),
     esac
 ])
 AC_MSG_RESULT($OUTPUT_STACKTRACE)
-AC_SUBST(STACKTRACE_ENABLE)
+AC_SUBST(STACKTRACE_LIBS)
 
 
 MOWGLI_SOURCE="internal"

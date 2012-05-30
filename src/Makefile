@@ -17,7 +17,7 @@ BASE_SRCS = \
 	module.c \
 	queue.c \
 	sigyn.c \
-	$(STACKTRACE_ENABLE) \
+	stack.c \
     channel.c
 
 SRCS = ${BASE_SRCS}
@@ -26,7 +26,7 @@ include ../extra.mk
 include ../buildsys.mk
 
 CPPFLAGS	+= $(MOWGLI_CFLAGS) -I../include -DBINDIR=\"$(bindir)\"
-LIBS		+= $(MOWGLI_LIBS) $(RPATH) $(PROG_IMPLIB_LDFLAGS)
+LIBS		+= $(MOWGLI_LIBS) $(STACKTRACE_LIBS) $(RPATH) $(PROG_IMPLIB_LDFLAGS)
 
 build: all
 

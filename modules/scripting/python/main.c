@@ -15,6 +15,11 @@
         PyErr_Format(PyExc_TypeError, "Argument %s is undefined.", #x); \
     } 
 
+#define py_check_err \
+    if (PyErr_Occurred()) \
+        PyErr_PrintEx(1)
+
+
 DECLARE_MODULE("scripting/python", MODULE_UNLOAD_CAPABILITY_OK,
         _modinit, _moddeinit, "1.0", "Alyx <alyx@malkier.net>");
 
@@ -48,6 +53,7 @@ static void py_cmd_cb(const irc_event_t * event, int parc, char ** parv)
     PyObject_CallFunction(o, "sssssss", event->command, event->target, 
             event->data, event->origin->nick, event->origin->user, 
             event->origin->host, event->origin->hostmask);
+    py_check_err;
 }
 
 static void py_timer_cb(void * data)
@@ -586,6 +592,7 @@ static void cmd_loadpy(const irc_event_t * event, int parc, char ** parv)
     }
 
     PyRun_AnyFileExFlags(fp, parv[1], 0, NULL);
+    py_check_err;
 }
 
 static void cmd_runpy(const irc_event_t * event, int parc, char ** parv)
@@ -594,6 +601,7 @@ static void cmd_runpy(const irc_event_t * event, int parc, char ** parv)
     logger(LOG_DEBUG, "cmd_runpy called");
     buf = mowgli_strdup(event->data+7);
     PyRun_SimpleStringFlags(buf, NULL);
+    py_check_err;
     mowgli_free(buf);
 }
 
