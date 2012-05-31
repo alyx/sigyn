@@ -7,14 +7,14 @@ Sigyn Style Guide
 - **Tabs** should be spaces, not the \t character. One tab should equal four spaces.
 - **Parenthesis** should be seperated by a space between conditionals (if, while, et cetera). There should not be a space between a standard function and parenthesis. <pre><code>if (x != y)
 {
-    function(a, b);
+&nbsp;&nbsp;&nbsp;&nbsp;function(a, b);
 }
 </pre></code>
 
 - **Comments** are to use standard C formatting (/* blah */).
 - **Functions** are to be formatted as: <pre><code>int function(int count, char fill)
 {
-    blah blah blah;
+&nbsp;&nbsp;&nbsp;&nbsp;blah blah blah;
 }
 </code></pre>
 - **Pointers** are formatted as <code>type *var;</code>
