@@ -16,7 +16,6 @@ install-extra:
 	-$(INSTALL) -m 600 -c ./sigyn/__init__.py $(libdir)/python/sigyn 
 	-$(INSTALL) -m 600 -c ./sigyn/cmd.py $(libdir)/python/sigyn 
 	-$(INSTALL) -m 600 -c ./sigyn/config.py $(libdir)/python/sigyn 
-	-$(INSTALL) -m 600 -c ./sigyn/ctcp.py $(libdir)/python/sigyn 
 	-$(INSTALL) -m 600 -c ./sigyn/irc.py $(libdir)/python/sigyn 
 	-$(INSTALL) -m 600 -c ./sigyn/log.py $(libdir)/python/sigyn 
 	-$(INSTALL) -m 600 -c ./sigyn/timer.py $(libdir)/python/sigyn 
