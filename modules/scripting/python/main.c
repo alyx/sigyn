@@ -87,12 +87,20 @@ static void add_constants(PyObject * m)
 static PyObject * sigyn_config(PyObject * self, PyObject * args)
 {
     const char * name;
+    mowgli_config_file_entry_t * value;
+    PyObject * val;
+
     PyArg_ParseTuple(args, "s", &name);
     py_return_err_if_null(name);
-    mowgli_config_file_entry_t * value = config_find_entry(me.config->entries, name);
-    PyObject *val = (value == NULL ? Py_None : PyString_FromString(value->vardata));
-    Py_INCREF(val);
-    return val;
+    value = config_find_entry(me.config->entries, name);
+    if (value && value->vardata)
+    {
+        val = PyString_FromString(value->vardata);
+        Py_INCREF(val);
+        return val;
+    }
+
+    PyErr_Format(PyExc_LookupError, "Could not find config entry %s", name);
 }
 
 static PyObject * sigyn_logger(PyObject * self, PyObject * args)
@@ -563,13 +571,18 @@ static PyMethodDef SigynMethods[] = {
 
 void _modinit(UNUSED module_t * m)
 {
-    PyObject * module;
+    PyObject * module, * path;
 
     Py_Initialize();
+
     py_cmd_list = mowgli_patricia_create(strcasecanon);
     py_timer_list = mowgli_patricia_create(strcasecanon);
+
     module = Py_InitModule("_sigyn", SigynMethods);
     add_constants(module);
+    path = PySys_GetObject("path");
+    PyList_Append(path, PyString_FromString(LIBDIR "/python"));
+
     command_add("loadpy", cmd_loadpy, 1, AC_ADMIN, "Loads and executes a Python file", "<file>");
     command_add("runpy", cmd_runpy, 1, AC_ADMIN, "Runs a string of Python code", "<string>");
 }
@@ -577,8 +590,8 @@ void _modinit(UNUSED module_t * m)
 void _moddeinit(UNUSED module_unload_intent_t intent)
 {
     Py_Finalize();
-    mowgli_patricia_destory(py_cmd_list);
-    mowgli_patricia_destroy(py_timer_list);
+    /*mowgli_patricia_destory(py_cmd_list);*/
+    /*mowgli_patricia_destroy(py_timer_list);*/
     command_del("loadpy", cmd_loadpy);
     command_del("runpy", cmd_runpy);
 }
@@ -601,9 +614,8 @@ static void cmd_runpy(const irc_event_t * event, int parc, char ** parv)
 {
     char * buf;
     logger(LOG_DEBUG, "cmd_runpy called");
-    buf = mowgli_strdup(event->data+7);
+    buf = (strchr(event->data, ' ')+1);
     PyRun_SimpleStringFlags(buf, NULL);
     py_check_err;
-    mowgli_free(buf);
 }
 
