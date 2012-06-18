@@ -7,7 +7,7 @@ include ../../../buildsys.mk
 
 plugindir = $(MODDIR)/modules/scripting
 
-CFLAGS += -I../../../include -I../../../libmowgli-2/src/libmowgli $(PLUGIN_CFLAGS) $(PYTHON_CFLAGS)
+CFLAGS += -I../../../include -I../../../libmowgli-2/src/libmowgli $(PLUGIN_CFLAGS) $(PYTHON_CFLAGS) -DLIBDIR="\"$(libdir)\""
 LDFLAGS += $(PLUGIN_LDFLAGS) $(PYTHON_LIBS)
 
 install-extra:
