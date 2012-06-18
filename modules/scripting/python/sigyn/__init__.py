@@ -1,6 +1,6 @@
 import _sigyn
 
-__all__ = ['cmd', 'ctcp', 'irc', 'log', 'timer']
+__all__ = ['cmd', 'irc', 'log', 'timer']
 
 def config(name):
     try:
