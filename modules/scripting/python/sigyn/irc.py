@@ -96,4 +96,9 @@ def users(server=None):
 def userhost(nickname):
     _sigyn.irc_userhost(nickname)
 
+def sendctcp(target, args):
+    _sigyn.ctcp_send(target, args)
+
+def ctcpreply(target, args):
+    _sigyn.ctcp_send(target, args)
 
