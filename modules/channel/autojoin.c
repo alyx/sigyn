@@ -29,6 +29,17 @@ void handle_001(void * data, UNUSED void * udata)
         {
             irc_join(entrytok,NULL);
             entrytok = strtok(NULL,",");
-        }        
+        }
+    }
+    /* joinlogchan */
+    entry = config_find_entry(me.config->entries, "joinlogchan");
+    if (entry && entry->vardata)
+    {
+                entrytok = strtok((char *)entry->vardata,",");
+        while (entrytok != NULL)
+        {
+            irc_join(entrytok,NULL);
+            entrytok = strtok(NULL,",");
+        }
     }
 }
