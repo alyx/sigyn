@@ -20,11 +20,13 @@ void handle_001(void * data, UNUSED void * udata)
 {
     /* autojoin */
     mowgli_config_file_entry_t * entry;
-    entry = config_find_entry(me.config->entries, "autojoin");
     char * entrytok;
+    char * entrydup;
+    entry = config_find_entry(me.config->entries, "autojoin");
     if (entry && entry->vardata)
     {
-        entrytok = strtok((char *)entry->vardata,",");
+		entrydup=mowgli_strdup(entry->vardata);
+        entrytok = strtok(entrydup,",");
         while (entrytok != NULL)
         {
             irc_join(entrytok,NULL);
@@ -35,7 +37,8 @@ void handle_001(void * data, UNUSED void * udata)
     entry = config_find_entry(me.config->entries, "joinlogchan");
     if (entry && entry->vardata)
     {
-                entrytok = strtok((char *)entry->vardata,",");
+		entrydup=mowgli_strdup(entry->vardata);
+		entrytok = strtok(entrydup,",");
         while (entrytok != NULL)
         {
             irc_join(entrytok,NULL);
