@@ -15,7 +15,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     command_del("raw", cmd_raw);
 }
 
-static void cmd_raw(const irc_event_t *event, int parc, char **parv)
+static void cmd_raw(UNUSED const irc_event_t *event, int parc, char **parv)
 {
     int i;
     char *buffer;

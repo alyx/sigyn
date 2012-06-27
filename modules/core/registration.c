@@ -19,7 +19,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     mowgli_hook_dissociate("001", handle_001);
 }
 
-static void handle_433(void *data, UNUSED void *udata)
+static void handle_433(UNUSED void *data, UNUSED void *udata)
 {
     if (got_001)
         return;
@@ -32,7 +32,7 @@ static void handle_433(void *data, UNUSED void *udata)
     mowgli_free(nickbuf);
 }
 
-static void handle_001(void *data, UNUSED void *udata)
+static void handle_001(UNUSED void *data, UNUSED void *udata)
 {
     mowgli_config_file_entry_t *entry, *root;
     got_001 = true;

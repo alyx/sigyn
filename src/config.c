@@ -24,10 +24,10 @@ void config_check(mowgli_config_file_t * config)
     root = config_fatal_find_entry(config->entries, "uplink");
     server = (config_fatal_find_entry(root->entries, "server"))->vardata;
     port = ((config_fatal_find_entry(root->entries, "port"))->vardata);
-    if (entry = config_find_entry(root->entries, "ssl"))
+    if ((entry = config_find_entry(root->entries, "ssl")))
         if ((int)strtol(entry->vardata, (char **)NULL, 10) == 1)
             use_ssl = true;
-    if (entry = config_find_entry(root->entries, "vhost"))
+    if ((entry = config_find_entry(root->entries, "vhost")))
         vhost = entry->vardata;
 
     initialise_sigyn(nick, ident, desc, server, port, use_ssl, vhost);

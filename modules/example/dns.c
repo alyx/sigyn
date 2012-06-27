@@ -67,7 +67,7 @@ end:
     mowgli_free(vptr);
 }
 
-static void cmd_dns(const irc_event_t *event, int parc, char **parv)
+static void cmd_dns(const irc_event_t *event, UNUSED int parc, char **parv)
 {
     query_data *data = mowgli_alloc(sizeof(query_data));
     mowgli_dns_query_t *query = &data->query;

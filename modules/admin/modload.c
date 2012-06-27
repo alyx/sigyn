@@ -26,7 +26,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
 }
 
 
-static void cmd_modload(const irc_event_t *event, int parc, char **parv)
+static void cmd_modload(const irc_event_t *event, UNUSED int parc, char **parv)
 {
     module_t *mod;
 
@@ -44,7 +44,7 @@ static void cmd_modload(const irc_event_t *event, int parc, char **parv)
         irc_notice(event->origin->nick, "Module \2%s\2 successfully loaded.", parv[1]);
 }
 
-static void cmd_modunload(const irc_event_t *event, int parc, char **parv)
+static void cmd_modunload(const irc_event_t *event, UNUSED int parc, char **parv)
 {
     module_t *mod;
 
@@ -65,7 +65,7 @@ static void cmd_modunload(const irc_event_t *event, int parc, char **parv)
     irc_notice(event->origin->nick, "Module \2%s\2 successfully unloaded.", parv[1]);
 }
 
-static void cmd_modreload(const irc_event_t *event, int parc, char **parv)
+static void cmd_modreload(const irc_event_t *event, UNUSED int parc, char **parv)
 {
     module_t *mod;
 
@@ -92,7 +92,7 @@ static void cmd_modreload(const irc_event_t *event, int parc, char **parv)
     
 }
 
-static void cmd_modlist(const irc_event_t *event, int parc, char **parv)
+static void cmd_modlist(const irc_event_t *event, UNUSED int parc, UNUSED char **parv)
 {
     mowgli_node_t *n;
 

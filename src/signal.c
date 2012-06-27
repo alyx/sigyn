@@ -7,7 +7,7 @@
 
 #include <signal.h>
 
-static void signal_hup_handler(int signum)
+static void signal_hup_handler(UNUSED int signum)
 {
     logger(LOG_GENERAL, "Received HUP, rehashing.");
 
@@ -15,24 +15,24 @@ static void signal_hup_handler(int signum)
     me.config = mowgli_config_file_load(config_file);
 }
 
-static void signal_pipe_handler(int signum)
+static void signal_pipe_handler(UNUSED int signum)
 {
   logger(LOG_DEBUG, "Received SIGPIPE, broken socket somewhere, ignoring.");
   mowgli_signal_install_handler(SIGPIPE, SIG_IGN);
 }
 
-static void signal_int_handler(int signum)
+static void signal_int_handler(UNUSED int signum)
 {
     sigyn_fatal("caught interrupt");
 }
 
-static void signal_segv_handler(int signum)
+static void signal_segv_handler(UNUSED int signum)
 {
     sigyn_log_backtrace();
     sigyn_fatal("Segmentation fault.");
 }
 
-static void signal_usr1_handler(int signum)
+static void signal_usr1_handler(UNUSED int signum)
 {
     sigyn_fatal("Out of memory!");
 }

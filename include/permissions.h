@@ -17,7 +17,7 @@
 #if 0
 static inline bool has_priv(const char * nick, unsigned int priv)
 #endif
-static inline unsigned int has_priv(const char * nick, unsigned int priv)
+static inline unsigned int has_priv(const char * nick, UNUSED unsigned int priv)
 {
     /* Magic goes here to find a client's privs. Just use the old admin block for now. */
 #if 0
