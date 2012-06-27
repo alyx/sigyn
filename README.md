@@ -44,6 +44,6 @@ projects for design concepts, code, and/or inspiration.
 
 ## 5. HELP, BUGS, SUGGESTIONS
 
-Please report all bugs, suggestions, and feature requests using the github issue tracker found [here](https://github.com/alyx/sigyn/issues).
+Please report all bugs, suggestions, and feature requests using the jira issue tracker found [here](http://jira.arinity.org/).
 
-For assistance with sigyn, please visit our support channel: irc.staticbox.net #sigyn [&#91;Webchat&#93;](http://webchat.staticbox.net/?channels=sigyn
+For assistance with sigyn, please visit our support channel: irc.staticbox.net #sigyn [&#91;Webchat&#93;](http://webchat.staticbox.net/?channels=sigyn)
