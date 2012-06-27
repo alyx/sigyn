@@ -27,7 +27,7 @@ Sigyn is a reasonably sane IRC bot programmed in C.
 
 ## 3. CREDITS
 
-In addition to the above devlopers we'd also like to acknowledge the following
+In addition to the above developers we'd also like to acknowledge the following
 projects for design concepts, code, and/or inspiration.
 
 + [Atheme](http://atheme.net)
