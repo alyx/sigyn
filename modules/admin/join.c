@@ -58,13 +58,14 @@ cmd_part(const irc_event_t *event, int parc, char **parv)
 static void
 cmd_join(const irc_event_t *event, int parc, char **parv)
 {
+    char *channelkey = ((parc > 2) ? parv[2] : NULL);
     if(!ischannel(parv[1]))
     {
 	    irc_notice(event->origin->nick, "Cannot join \2%s\2, invalid channel name.", parv[1]);
 	    return;
     }
 
-    if (irc_join(parv[1], message))
+    if (irc_join(parv[1], channelkey))
     {
         irc_notice(event->origin->nick, "Joined \2%s\2 successfully.", parv[1]);
         return;
