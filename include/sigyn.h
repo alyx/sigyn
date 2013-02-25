@@ -40,5 +40,6 @@
 
 /* from sigyn.c */
 extern char *config_file;
+extern bool should_fork;
 
 #endif /* SIGYN_H */

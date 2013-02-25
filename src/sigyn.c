@@ -8,6 +8,7 @@
 
 fd_set readfds, writefds, nullfds;
 char *config_file;
+bool should_fork = true;
 
 /*
  * Routine Description:
@@ -86,7 +87,8 @@ void parse_commandline_options(int argc, char **argv)
                 " -c <path>   Specify a configuration file for sigyn to use\n"
                 " -h          Print this message and exit\n"
                 " -d <level>  Run in foreground and print debug (1=all, 2=debug)\n"
-                " -v          Print the version information and exit\n");
+                " -v          Print the version information and exit\n"
+                " -n          Prevents Sigyn from forking into the background\n");
                 exit(EXIT_SUCCESS);
                 break;
             case 'v':
@@ -98,6 +100,9 @@ void parse_commandline_options(int argc, char **argv)
                 break;
             case 'd':
                 me.debug = atoi(mowgli_optarg);
+                break;
+            case 'n':
+                should_fork = false;
                 break;
             default:
                 printf("\nusage: sigyn [-hv] [-d debug level] [-c config]\n");
