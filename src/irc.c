@@ -242,7 +242,10 @@ void irc_mode(const char *target, const char *modestring)
      *    Example: MODE WiZ -o
      */
     /* XXX: Stop being lazy and code a real mode command. */
-    raw("MODE %s %s", target, modestring);
+    if (modestring != NULL)
+        raw("MODE %s %s", target, modestring);
+    else
+        raw("MODE %s", target);
 }
 
 void irc_topic(const char *channel, const char *topic)
