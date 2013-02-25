@@ -95,12 +95,13 @@ static void cmd_modreload(const irc_event_t *event, UNUSED int parc, char **parv
 static void cmd_modlist(const irc_event_t *event, UNUSED int parc, UNUSED char **parv)
 {
     mowgli_node_t *n;
-
+    int i = 0;
     irc_notice(event->origin->nick, "*** Sigyn Module List ***");
     MOWGLI_ITER_FOREACH(n, modules.head)
     {
+        i++;
         module_t *m = n->data;
-
         irc_notice(event->origin->nick, "%s (version %s) by %s", m->name, m->header->version, m->header->vendor);
     }
+    irc_notice(event->origin->nick, "*** End of Module List. Total of %i modules loaded. ***", i);
 }
