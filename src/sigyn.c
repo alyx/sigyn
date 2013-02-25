@@ -78,7 +78,7 @@ void parse_commandline_options(int argc, char **argv)
       { NULL, 0, NULL, 0, 0 },
     };
 
-    while ((r = mowgli_getopt_long(argc, argv, "c:hvd:", long_opts, NULL)) != -1)
+    while ((r = mowgli_getopt_long(argc, argv, "c:hvnd:", long_opts, NULL)) != -1)
     {
         switch (r)
         {
@@ -209,6 +209,8 @@ int main(int argc, char *argv[])
     loadmodules(me.config->entries);
 
     sigyn_introduce_client(me.client->nick, me.client->user, NULL);
+    if (should_fork)
+        daemonise(SYSCONFDIR "/sigyn.pid");
     mowgli_eventloop_run(me.ev);
 
     sigyn_cleanup();

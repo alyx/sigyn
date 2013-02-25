@@ -54,6 +54,8 @@ static inline int sigyn_hostname(char * host, int len)
     return gethostname(host, len);
 }
 
+/* daemonise.c functions */
+extern void daemonise(const char *pidpath);
 /* signal.c functions */
 extern void signals_init(void);
 
