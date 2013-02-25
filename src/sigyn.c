@@ -78,7 +78,7 @@ void parse_commandline_options(int argc, char **argv)
       { NULL, 0, NULL, 0, 0 },
     };
 
-    while ((r = mowgli_getopt_long(argc, argv, "c:hv", long_opts, NULL)) != -1)
+    while ((r = mowgli_getopt_long(argc, argv, "c:hvd", long_opts, NULL)) != -1)
     {
         switch (r)
         {
