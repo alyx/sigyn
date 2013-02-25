@@ -177,6 +177,16 @@ bool irc_join(const char *channel, const char *key)
 {
     irc_channel_t *c;
 
+    /* Check to see if the channel name exceeds max length */
+    char *maxlenval = mowgli_patricia_retrieve(isupport_table, "CHANNELLEN");
+    /* If it's null, fill it in with 32 */
+    if (maxlenval == NULL)
+        maxlenval = "32\0";
+    /* Convert to int */
+    int maxlen = atoi(maxlenval) - 1;
+    /* Check if length exceeds max length */
+    if (strlen(channel) > maxlen)
+        return false;
     if ((c = channel_find(channel)) == NULL)
     {
         /* TODO: Check to see if we actually joined. */
