@@ -185,7 +185,8 @@ void logger(unsigned int level, char *format, ...)
     tm = *localtime(&t);
     strftime(datetime, sizeof(datetime) - 1, "[%d/%m/%Y %H:%M:%S]", &tm);
 
-    fprintf(stdout, "%s %s\n", datetime, strip_colour_codes(buf));
+    if (should_log(level))
+        fprintf(stdout, "%s %s\n", datetime, strip_colour_codes(buf));
 
     MOWGLI_ITER_FOREACH(n, loglocs.head)
     {
@@ -201,5 +202,25 @@ void logger(unsigned int level, char *format, ...)
             else
                 irc_privmsg(l->channel, "%s %s", datetime, buf);
         }
+    }
+}
+
+bool should_log(unsigned int level)
+{
+    if (!(level & LOG_DEBUG) && !(level & LOG_RAW))
+    {
+        return true;
+    }
+    if (me.debug >= 2)
+    {
+        return true;
+    }
+    if (me.debug == 1 && !(level & LOG_RAW))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }

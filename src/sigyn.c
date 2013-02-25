@@ -46,7 +46,6 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     me.uplink.vhost = vhost;
     me.uplink.connected = false;
     me.maxfd = 3;
-    me.debug = false;
 
     mowgli_hook_bootstrap();
     modules_init();
@@ -78,7 +77,7 @@ void parse_commandline_options(int argc, char **argv)
       { NULL, 0, NULL, 0, 0 },
     };
 
-    while ((r = mowgli_getopt_long(argc, argv, "c:hvd", long_opts, NULL)) != -1)
+    while ((r = mowgli_getopt_long(argc, argv, "c:hvd:", long_opts, NULL)) != -1)
     {
         switch (r)
         {
@@ -86,7 +85,7 @@ void parse_commandline_options(int argc, char **argv)
                 printf("usage: sigyn [-hv] [-c config]\n\n"
                 " -c <path>   Specify a configuration file for sigyn to use\n"
                 " -h          Print this message and exit\n"
-                " -d          Run in foreground and print debug\n"
+                " -d <level>  Run in foreground and print debug (1=all, 2=debug)\n"
                 " -v          Print the version information and exit\n");
                 exit(EXIT_SUCCESS);
                 break;
@@ -98,10 +97,10 @@ void parse_commandline_options(int argc, char **argv)
                 config_file = mowgli_strdup(mowgli_optarg);
                 break;
             case 'd':
-                me.debug = true;
+                me.debug = atoi(mowgli_optarg);
                 break;
             default:
-                printf("\nusage: sigyn [-dhv] [-c config]\n");
+                printf("\nusage: sigyn [-hv] [-d debug level] [-c config]\n");
                 exit(EXIT_SUCCESS);
                 break;
         }

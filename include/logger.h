@@ -36,6 +36,7 @@ extern void logger_add_channel(const char * channel, const unsigned int level);
 extern void logger_init(mowgli_config_file_entry_t * config);
 extern void logger_deinit(void);
 extern void logger(unsigned int level, char *format, ...);
+extern bool should_log(unsigned int level);
 
 mowgli_list_t loglocs;
 
