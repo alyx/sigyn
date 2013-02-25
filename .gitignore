@@ -6,3 +6,20 @@
 *.d
 *.so
 *.deps
+
+# ignore autotools stuff
+autom4te.cache/
+configure
+config.log
+config.status
+aclocal.m4
+buildsys.mk
+extra.mk
+include/config.h
+include/config.h.in
+
+# ignore final binary
+src/sigyn
+
+# ignore sigyn.conf, we don't want to accidentally commit a config file
+dist/sigyn.conf
