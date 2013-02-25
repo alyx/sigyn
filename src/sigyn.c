@@ -46,6 +46,7 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     me.uplink.vhost = vhost;
     me.uplink.connected = false;
     me.maxfd = 3;
+    me.debug = false;
 
     mowgli_hook_bootstrap();
     modules_init();
@@ -85,6 +86,7 @@ void parse_commandline_options(int argc, char **argv)
                 printf("usage: sigyn [-hv] [-c config]\n\n"
                 " -c <path>   Specify a configuration file for sigyn to use\n"
                 " -h          Print this message and exit\n"
+                " -d          Run in foreground and print debug\n"
                 " -v          Print the version information and exit\n");
                 exit(EXIT_SUCCESS);
                 break;
@@ -95,8 +97,11 @@ void parse_commandline_options(int argc, char **argv)
             case 'c':
                 config_file = mowgli_strdup(mowgli_optarg);
                 break;
+            case 'd':
+                me.debug = true;
+                break;
             default:
-                printf("\nusage: sigyn [-hv] [-c config]\n");
+                printf("\nusage: sigyn [-dhv] [-c config]\n");
                 exit(EXIT_SUCCESS);
                 break;
         }

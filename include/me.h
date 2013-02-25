@@ -31,6 +31,7 @@ struct me {
         } len;
     } isupport;
     int maxfd;
+    bool debug;
 } me;
 
 #endif
