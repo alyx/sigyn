@@ -16,6 +16,7 @@ static void handle_topic(void *data, UNUSED void *udata);
 static void handle_332(void *data, UNUSED void *udata);
 static void handle_352(void *data, UNUSED void *udata);
 static void handle_nick(void *data, UNUSED void *udata);
+static void handle_mode(void *data, UNUSED void *udata);
 
 /*
  * Routine Description:
@@ -106,6 +107,7 @@ void channel_init(void)
     mowgli_hook_associate("NICK", handle_nick, NULL);
     mowgli_hook_associate("332", handle_332, NULL);
     mowgli_hook_associate("352", handle_352, NULL);
+    mowgli_hook_associate("MODE", handle_mode, NULL);
 }
 
 /*
@@ -406,5 +408,10 @@ static void handle_nick(void *data, UNUSED void *udata)
                 cu->name = event->target;
         }
     }
+}
+
+static void handle_mode(void *data, UNUSED void *udata)
+{
+
 }
 
