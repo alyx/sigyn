@@ -15,6 +15,7 @@ static void handle_quit(void *data, UNUSED void *udata);
 static void handle_topic(void *data, UNUSED void *udata);
 static void handle_332(void *data, UNUSED void *udata);
 static void handle_352(void *data, UNUSED void *udata);
+static void handle_329(void *data, UNUSED void *udata);
 static void handle_nick(void *data, UNUSED void *udata);
 static void handle_mode(void *data, UNUSED void *udata);
 
@@ -107,6 +108,7 @@ void channel_init(void)
     mowgli_hook_associate("NICK", handle_nick, NULL);
     mowgli_hook_associate("332", handle_332, NULL);
     mowgli_hook_associate("352", handle_352, NULL);
+    mowgli_hook_associate("329", handle_329, NULL);
     mowgli_hook_associate("MODE", handle_mode, NULL);
 }
 
@@ -275,6 +277,7 @@ static void handle_join(void *data, UNUSED void *udata)
         channel_add(event->target);
         me.stats.channels++;
         irc_who(event->target, NULL);
+        irc_mode(event->target, NULL);
         return;
     }
     irc_channel_t *channel;
@@ -410,8 +413,46 @@ static void handle_nick(void *data, UNUSED void *udata)
     }
 }
 
+/* :blah!blah@blah MODE #blah :+o blah */ 
 static void handle_mode(void *data, UNUSED void *udata)
 {
-
+    irc_channel_t *c;
+    irc_event_t *event;
+    event = (irc_event_t *)data;
+    // It's not even worth our time if the target isn't a channel
+    if (!ischannel(event->target))
+        return;
+    // Dowe know about this channel?
+    if ((c = channel_find(event->target)) == NULL)
+    {
+        printf("Mode set on a target I don't know about\n");
+        return;
+    }
+    else
+    {
+        printf("Modes set on %s: %s\n", c->name, event->data);
+    }
 }
 
+static void handle_329(void *data, UNUSED void *udata)
+{
+    irc_event_t *event;
+    irc_channel_t *c;
+    int parc;
+    char *parv[MAXPARC + 1], *tmp;
+    INIT_PARV(parv, MAXPARC + 1);
+    event = (irc_event_t *)data;
+    tmp = mowgli_strdup(event->data);
+    parc = tokenize(tmp, parv);
+    if ((c = channel_find(parv[0])) == NULL)
+    {
+        logger(LOG_DEBUG, "Couldn't find channel %s\n", parv[0]);
+        return;
+    }
+    else
+    {
+        int time = atoi(parv[1]);
+        logger(LOG_DEBUG, "Channel %s was created at %i\n", c->name, time);
+        c->created = (time_t)time;
+    }
+}

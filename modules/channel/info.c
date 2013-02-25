@@ -35,6 +35,10 @@ static void cmd_info(const irc_event_t *event, UNUSED int parc, UNUSED char **pa
     if (c == NULL)
         command_reply(event->target, "Unable to find channel.");
     else
-        command_reply(event->target, "Name: %s Users: %i Topic: %s", c->name, c->nusers, c->topic);
+    {
+        char buf[BUFSIZE];
+        strftime(buf, sizeof(buf), "%m/%d/%Y %H:%M", localtime(&c->created));
+        command_reply(event->target, "Name: %s Users: %i Topic: %s Time created: %s", c->name, c->nusers, c->topic, buf);
+    }
 }
 
