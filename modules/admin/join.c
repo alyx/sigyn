@@ -42,8 +42,8 @@ cmd_part(const irc_event_t *event, int parc, char **parv)
 
     if(!channel_find(parv[1]))
     {
-	irc_notice(event->origin->nick, "Not currently in \2%s\2", parv[1]);
-	return;
+	    irc_notice(event->origin->nick, "Not currently in \2%s\2", parv[1]);
+	    return;
     }
 
     if (irc_part(parv[1], message))
@@ -62,20 +62,20 @@ cmd_join(const irc_event_t *event, int parc, char **parv)
     char *maxlenval = mowgli_patricia_retrieve(isupport_table, "CHANNELLEN");
 
     if(maxlenval == NULL)
-	maxlenval = "32\0"; // this should never happen, unless you're InspIRCd
+	    maxlenval = "32\0"; // this should never happen, unless you're InspIRCd
 
     int maxlen = atoi(maxlenval) - 1;
 
     if(strlen(parv[1]) > maxlen)
     {
-	irc_notice(event->origin->nick, "Cannot join \2%s\2, channel name is too long.", parv[1]);
-	return;
+	    irc_notice(event->origin->nick, "Cannot join \2%s\2, channel name is too long.", parv[1]);
+	    return;
     }
 
     if(!ischannel(parv[1]))
     {
-	irc_notice(event->origin->nick, "Cannot join \2%s\2, invalid channel name.", parv[1]);
-	return;
+	    irc_notice(event->origin->nick, "Cannot join \2%s\2, invalid channel name.", parv[1]);
+	    return;
     }
 
     if (irc_join(parv[1], message))
