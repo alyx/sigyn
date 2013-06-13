@@ -334,7 +334,7 @@ static void handle_kick(void *data, UNUSED void *udata)
     parc = tokenize(tmp, parv);
     c = channel_find(event->target);
     if (c == NULL)
-        return;
+        return;`
     // Check if the user is us.
     if (strcmp(me.client->nick, parv[0]) == 0)
     {
@@ -422,15 +422,16 @@ static void handle_mode(void *data, UNUSED void *udata)
     // It's not even worth our time if the target isn't a channel
     if (!ischannel(event->target))
         return;
-    // Dowe know about this channel?
+    // Do we know about this channel?
     if ((c = channel_find(event->target)) == NULL)
     {
-        printf("Mode set on a target I don't know about\n");
+        logger(LOG_DEBUG, "Mode set on a channel I don't know about");
         return;
     }
     else
     {
-        printf("Modes set on %s: %s\n", c->name, event->data);
+        # XXX: We need mode handling
+        logger(LOG_DEBUG, "Modes set on %s: %s\n", c->name, event->data);
     }
 }
 
