@@ -51,6 +51,7 @@ typedef struct
 
 static inline bool ischannel(const char * target)
 {
+    // XXX: We need to be parsing ISUPPORT for this.
     if (target[0] == '#' || target[0] == '&' || target[0] == '!' || target[0] == '+')
         return true;
     return false;
