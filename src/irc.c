@@ -106,6 +106,14 @@ static void serv_optional(const char *server, const char *command)
         raw("%s", command);
 }
 
+bool ischannel(const char * target)
+{
+    char *chantypes = mowgli_patricia_retrieve(isupport_table, "CHANTYPES");
+    if (strchr(chantypes, target[0]) != NULL)
+        return true;
+    return false;
+}
+
 /* RFC 1459 commands follow.
  * RFC 1459 is the original
  * IRC RFC by J. Oikarinen.

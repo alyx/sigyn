@@ -49,14 +49,6 @@ typedef struct
     char *data;
 } irc_event_t;
 
-static inline bool ischannel(const char * target)
-{
-    // XXX: We need to be parsing ISUPPORT for this.
-    if (target[0] == '#' || target[0] == '&' || target[0] == '!' || target[0] == '+')
-        return true;
-    return false;
-}
-
 typedef struct
 {
     unsigned char letter;
@@ -67,6 +59,7 @@ typedef struct
 extern int raw(char *line, ...);
 extern void read_irc(mowgli_linebuf_t * linebuf, char * line, size_t len, UNUSED void * userdata);
 void sigyn_introduce_client(const char * nick, const char * ident, const char * password);
+bool ischannel(const char *target);
 
 extern void irc_pass(const char *password);
 extern void irc_nick(const char *nick);
