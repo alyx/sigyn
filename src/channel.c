@@ -334,7 +334,7 @@ static void handle_kick(void *data, UNUSED void *udata)
     parc = tokenize(tmp, parv);
     c = channel_find(event->target);
     if (c == NULL)
-        return;`
+        return;
     // Check if the user is us.
     if (strcmp(me.client->nick, parv[0]) == 0)
     {
