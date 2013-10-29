@@ -430,7 +430,7 @@ static void handle_mode(void *data, UNUSED void *udata)
     }
     else
     {
-        # XXX: We need mode handling
+        // XXX: We need mode handling
         logger(LOG_DEBUG, "Modes set on %s: %s\n", c->name, event->data);
     }
 }
