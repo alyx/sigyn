@@ -48,7 +48,6 @@ void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
     me.uplink.connected = false;
     me.maxfd = 3;
 
-    mowgli_hook_bootstrap();
     modules_init();
     queue_init();
     command_init();
