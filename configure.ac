@@ -239,6 +239,10 @@ if test "$shared_modules" = yes; then
         found="no, Solaris ld uses -B,dynamic"
         LDFLAGS="${LDFLAGS} -Wl,-B,dynamic"
     fi
+    if expr "`uname -s`" : ^Darwin >/dev/null 2>&1; then
+        found="no, OS X ld defaults to visible symbols"
+        LDFLAGS="${LDFLAGS} -Wl"
+    fi
 
 	AC_MSG_RESULT($found)
 
