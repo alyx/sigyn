@@ -109,6 +109,8 @@ static void serv_optional(const char *server, const char *command)
 bool ischannel(const char * target)
 {
     char *chantypes = mowgli_patricia_retrieve(isupport_table, "CHANTYPES");
+    if (chantypes == NULL || target == NULL)
+        return false;
     if (strchr(chantypes, target[0]) != NULL)
         return true;
     return false;
