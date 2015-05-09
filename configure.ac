@@ -235,6 +235,10 @@ if test "$shared_modules" = yes; then
 		found="no, IRIX ld uses -B,dynamic"
 		LDFLAGS="${LDFLAGS} -Wl,-B,dynamic"
 	fi
+    if expr "`uname -s`" : ^SunOS >/dev/null 2>&1; then
+        found="no, Solaris ld uses -B,dynamic"
+        LDFLAGS="${LDFLAGS} -Wl,-B,dynamic"
+    fi
 
 	AC_MSG_RESULT($found)
 
