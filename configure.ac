@@ -228,8 +228,6 @@ if test "$shared_modules" = yes; then
 	# The GNU linker requires the -export-dynamic option to make
 	# all symbols visible in the dynamic symbol table.
 	AC_MSG_CHECKING(for the ld -export-dynamic flag)
-	LDFLAGS="${LDFLAGS}"
-	hold_ldflags=$LDFLAGS
 
 	if expr "`uname -s`" : ^IRIX >/dev/null 2>&1; then
 		found="no, IRIX ld uses -B,dynamic"
@@ -249,6 +247,7 @@ if test "$shared_modules" = yes; then
 	if test "$found" = yes; then
 		LDFLAGS="${LDFLAGS} -Wl,-export-dynamic"
 	fi
+	hold_ldflags=$LDFLAGS
 
 	if test "$ac_cv_c_compiler_gnu" = yes; then
 		AC_MSG_CHECKING(if $CC is Apple GCC)
