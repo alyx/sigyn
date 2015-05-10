@@ -1,7 +1,8 @@
 #include "sigyn.h"
+#include <stdio.h>
 
 DECLARE_MODULE("channel/autojoin", MODULE_UNLOAD_CAPABILITY_OK, _modinit, _moddeinit,
-        "1.0", "Alyx <alyx@malkier.net>");
+        "1.0", "bikcmp <bikcmp@irondust.net>");
 
 static void handle_001(void * data, UNUSED void * udata);
 
@@ -17,46 +18,31 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
 
 void handle_001(void * data, UNUSED void * udata)
 {
-#if 0
+    /* autojoin */
     mowgli_config_file_entry_t * entry;
-    mowgli_node_t * n;
-    logger_t * loc;
-    char * buf;
-    size_t size;
-
-    buf = mowgli_alloc(BUFSIZE);
-    size = BUFSIZE - 1;
+    char * entrytok;
+    char * entrydup;
     entry = config_find_entry(me.config->entries, "autojoin");
-    if (entry != NULL)
+    if (entry && entry->vardata)
     {
-        if (entry->entries != NULL)
+		entrydup=mowgli_strdup(entry->vardata);
+        entrytok = strtok(entrydup,",");
+        while (entrytok != NULL)
         {
-            entry = entry->entries;
-            while (entry != NULL)
-            {
-                mowgli_strlcat(buf, entry->varname, size);
-                mowgli_strlcat(buf, ",", size);
-                size = size - (strlen(entry->varname) + 1);
-                entry = entry->next;
-            }
+            irc_join(entrytok,NULL);
+            entrytok = strtok(NULL,",");
         }
     }
-
+    /* joinlogchan */
     entry = config_find_entry(me.config->entries, "joinlogchan");
-    if (entry)
+    if (entry && entry->vardata)
     {
-        MOWGLI_ITER_FOREACH(n, loglocs.head)
+		entrydup=mowgli_strdup(entry->vardata);
+		entrytok = strtok(entrydup,",");
+        while (entrytok != NULL)
         {
-            loc = (logger_t *)n->data;
-
-            if (!loc->isFile && loc->channel != NULL)
-            {
-                mowgli_strlcat(buf, loc->channel, size);
-                mowgli_strlcat(buf, ",", size);
-                size = size - (strlen(loc->channel) + 1);
-            }
+            irc_join(entrytok,NULL);
+            entrytok = strtok(NULL,",");
         }
     }
-#endif
-    irc_join("#sigyn", NULL);
 }
