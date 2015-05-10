@@ -62,7 +62,7 @@
  * libraries (What Sigyn uses for its module framework).
  */
 #if defined(__APPLE__)
-#   define PLATFORM_SUFFIX ".dylib"
+#   define PLATFORM_SUFFIX ".impl"
 #elif defined(__FreeBSD__) || defined(__unix__) || defined(__unix) || defined(sun)
 #   define PLATFORM_SUFFIX ".so"
 #elif defined(__hpux)

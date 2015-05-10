@@ -15,48 +15,25 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     mowgli_hook_dissociate("001", handle_001);
 }
 
+
 void handle_001(void * data, UNUSED void * udata)
 {
-#if 0
-    mowgli_config_file_entry_t * entry;
-    mowgli_node_t * n;
-    logger_t * loc;
-    char * buf;
-    size_t size;
+    mowgli_config_file_entry_t *autojoin_entry;
+    mowgli_config_file_entry_t *logchan_entry;
 
-    buf = mowgli_alloc(BUFSIZE);
-    size = BUFSIZE - 1;
-    entry = config_find_entry(me.config->entries, "autojoin");
-    if (entry != NULL)
-    {
-        if (entry->entries != NULL)
-        {
-            entry = entry->entries;
-            while (entry != NULL)
-            {
-                mowgli_strlcat(buf, entry->varname, size);
-                mowgli_strlcat(buf, ",", size);
-                size = size - (strlen(entry->varname) + 1);
-                entry = entry->next;
-            }
-        }
-    }
+    /**
+     * IRC supports JOIN #chan1,#chan2 so instead of 
+     * splitting these by comma and sending 1 JOIN per
+     * element, just send as-is. Shouldn't be a problem
+     * for most modern ircds.
+     **/
 
-    entry = config_find_entry(me.config->entries, "joinlogchan");
-    if (entry)
-    {
-        MOWGLI_ITER_FOREACH(n, loglocs.head)
-        {
-            loc = (logger_t *)n->data;
+    autojoin_entry = config_find_entry(me.config->entries, "autojoin");
+    if(autojoin_entry)
+        irc_join(autojoin_entry->vardata, NULL);
 
-            if (!loc->isFile && loc->channel != NULL)
-            {
-                mowgli_strlcat(buf, loc->channel, size);
-                mowgli_strlcat(buf, ",", size);
-                size = size - (strlen(loc->channel) + 1);
-            }
-        }
-    }
-#endif
-    irc_join("#sigyn", NULL);
+    logchan_entry = config_find_entry(me.config->entries, "joinlogchan");
+    if(logchan_entry)
+        irc_join(logchan_entry->vardata, NULL);
+
 }
