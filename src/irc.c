@@ -216,7 +216,7 @@ bool irc_join(const char *channel, const char *key)
     return false;
 }
 
-bool irc_part(const char *channel, const char *message)
+bool irc_part(const char *channel, const char *format, ...)
 {
     irc_channel_t *c;
 
@@ -226,10 +226,17 @@ bool irc_part(const char *channel, const char *message)
     /* 4.2.2: PART
      * Parameters: <channel>{,<channel>}
      * Example: PART #twilight_zone
-     */
-    if (message != NULL)
+     */    
+
+    if (format != NULL)
     {
-        raw("PART %s :%s", c->name, message);
+        char buf[BUFSIZE];
+        va_list args;
+        va_start(args, format);
+        vsnprintf(buf, BUFSIZE, format, args);
+        va_end(args);
+
+        raw("PART %s :%s", c->name, buf);
         channel_del(c);
 
         return true;

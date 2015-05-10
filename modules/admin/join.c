@@ -22,10 +22,12 @@ _modinit(UNUSED module_t *m)
 
     command_add("part",
                 cmd_part,
-                1,
+                0,
                 AC_ADMIN,
                 "Parts an IRC channel",
                 "<channel> [<reason>]");
+
+    // TODO: Add CYCLE
 }
 
 void
@@ -38,11 +40,23 @@ _moddeinit(UNUSED module_unload_intent_t intent)
 static void
 cmd_part(const irc_event_t *event, int parc, char **parv)
 {
+
+    if(!parc)
+    {   
+        if(!channel_find(event->target))
+        {
+            irc_notice(event->origin->nick, "Use PART without parameters in a channel to part contextually.");
+            return;
+        }
+        irc_part(event->target, "Part requested by \2%s\2.", event->origin->nick);
+        return;
+    }
+
     char *message = ((parc > 2) ? parv[2] : NULL);
 
     if(!channel_find(parv[1]))
     {
-	    irc_notice(event->origin->nick, "Not currently in \2%s\2", parv[1]);
+	    irc_notice(event->origin->nick, "Not currently in \2%s\2.", parv[1]);
 	    return;
     }
 
