@@ -68,7 +68,7 @@
 #elif defined(__hpux)
 #   define PLATFORM_SUFFIX ".sl"
 #elif defined(_MSC_VER) || defined(_WIN32)
-O#   define PLATFORM_SUFFIX ".dll"
+#   define PLATFORM_SUFFIX ".dll"
 #else
 #   error Unknown platform - Dynamic library suffix unknown.
 #endif
