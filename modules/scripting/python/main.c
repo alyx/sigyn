@@ -6,14 +6,14 @@
     { \
         fprintf(stderr, "Argument %s is undefined.", #x); \
         PyErr_Format(PyExc_TypeError, "Argument %s is undefined.", #x); \
-    } 
+    }
 
 #define py_return_err_if_zero(x) \
     if (x == 0) \
     { \
         fprintf(stderr, "Argument %s is undefined.", #x); \
         PyErr_Format(PyExc_TypeError, "Argument %s is undefined.", #x); \
-    } 
+    }
 
 #define py_check_err \
     if (PyErr_Occurred()) \
@@ -50,8 +50,8 @@ static void py_cmd_cb(const irc_event_t * event, int parc, char ** parv)
     o = mowgli_patricia_retrieve(py_cmd_list, event->command);
     if (o == NULL)
         return;
-    PyObject_CallFunction(o, "sssssss", event->command, event->target, 
-            event->data, event->origin->nick, event->origin->user, 
+    PyObject_CallFunction(o, "sssssss", event->command, event->target,
+            event->data, event->origin->nick, event->origin->user,
             event->origin->host, event->origin->hostmask);
     py_check_err;
 }
@@ -114,17 +114,17 @@ static PyObject * sigyn_logger(PyObject * self, PyObject * args)
     return Py_None;
 }
 
-static PyObject * sigyn_irc_pass(PyObject * self, PyObject * args) 
-{ 
-    const char * password; 
-    PyArg_ParseTuple(args, "s", &password); 
+static PyObject * sigyn_irc_pass(PyObject * self, PyObject * args)
+{
+    const char * password;
+    PyArg_ParseTuple(args, "s", &password);
     py_return_err_if_null(password);
     irc_pass(password);
     Py_INCREF(Py_None); return Py_None;
 }
 
-static PyObject * sigyn_irc_nick(PyObject * self, PyObject * args) 
-{ 
+static PyObject * sigyn_irc_nick(PyObject * self, PyObject * args)
+{
     const char * nick;
     PyArg_ParseTuple(args, "s", &nick);
     py_return_err_if_null(nick);
@@ -155,7 +155,7 @@ static PyObject * sigyn_irc_oper(PyObject * self, PyObject * args)
 }
 
 static PyObject * sigyn_irc_quit(PyObject * self, PyObject * args)
-{ 
+{
     const char * message;
     PyArg_ParseTuple(args, "|s", &message);
     irc_quit(message);
@@ -181,8 +181,8 @@ static PyObject * sigyn_irc_join(PyObject * self, PyObject * args)
     Py_INCREF(Py_None); return Py_None;
 }
 
-static PyObject * sigyn_irc_part(PyObject * self, PyObject * args) 
-{ 
+static PyObject * sigyn_irc_part(PyObject * self, PyObject * args)
+{
     const char * channel, * message;
     PyArg_ParseTuple(args, "s|s", &channel, &message);
     py_return_err_if_null(channel);
@@ -209,7 +209,7 @@ static PyObject * sigyn_irc_topic(PyObject * self, PyObject * args)
     Py_INCREF(Py_None); return Py_None;
 }
 
-static PyObject * sigyn_irc_names(PyObject * self, PyObject * args) 
+static PyObject * sigyn_irc_names(PyObject * self, PyObject * args)
 {
     const char * channel;
     PyArg_ParseTuple(args, "s", &channel);
@@ -238,7 +238,7 @@ static PyObject * sigyn_irc_kick(PyObject * self, PyObject * args)
     Py_INCREF(Py_None); return Py_None;
 }
 
-static PyObject * sigyn_irc_version (PyObject * self, PyObject * args) 
+static PyObject * sigyn_irc_version (PyObject * self, PyObject * args)
 {
     const char * server;
     PyArg_ParseTuple(args, "|s", &server);
@@ -263,7 +263,7 @@ static PyObject * sigyn_irc_links(PyObject * self, PyObject * args)
     Py_INCREF(Py_None); return Py_None;
 }
 
-static PyObject * sigyn_irc_time(PyObject * self, PyObject * args) 
+static PyObject * sigyn_irc_time(PyObject * self, PyObject * args)
 {
     const char * server;
     PyArg_ParseTuple(args, "|s", &server);
@@ -389,11 +389,11 @@ static PyObject * sigyn_irc_away(PyObject * self, PyObject * args)
 }
 
 static PyObject * sigyn_irc_users(PyObject * self, PyObject * args)
-{ 
+{
     const char * server;
     PyArg_ParseTuple(args, "|s", &server);
     irc_users(server);
-    Py_INCREF(Py_None); return Py_None; 
+    Py_INCREF(Py_None); return Py_None;
 }
 
 static PyObject * sigyn_irc_userhost(PyObject * self, PyObject * args)
@@ -562,7 +562,8 @@ static PyMethodDef SigynMethods[] = {
     {"cmd_add", sigyn_cmd_add, METH_VARARGS, "Adds a command to the command tree."},
     {"cmd_del", sigyn_cmd_del, METH_VARARGS, "Deletes a command from the command tree."},
     {"timer_add", sigyn_timer_add, METH_VARARGS, "Adds a timer."},
-    {"timer_del", sigyn_timer_del, METH_VARARGS, "Deletes a timer."}
+    {"timer_del", sigyn_timer_del, METH_VARARGS, "Deletes a timer."},
+    {NULL, NULL, 0, NULL}
 };
 
 /*
@@ -595,7 +596,7 @@ void _moddeinit(UNUSED module_unload_intent_t intent)
     command_del("loadpy", cmd_loadpy);
     command_del("runpy", cmd_runpy);
 }
-    
+
 static void cmd_loadpy(const irc_event_t * event, int parc, char ** parv)
 {
     FILE * fp;
