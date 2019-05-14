@@ -19,6 +19,17 @@
     if (PyErr_Occurred()) \
         PyErr_PrintEx(1)
 
+struct module_state {
+  PyObject *error;
+};
+
+#if PY_MAJOR_VERSION >= 3
+# define PyString_FromString PyUnicode_FromString
+# define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+#else
+# define GETSTATE(m) (&_state)
+static struct module_state _state;
+#endif
 
 DECLARE_MODULE("scripting/python", MODULE_UNLOAD_CAPABILITY_OK,
         _modinit, _moddeinit, "1.0", "Alyx <alyx@malkier.net>");
@@ -101,6 +112,7 @@ static PyObject * sigyn_config(PyObject * self, PyObject * args)
     }
 
     PyErr_Format(PyExc_LookupError, "Could not find config entry %s", name);
+    return NULL;
 }
 
 static PyObject * sigyn_logger(PyObject * self, PyObject * args)
@@ -566,6 +578,23 @@ static PyMethodDef SigynMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
+#if PY_MAJOR_VERSION >= 3
+
+static PyModuleDef SigynModule = {
+  PyModuleDef_HEAD_INIT, "_sigyn", NULL, -1, SigynMethods,
+  NULL, NULL, NULL, NULL
+};
+
+static PyObject * PyInit_sigyn(void)
+{
+  PyObject * module;
+  module = PyModule_Create(&SigynModule);
+  add_constants(module);
+  return module;
+}
+
+#endif
+
 /*
  * END PYTHON SHIM FUNCTIONS
  */
@@ -573,14 +602,18 @@ static PyMethodDef SigynMethods[] = {
 void _modinit(UNUSED module_t * m)
 {
     PyObject * module, * path;
+#if PY_MAJOR_VERSION >= 3
+    PyImport_AppendInittab("_sigyn", &PyInit_sigyn);
+#endif
 
     Py_Initialize();
 
     py_cmd_list = mowgli_patricia_create(strcasecanon);
     py_timer_list = mowgli_patricia_create(strcasecanon);
-
+#if PY_MAJOR_VERSION <  3
     module = Py_InitModule("_sigyn", SigynMethods);
     add_constants(module);
+#endif
     path = PySys_GetObject("path");
     PyList_Append(path, PyString_FromString(LIBDIR "/python"));
 

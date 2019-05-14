@@ -90,6 +90,13 @@ AC_ARG_WITH([python],
             [],
             [with_python="no"])
 
+AC_ARG_WITH([python3],
+            [AS_HELP_STRING([--with-python3],
+                            [Enable building python 3 scripting module.])],
+            [],
+            [with_python3="no"])
+
+PYTHON_SUPPORT="no"
 AS_IF([test "x$with_python" != "xno"],
 [
     AC_PATH_PROG(pythonpath, python)
@@ -97,11 +104,23 @@ AS_IF([test "x$with_python" != "xno"],
         PYTHON_ENABLE=python
         PYTHON_CFLAGS=`python-config --cflags`
         PYTHON_LIBS=`python-config --ldflags`
+        PYTHON_SUPPORT="python 2"
+    fi
+])
+
+AS_IF([test "x$with_python3" != "xno"],
+[
+    AC_PATH_PROG(pythonpath, python)
+    if test -n "$pythonpath"; then
+      PYTHON_ENABLE=python
+      PYTHON_CFLAGS=`python3-config --cflags`
+      PYTHON_LIBS=`python3-config --ldflags`
+      PYTHON_SUPPORT="python 3"
     fi
 ])
 
 
-AS_IF([test "x$with_python" = "xyes" && test "x$PYTHON_CFLAGS" = "x"],
+AS_IF([test "x$PYTHON_SUPPORT" != "xno" && test "x$PYTHON_CFLAGS" = "x"],
       [AC_MSG_ERROR([Python support was requested but Python could not be found.])])
 
 AC_SUBST(PYTHON_CFLAGS)
@@ -257,7 +276,7 @@ if test "$shared_modules" = yes; then
 		else
 			AppleGCC=no
 		fi
-	
+
 		AC_MSG_RESULT($AppleGCC)
 	fi
 
@@ -267,7 +286,7 @@ if test "$shared_modules" = yes; then
 		AC_MSG_RESULT([SVR4 SGS interfaces: -KPIC -DPIC -G])
 		PICFLAGS="-KPIC -DPIC -G"
 	fi
-	
+
 	if test "$AppleGCC" = "yes"; then
 		AC_MSG_RESULT([Darwin Mach-O bundles: -fno-common -bundle -flat_namespace -undefined suppress])
 		PICFLAGS="-fno-common -bundle -flat_namespace -undefined suppress"
@@ -277,8 +296,8 @@ if test "$shared_modules" = yes; then
 		AC_MSG_RESULT(HP-UX cc: +z -r -q -n)
 		PICFLAGS="+z -r -q -n -c"
 		AC_MSG_CHECKING([if +ESfic is required on this platform])
-		
-		if expr "`$CC +ESfic 2>&1`" : ".*neither supported.*" >/dev/null; then 
+
+		if expr "`$CC +ESfic 2>&1`" : ".*neither supported.*" >/dev/null; then
 			AC_MSG_RESULT(no)
 		else
 			AC_MSG_RESULT(yes)
@@ -372,7 +391,7 @@ EOF
 		AC_MSG_RESULT($symbol_underscores)
 		$RM -f conftest conftest.c
 		])
-		AC_DEFINE_UNQUOTED(SYMBOL_PREFIX, "${symbol_underscores}", 
+		AC_DEFINE_UNQUOTED(SYMBOL_PREFIX, "${symbol_underscores}",
 			[String containing extra underscores prepended to symbols loaded from modules.])
 	fi
 fi
@@ -551,6 +570,7 @@ Configuration:
 	PID directory        : ${RUNDIR}
 	Contrib modules      : ${CONTRIB}
 	Stacktrace           : ${OUTPUT_STACKTRACE}
+	Python               : ${PYTHON_SUPPORT}
 	Mowgli installation  : ${MOWGLI_SOURCE}
 	CFLAGS               : ${CFLAGS}
 
