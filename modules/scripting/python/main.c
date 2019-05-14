@@ -1,4 +1,5 @@
 #include <Python.h>
+#include <dlfcn.h>
 #include "sigyn.h"
 
 #define py_return_err_if_null(x) \
@@ -599,6 +600,53 @@ static PyObject * PyInit_sigyn(void)
  * END PYTHON SHIM FUNCTIONS
  */
 
+static int ends_with_py(const char *str)
+{
+  char *suffix = ".py";
+  size_t lenstr, lensuffix;
+
+  lensuffix = 3;
+
+  if (!str)
+    return 0;
+  lenstr = strlen(str);
+  if (lensuffix > lenstr)
+    return 0;
+  return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
+}
+
+static void loadscript_py(mowgli_config_file_entry_t * entry)
+{
+  FILE * fp;
+
+  if (entry == NULL)
+    logger(LOG_DEBUG, "loadscript_py(): Initial entry is NULL");
+
+  while (entry != NULL)
+  {
+    logger(LOG_DEBUG, "loadscript_py(): Entry name, %s", entry->varname);
+    if (!strcmp(entry->varname, "loadscript"))
+    {
+      if (ends_with_py(entry->vardata))
+      {
+        if ((fp = fopen(entry->vardata, "r")) == NULL)
+        {
+          logger(LOG_GENERAL, "[Scripting] Failed to load script %s\n", entry->vardata);
+        }
+        else
+        {
+          PyRun_AnyFileExFlags(fp, entry->vardata, 0, NULL);
+          py_check_err;
+          logger(LOG_GENERAL, "[Scripting] Loaded module %s\n", entry->vardata);
+        }
+      }
+    }
+    if (entry->entries != NULL)
+      loadscript_py(entry->entries);
+    entry = entry->next;
+  }
+}
+
 void _modinit(UNUSED module_t * m)
 {
     PyObject * module, * path;
@@ -606,7 +654,10 @@ void _modinit(UNUSED module_t * m)
     PyImport_AppendInittab("_sigyn", &PyInit_sigyn);
 #endif
 
+    dlopen("libpython3.5.so", RTLD_NOW | RTLD_GLOBAL);
+
     Py_Initialize();
+    PyEval_InitThreads();
 
     py_cmd_list = mowgli_patricia_create(strcasecanon);
     py_timer_list = mowgli_patricia_create(strcasecanon);
@@ -619,6 +670,7 @@ void _modinit(UNUSED module_t * m)
 
     command_add("loadpy", cmd_loadpy, 1, AC_ADMIN, "Loads and executes a Python file", "<file>");
     command_add("runpy", cmd_runpy, 1, AC_ADMIN, "Runs a string of Python code", "<string>");
+    loadscript_py(me.config->entries);
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)

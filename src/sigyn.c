@@ -25,13 +25,13 @@ bool should_fork = true;
  *     uplink  - A string containing the hostname Sigyn should connect to.
  *     port    - An integer specifying the port number of the IRC server.
  *     use_ssl - A boolean specifying whether to use SSL or not.
- *     vhost   - A string containing the hostname for Sigyn to bind to (Optional). 
+ *     vhost   - A string containing the hostname for Sigyn to bind to (Optional).
  *
  * Return value:
  *    None.
  */
 
-void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink, 
+void initialise_sigyn(char *nick, char *ident, char *gecos, char *uplink,
         char * port, bool use_ssl, char *vhost)
 {
     me.client = mowgli_alloc(sizeof(irc_user_t));
@@ -194,6 +194,7 @@ int main(int argc, char *argv[])
     parse_commandline_options(argc, argv);
 
     me.config = mowgli_config_file_load(config_file);
+    logger(LOG_DEBUG, "[Config] Using configuration file: %s\n", config_file);
 
     if(me.config == NULL)
         sigyn_fatal("Cannot load configuration file.");

@@ -1,4 +1,5 @@
 import _sigyn
+import sigyn.cmd, sigyn.irc, sigyn.log, sigyn.timer
 
 __all__ = ['cmd', 'irc', 'log', 'timer']
 

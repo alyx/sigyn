@@ -123,6 +123,9 @@ AS_IF([test "x$with_python3" != "xno"],
 AS_IF([test "x$PYTHON_SUPPORT" != "xno" && test "x$PYTHON_CFLAGS" = "x"],
       [AC_MSG_ERROR([Python support was requested but Python could not be found.])])
 
+LIBS="$LIBS $PYTHON_LIBS"
+CPPFLAGS="$CPPFLAGS $PYTHON_CFLAGS"
+
 AC_SUBST(PYTHON_CFLAGS)
 AC_SUBST(PYTHON_LIBS)
 AC_SUBST(PYTHON_ENABLE)
