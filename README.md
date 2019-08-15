@@ -1,11 +1,10 @@
-<pre>
-     _                   
- ___(_) __ _ _   _ _ __  
-/ __| |/ _` | | | | '_ \ 
+```  _
+ ___(_) __ _ _   _ _ __
+/ __| |/ _` | | | | '_ \
 \__ \ | (_| | |_| | | | |
 |___/_|\__, |\__, |_| |_|
-       |___/ |___/     
-</pre>
+       |___/ |___/
+ ```
 
 ## Table of Contents
 1.   Description
@@ -21,9 +20,9 @@ Sigyn is a reasonably sane IRC bot programmed in C.
 
 ## 2. DEVELOPERS
 
-+ [Alyx Wolcott](https://github.com/alyx) &lt;alyx@malkier.net&gt;
-+ [Justin "Justasic" Crawford](https://github.com/Justasic) &lt;justasic@gmail.com&gt;
-+ [Matthew "mattwb65" Barksdale](https://github.com/mattwb65) &lt;mattwb65@gmail.com&gt;
++ [Alyx Wolcott](https://github.com/alyx) <alyx@malkier.net>
++ [Justin "Justasic" Crawford](https://github.com/Justasic) <justasic@gmail.com>
++ [Matthew "mattwb65" Barksdale](https://github.com/mattwb65) <mattwb65@gmail.com>
 
 ## 3. CREDITS
 
@@ -43,7 +42,5 @@ projects for design concepts, code, and/or inspiration.
 - Edit and rename your configuration file to sigyn.conf
 
 ## 5. HELP, BUGS, SUGGESTIONS
-
-Please report all bugs, suggestions, and feature requests using the jira issue tracker found [here](http://jira.arinity.org/).
 
 For assistance with sigyn, please visit our support channel: irc.staticbox.net #sigyn [&#91;Webchat&#93;](http://webchat.staticbox.net/?channels=sigyn)
