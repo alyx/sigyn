@@ -6,17 +6,16 @@
 # $Id: Makefile.in 8375 2007-06-03 20:03:26Z pippijn $
 #
 
-MODULE = admin
+MODULE = web
 
 SRCS =		\
-	raw.c \
-	join.c \
-	memory.c \
-	modload.c \
-	exec.c
+	lastfm.c \
+#	help.c \
 
 include ../../extra.mk
 include ../../buildsys.mk
 include ../../buildsys.module.mk
 
 CPPFLAGS	+= -I../../include
+CFLAGS += -lcurl
+LDFLAGS += -lcurl

@@ -8,4 +8,5 @@ SUBDIRS = \
 		  games \
 		  example \
 		  scripting \
+		  web \
 		  $(CONTRIB_ENABLE)

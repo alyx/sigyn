@@ -8,7 +8,8 @@
 #include "sigyn.h"
 
 /* copied from atheme */
-void strcasecanon(char *str)                                                    {
+void strcasecanon(char *str)
+{
     while (*str)
     {
         *str = toupper(*str);
