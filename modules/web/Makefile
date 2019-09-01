@@ -9,8 +9,8 @@
 MODULE = web
 
 SRCS =		\
-	lastfm.c \
-#	help.c \
+	core.c \
+	lastfm.c
 
 include ../../extra.mk
 include ../../buildsys.mk

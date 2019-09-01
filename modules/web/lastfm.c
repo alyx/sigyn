@@ -26,12 +26,11 @@ void _modinit(module_t *m)
 {
     mowgli_config_file_entry_t *root, *entry;
 
-    command_add("np",
-                cmd_np,
-                1,
-                AC_NONE,
-                "Retrieve Now Playing information for a Last.FM account",
-                "<username>");
+    MODULE_TRY_REQUEST_DEPENDENCY(m, "web/core");
+
+    command_add("np", cmd_np, 1, AC_NONE,
+        "Retrieve Now Playing information for a Last.FM account",
+        "<username>");
 
     root = config_find_entry(me.config->entries, "lastfm");
     if (root == NULL)
@@ -46,15 +45,12 @@ void _modinit(module_t *m)
         return;
     }
 
-    curl_global_init(CURL_GLOBAL_DEFAULT);
-
     api_key = entry->vardata;
 }
 
 void _moddeinit(UNUSED module_unload_intent_t intent)
 {
     command_del("np", cmd_np);
-    curl_global_cleanup();
 }
 
 static size_t write_data(void *buf, size_t size, size_t nmemb, mowgli_string_t *input_buf)
