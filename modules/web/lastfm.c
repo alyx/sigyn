@@ -31,8 +31,8 @@ void _modinit(module_t *m)
     MODULE_TRY_REQUEST_SYMBOL(m, web_write_to_buffer, "web/core", "web_write_to_buffer");
 
     command_add("np", cmd_np, 1, AC_NONE,
-        "Retrieve Now Playing information for a Last.FM account",
-        "<username>");
+                "Retrieve Now Playing information for a Last.FM account",
+                "<username>");
 
     root = config_find_entry(me.config->entries, "lastfm");
     if (root == NULL)
@@ -71,10 +71,16 @@ static int get_first_track(const char *key, void *data, void *privdata)
     {
         m = mowgli_patricia_retrieve(n->v.v_object, "nowplaying");
         if (m != NULL)
+        {
             if (strcmp(m->v.v_string->str, "0") == 0)
+            {
                 t->np = false;
+            }
             else
+            {
                 t->np = true;
+            }
+        }
     }
     else if (strcmp(key, "artist") == 0)
     {
@@ -90,46 +96,6 @@ static int get_first_track(const char *key, void *data, void *privdata)
     }
 
     return 1;
-}
-
-static struct track *gen_track(mowgli_string_t *buf)
-{
-    mowgli_json_t *json, *curr;
-    struct track *t;
-
-    t = mowgli_alloc(sizeof(struct track));
-
-    t->title = t->artist = t->album = NULL;
-    t->np = false;
-
-    json = mowgli_json_parse_string(buf->str);
-
-    if (json == NULL || json->tag != MOWGLI_JSON_TAG_OBJECT)
-    {
-        logger(LOG_DEBUG, "[web/lastfm] lookup failed: Invalid JSON");
-        mowgli_json_decref(json);
-        return NULL;
-    }
-
-    if ((curr = mowgli_json_object_retrieve(json, "recenttracks")) == NULL)
-    {
-        logger(LOG_DEBUG,
-               "[web/lastfm] unhandled exception: missing required field 'recenttracks'");
-        mowgli_json_decref(json);
-        return NULL;
-    }
-
-    if ((curr = mowgli_json_object_retrieve(curr, "track")) == NULL)
-    {
-        logger(LOG_DEBUG,
-               "[web/lastfm] unhandled exception: missing required field 'track'");
-        mowgli_json_decref(json);
-        return NULL;
-    }
-
-    mowgli_patricia_foreach(curr->v.v_object, get_first_track, t);
-
-    return t;
 }
 
 static void
@@ -204,14 +170,14 @@ cmd_np(const irc_event_t *event, int parc, char **parv)
 
     if (t->album)
     {
-        command_reply(event->target, "%s %s %s by %s (%s)", 
-            parv[1], (t->np ? "is now playing" : "last played"), 
-            t->title, t->artist, t->album);
+        command_reply(event->target, "%s %s %s by %s (%s)",
+                      parv[1], (t->np ? "is now playing" : "last played"),
+                      t->title, t->artist, t->album);
     }
     else
     {
-        command_reply(event->target, "%s %s %s by %s", parv[1], 
-        (t->np ? "is now playing" : "last played"), t->title, t->artist);
+        command_reply(event->target, "%s %s %s by %s", parv[1],
+                      (t->np ? "is now playing" : "last played"), t->title, t->artist);
     }
 
 cleanup:

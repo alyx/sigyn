@@ -5,11 +5,11 @@
 
 #include "sigyn.h"
 
-void config_check(mowgli_config_file_t * config)
+void config_check(mowgli_config_file_t *config)
 {
-    mowgli_config_file_entry_t * entry, * root;
+    mowgli_config_file_entry_t *entry, *root;
 
-    char * nick, * desc, * server, * vhost, * ident, * port, * ssl;
+    char *nick, *desc, *server, *vhost, *ident, *port;
     bool use_ssl = false;
 
     root = config_fatal_find_entry(config->entries, "sigyn");
@@ -28,19 +28,25 @@ void config_check(mowgli_config_file_t * config)
         if ((int)strtol(entry->vardata, (char **)NULL, 10) == 1)
             use_ssl = true;
     if ((entry = config_find_entry(root->entries, "vhost")))
+    {
         vhost = entry->vardata;
+    }
+    else
+    {
+        vhost = NULL;
+    }
 
     initialise_sigyn(nick, ident, desc, server, port, use_ssl, vhost);
 }
 
-mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t * start,
-        const char * name)
+mowgli_config_file_entry_t *config_find_entry(mowgli_config_file_entry_t *start,
+                                              const char *name)
 {
-    mowgli_config_file_entry_t * e;
+    mowgli_config_file_entry_t *e;
 
     e = start;
 
-    while(e != NULL)
+    while (e != NULL)
     {
         if (!strcmp(e->varname, name))
             return e;
@@ -51,11 +57,10 @@ mowgli_config_file_entry_t * config_find_entry(mowgli_config_file_entry_t * star
     return NULL;
 }
 
-
-mowgli_config_file_entry_t * config_fatal_find_entry(mowgli_config_file_entry_t * entries,
-        char * name)
+mowgli_config_file_entry_t *config_fatal_find_entry(mowgli_config_file_entry_t *entries,
+                                                    char *name)
 {
-    mowgli_config_file_entry_t * entry;
+    mowgli_config_file_entry_t *entry;
     entry = config_find_entry(entries, name);
 
     if (entry == NULL)
@@ -66,9 +71,9 @@ mowgli_config_file_entry_t * config_fatal_find_entry(mowgli_config_file_entry_t 
     return entry;
 }
 
-void config_print(mowgli_config_file_entry_t * entries, int level)
+void config_print(mowgli_config_file_entry_t *entries, int level)
 {
-    mowgli_config_file_entry_t * e;
+    mowgli_config_file_entry_t *e;
 
     e = entries;
 
@@ -76,7 +81,7 @@ void config_print(mowgli_config_file_entry_t * entries, int level)
     {
         fprintf(stderr, "%d:\t%s\t%s\n", level, e->varname, e->vardata);
         if (e->entries != NULL)
-            config_print(e->entries, level+1);
+            config_print(e->entries, level + 1);
         e = e->next;
     }
 }
