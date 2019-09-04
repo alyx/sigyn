@@ -5,6 +5,8 @@
 
 static void cmd_np(const irc_event_t *event, int parc, char **parv);
 
+size_t (*web_write_to_buffer)(void *buf, size_t size, size_t nmemb, mowgli_string_t *input_buf);
+
 DECLARE_MODULE("web/lastfm",
                MODULE_UNLOAD_CAPABILITY_OK,
                _modinit,
@@ -26,7 +28,7 @@ void _modinit(module_t *m)
 {
     mowgli_config_file_entry_t *root, *entry;
 
-    MODULE_TRY_REQUEST_DEPENDENCY(m, "web/core");
+    MODULE_TRY_REQUEST_SYMBOL(m, web_write_to_buffer, "web/core", "web_write_to_buffer");
 
     command_add("np", cmd_np, 1, AC_NONE,
         "Retrieve Now Playing information for a Last.FM account",
@@ -51,19 +53,6 @@ void _modinit(module_t *m)
 void _moddeinit(UNUSED module_unload_intent_t intent)
 {
     command_del("np", cmd_np);
-}
-
-static size_t write_data(void *buf, size_t size, size_t nmemb, mowgli_string_t *input_buf)
-{
-    size_t r;
-
-    r = size * nmemb;
-
-    printf("\nWRITE_DATA: POINTER LOC: %p\n", &input_buf);
-
-    mowgli_string_append(input_buf, (char *)buf, r);
-
-    return r;
 }
 
 static int get_first_track(const char *key, void *data, void *privdata)
@@ -156,7 +145,6 @@ cmd_np(const irc_event_t *event, int parc, char **parv)
     curl = curl_easy_init();
 
     snprintf(uri, BUFSIZE, API_ROOT, parv[1], api_key);
-    printf("\n%s\n", uri);
 
     if (curl == NULL)
     {
@@ -166,10 +154,9 @@ cmd_np(const irc_event_t *event, int parc, char **parv)
     }
 
     input_buf = mowgli_string_create();
-    printf("\nCMD_NP: POINTER LOC: %p\n", &input_buf);
 
     curl_easy_setopt(curl, CURLOPT_URL, uri);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, web_write_to_buffer);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, input_buf);
 
     res = curl_easy_perform(curl);

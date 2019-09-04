@@ -10,6 +10,7 @@ MODULE = web
 
 SRCS =		\
 	core.c \
+	cve.c \
 	lastfm.c
 
 include ../../extra.mk
