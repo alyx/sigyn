@@ -19,5 +19,6 @@ extern void command_fail(const int reason,
                          const char *command);
 
 extern void command_reply(const char * target, char * fmt, ...);
+extern void command_reply_safe(const char * target, char * fmt, ...);
 
 #endif /* SIGYN_INTERFACE_H */

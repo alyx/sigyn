@@ -77,7 +77,7 @@ cmd_cve(const irc_event_t *event, int parc, char **parv)
         goto cleanup;
     }
 
-    command_reply(event->target, "%s: %s", parv[1], curr->v.v_string->str);
+    command_reply_safe(event->target, "%s: %s", parv[1], curr->v.v_string->str);
 
 cleanup:
     mowgli_json_decref(json);

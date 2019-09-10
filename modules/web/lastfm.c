@@ -170,13 +170,13 @@ cmd_np(const irc_event_t *event, int parc, char **parv)
 
     if (t->album)
     {
-        command_reply(event->target, "%s %s %s by %s (%s)",
+        command_reply_safe(event->target, "%s %s %s by %s (%s)",
                       parv[1], (t->np ? "is now playing" : "last played"),
                       t->title, t->artist, t->album);
     }
     else
     {
-        command_reply(event->target, "%s %s %s by %s", parv[1],
+        command_reply_safe(event->target, "%s %s %s by %s", parv[1],
                       (t->np ? "is now playing" : "last played"), t->title, t->artist);
     }
 
